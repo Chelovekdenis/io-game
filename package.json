@@ -6,7 +6,7 @@
     "start": "cross-env NODE_ENV=production node src/server/app.js",
     "dev": "cross-env NODE_ENV=development nodemon src/server/app.js",
     "build": "webpack --config webpack.prod.js",
-    "heroku-postbuild": "webpack -p --config ./webpack.prod.js --progress"
+    "heroku-postbuild": "webpack --config ./webpack.prod.js --progress"
   },
   "dependencies": {
     "express": "~4.16.1",
