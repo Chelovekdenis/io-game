@@ -1,76 +1,55 @@
-const ObjectClass = require('./object');
-const Bullet = require('./bullet');
-const Constants = require('../shared/constants');
+const ObjectClass = require('./object')
+const Bullet = require('./bullet')
+const Constants = require('../shared/constants')
 
 class Player extends ObjectClass {
   constructor(id, username, x, y) {
-    super(id, x, y, Math.random() * 2 * Math.PI, Constants.PLAYER_SPEED);
-    this.username = username;
-    this.hp = Constants.PLAYER_MAX_HP;
-    this.fireCooldown = 0;
-    this.score = 0;
+    super(id, x, y, Math.random() * 2 * Math.PI, Constants.PLAYER_SPEED)
+    this.username = username
+    console.log(username)
+    this.hp = Constants.PLAYER_MAX_HP
+    this.fireCooldown = 0
+    this.score = 0
     this.move = {}
     this.click = false
   }
 
   // Returns a newly created bullet, or null.
   update(dt) {
-    this.score += dt * Constants.SCORE_PER_SECOND;
+    this.score += dt * Constants.SCORE_PER_SECOND
+
+    let upDown = this.move.left || this.move.right ? dt * this.speed * 0.8 : dt * this.speed
 
     if (this.move.up) {
-      // super.update(dt);
-      this.y -= dt * this.speed
-
-      // Update score
-
-      // Make sure the player stays in bounds
-      this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
-      this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
-
-      // return null;
+      this.y -= upDown
     }
+
     if (this.move.down) {
-      // super.update(dt);
-      this.y += dt * this.speed
-
-      // Make sure the player stays in bounds
-      this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
-      this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
-
-      // return null;
+      this.y += upDown
     }
+
+    let leftRight = this.move.up || this.move.down ? dt * this.speed * 0.8 : dt * this.speed
 
     if (this.move.left) {
-      // super.update(dt);
-      this.x -= dt * this.speed
-
-      // Make sure the player stays in bounds
-      this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
-      this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
-
-      // return null;
+      this.x -= leftRight
     }
 
     if (this.move.right) {
-      // super.update(dt);
-      this.x += dt * this.speed
-
-      // Make sure the player stays in bounds
-      this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x));
-      this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y));
-
-      // return null;
+      this.x += leftRight
     }
 
     if(this.click) {
-      this.fireCooldown -= dt;
+      this.fireCooldown -= dt
       if (this.fireCooldown <= 0) {
-        this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN;
-        return new Bullet(this.id, this.x, this.y, this.direction);
+        this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN
+        return new Bullet(this.id, this.x, this.y, this.direction)
       }
     }
 
-    return null;
+    this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x))
+    this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y))
+
+    return null
   }
 
   setMovement(move) {
@@ -83,20 +62,20 @@ class Player extends ObjectClass {
 
   shoot(dt) {
     if(this.click) {
-      this.fireCooldown -= dt;
+      this.fireCooldown -= dt
       if (this.fireCooldown <= 0) {
-        this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN;
-        return new Bullet(this.id, this.x, this.y, this.direction);
+        this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN
+        return new Bullet(this.id, this.x, this.y, this.direction)
       }
     }
   }
 
   takeBulletDamage() {
-    this.hp -= Constants.BULLET_DAMAGE;
+    this.hp -= Constants.BULLET_DAMAGE
   }
 
   onDealtDamage() {
-    this.score += Constants.SCORE_BULLET_HIT;
+    this.score += Constants.SCORE_BULLET_HIT
   }
 
   serializeForUpdate() {
@@ -104,8 +83,9 @@ class Player extends ObjectClass {
       ...(super.serializeForUpdate()),
       direction: this.direction,
       hp: this.hp,
-    };
+      username: this.username
+    }
   }
 }
 
-module.exports = Player;
+module.exports = Player

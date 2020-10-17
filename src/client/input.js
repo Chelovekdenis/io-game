@@ -1,19 +1,17 @@
-// Learn more about this file at:
-// https://victorzhou.com/blog/build-an-io-game-part-1/#6-client-input-%EF%B8%8F
-import { updateDirection, moveEmit, mouseClickEmit } from './networking';
+import { updateDirection, moveEmit, mouseClickEmit } from './networking'
 
 function onMouseInput(e) {
-  handleInput(e.clientX, e.clientY);
+  handleInput(e.clientX, e.clientY)
 }
 
 function onTouchInput(e) {
-  const touch = e.touches[0];
-  handleInput(touch.clientX, touch.clientY);
+  const touch = e.touches[0]
+  handleInput(touch.clientX, touch.clientY)
 }
 
 function handleInput(x, y) {
-  const dir = Math.atan2(x - window.innerWidth / 2, window.innerHeight / 2 - y);
-  updateDirection(dir);
+  const dir = Math.atan2(x - window.innerWidth / 2, window.innerHeight / 2 - y)
+  updateDirection(dir)
 }
 
 let movement = {
@@ -24,14 +22,14 @@ let movement = {
 }
 
 function handleInputKey() {
-  moveEmit(movement);
+  moveEmit(movement)
 }
 
 function onMouseDown() {
-  mouseClickEmit(true);
+  mouseClickEmit(true)
 }
 function onMouseUp() {
-  mouseClickEmit(false);
+  mouseClickEmit(false)
 }
 
 function onKeyDown(e) {
@@ -71,31 +69,24 @@ function onKeyUp(e) {
 }
 
 export function startCapturingInput() {
-  window.addEventListener('mousemove', onMouseInput);
-  // window.addEventListener('click', onMouseClick);
-  window.addEventListener('mousedown', onMouseDown);
-  window.addEventListener('mouseup', onMouseUp);
-  window.addEventListener('touchstart', onTouchInput);
-  window.addEventListener('touchmove', onTouchInput);
-  window.addEventListener('keydown', onKeyDown);
-  window.addEventListener('keyup', onKeyUp);
+  window.addEventListener('mousemove', onMouseInput)
+  // window.addEventListener('click', onMouseClick)
+  window.addEventListener('mousedown', onMouseDown)
+  window.addEventListener('mouseup', onMouseUp)
+  window.addEventListener('touchstart', onTouchInput)
+  window.addEventListener('touchmove', onTouchInput)
+  window.addEventListener('keydown', onKeyDown)
+  window.addEventListener('keyup', onKeyUp)
 }
 
 export function stopCapturingInput() {
-  window.removeEventListener('mousemove', onMouseInput);
-  // window.removeEventListener('click', onMouseClick);
-  window.addEventListener('mousedown', onMouseDown);
-  window.addEventListener('mouseup', onMouseUp);
-  window.removeEventListener('touchstart', onTouchInput);
-  window.removeEventListener('touchmove', onTouchInput);
-  window.removeEventListener('keydown', onKeyDown);
-  window.removeEventListener('keyup', onKeyUp);
+  window.removeEventListener('mousemove', onMouseInput)
+  // window.removeEventListener('click', onMouseClick)
+  window.addEventListener('mousedown', onMouseDown)
+  window.addEventListener('mouseup', onMouseUp)
+  window.removeEventListener('touchstart', onTouchInput)
+  window.removeEventListener('touchmove', onTouchInput)
+  window.removeEventListener('keydown', onKeyDown)
+  window.removeEventListener('keyup', onKeyUp)
 }
 
-
-// document.addEventListener('keydown', event => {
-//
-// })
-// document.addEventListener('keyup', event => {
-//
-// })

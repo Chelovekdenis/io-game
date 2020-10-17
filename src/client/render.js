@@ -1,12 +1,10 @@
-// Learn more about this file at:
-// https://victorzhou.com/blog/build-an-io-game-part-1/#5-client-rendering
 import { debounce } from 'throttle-debounce'
 import { getAsset } from './assets'
 import { getCurrentState } from './state'
 
 const Constants = require('../shared/constants')
 
-const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE } = Constants
+const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE, MAP_FPS } = Constants
 
 // Get the canvas graphics context
 const canvas = document.getElementById('game-canvas')
@@ -22,6 +20,7 @@ function setCanvasDimensions() {
 }
 
 window.addEventListener('resize', debounce(40, setCanvasDimensions))
+
 
 function render() {
   const { me, others, bullets } = getCurrentState()
@@ -56,8 +55,8 @@ function renderBackground(x, y) {
     backgroundY,
     MAP_SIZE / 2,
   )
-  backgroundGradient.addColorStop(0, 'black')
-  backgroundGradient.addColorStop(1, 'gray')
+  backgroundGradient.addColorStop(0, 'darkgreen')
+  backgroundGradient.addColorStop(1, 'green')
   context.fillStyle = backgroundGradient
   context.fillRect(0, 0, canvas.width, canvas.height)
 }
@@ -80,6 +79,17 @@ function renderPlayer(me, player) {
     PLAYER_RADIUS * 2,
   )
   context.restore()
+
+
+
+
+  // Из за интерполяции в конец имени добовляется NaN, можно реализовать через одельный метод
+  // в обход интерпляции и чтобы методо сюда присылал имя, но это излишне и костыль снизу все
+  // испровляет player.username.length - 3
+  context.fillStyle = 'white'
+  context.textBaseline = "middle"
+  context.textAlign = 'center'
+  context.fillText(player.username.slice(0, player.username.length - 3), canvasX, canvasY - PLAYER_RADIUS - 12)
 
   // Draw health bar
   context.fillStyle = 'white'
@@ -116,16 +126,16 @@ function renderMainMenu() {
   renderBackground(x, y)
 }
 
-let renderInterval = setInterval(renderMainMenu, 1000 / 60)
+let renderInterval = setInterval(renderMainMenu, MAP_FPS)
 
 // Replaces main menu rendering with game rendering.
 export function startRendering() {
   clearInterval(renderInterval)
-  renderInterval = setInterval(render, 1000 / 60)
+  renderInterval = setInterval(render, MAP_FPS)
 }
 
 // Replaces game rendering with main menu rendering.
 export function stopRendering() {
   clearInterval(renderInterval)
-  renderInterval = setInterval(renderMainMenu, 1000 / 60)
+  renderInterval = setInterval(renderMainMenu, MAP_FPS)
 }

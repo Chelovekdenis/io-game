@@ -12,10 +12,13 @@ module.exports = Object.freeze({
   SCORE_PER_SECOND: 1,
 
   MAP_SIZE: 3000,
+  MAP_FPS: 1000/60,
   MSG_TYPES: {
     JOIN_GAME: 'join_game',
     GAME_UPDATE: 'update',
     INPUT: 'input',
     GAME_OVER: 'dead',
-  },
-});
+    MOVEMENT: "movement",
+    MOUSE_CLICK: "mouse_click"
+  }
+})

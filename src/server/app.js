@@ -1,11 +1,10 @@
 const express = require('express')
-const path = require('path')
 const socket = require('socket.io')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpack = require('webpack')
 
-const Constants = require('../shared/constants');
-const Game = require('./game');
+const Constants = require('../shared/constants')
+const Game = require('./game')
 const webpackConfig = require('../../webpack.dev.js')
 
 const app = express()
@@ -28,33 +27,32 @@ const io = socket(server)
 
 
 io.on('connection', socket => {
-    console.log('Player connected!', socket.id);
+    console.log('Player connected!', socket.id)
 
-    socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame);
-    socket.on(Constants.MSG_TYPES.INPUT, handleInput);
-    socket.on("movement", movement);
-    socket.on("mouse_click", mouseClick);
-    socket.on('disconnect', onDisconnect);
-});
+    socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame)
+    socket.on(Constants.MSG_TYPES.INPUT, handleInput)
+    socket.on(Constants.MSG_TYPES.MOVEMENT, movement)
+    socket.on(Constants.MSG_TYPES.MOUSE_CLICK, mouseClick)
+    socket.on('disconnect', onDisconnect)
+})
 
 // Setup the Game
-const game = new Game();
+const game = new Game()
 
 function joinGame(username) {
-    game.addPlayer(this, username);
+    game.addPlayer(this, username.slice(0,13))
 }
 
 function handleInput(dir) {
-    game.handleInput(this, dir);
+    game.handleInput(this, dir)
 }
 
 function onDisconnect() {
-    game.removePlayer(this);
+    game.removePlayer(this)
 }
 
 function movement(move) {
     game.ifMovement(this, move)
-    // console.log(move);
 }
 
 function mouseClick(click) {
