@@ -32,7 +32,7 @@ export const play = username => {
   socket.emit(Constants.MSG_TYPES.JOIN_GAME, username)
 }
 
-export const updateDirection = throttle(20, dir => {
+export const updateDirection = throttle(10, dir => {
   socket.emit(Constants.MSG_TYPES.INPUT, dir)
 })
 

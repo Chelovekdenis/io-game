@@ -98,7 +98,7 @@ class Game {
         const player = this.players[playerID]
         socket.emit(Constants.MSG_TYPES.GAME_UPDATE, this.createUpdate(player, leaderboard))
       })
-      this.shouldSendUpdate = false
+      this.shouldSendUpdate = true
     } else {
       this.shouldSendUpdate = true
     }

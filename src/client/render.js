@@ -55,10 +55,11 @@ function renderBackground(x, y) {
     backgroundY,
     MAP_SIZE / 2,
   )
-  backgroundGradient.addColorStop(0, 'darkgreen')
-  backgroundGradient.addColorStop(1, 'green')
+  backgroundGradient.addColorStop(0, 'black')
+  backgroundGradient.addColorStop(1, 'gray')
   context.fillStyle = backgroundGradient
   context.fillRect(0, 0, canvas.width, canvas.height)
+
 }
 
 // Renders a ship at the given coordinates
