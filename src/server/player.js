@@ -12,6 +12,7 @@ class Player extends ObjectClass {
     this.score = 0
     this.move = {}
     this.click = false
+    this.item = 1
   }
 
   // Returns a newly created bullet, or null.
@@ -38,11 +39,13 @@ class Player extends ObjectClass {
       this.x += leftRight
     }
 
-    if(this.click) {
+    if(this.click && this.item === 3) {
       this.fireCooldown -= dt
       if (this.fireCooldown <= 0) {
         this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN
-        return new Bullet(this.id, this.x, this.y, this.direction)
+        let sendX = this.x + dt * this.speed * Math.sin(this.direction) * 15
+        let sendY = this.y - dt * this.speed * Math.cos(this.direction) * 15
+        return new Bullet(this.id, sendX, sendY, this.direction)
       }
     }
 
@@ -60,15 +63,10 @@ class Player extends ObjectClass {
     this.click = click
   }
 
-  shoot(dt) {
-    if(this.click) {
-      this.fireCooldown -= dt
-      if (this.fireCooldown <= 0) {
-        this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN
-        return new Bullet(this.id, this.x, this.y, this.direction)
-      }
-    }
+  setItem(item) {
+    this.item = item
   }
+
 
   takeBulletDamage() {
     this.hp -= Constants.BULLET_DAMAGE
@@ -83,7 +81,8 @@ class Player extends ObjectClass {
       ...(super.serializeForUpdate()),
       direction: this.direction,
       hp: this.hp,
-      username: this.username
+      username: this.username,
+      item: this.item
     }
   }
 }

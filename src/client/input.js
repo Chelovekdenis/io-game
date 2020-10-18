@@ -1,4 +1,13 @@
-import { updateDirection, moveEmit, mouseClickEmit } from './networking'
+import { updateDirection, moveEmit, mouseClickEmit, quickBarItemEmit } from './networking'
+
+let movement = {
+  up: false,
+  down: false,
+  left: false,
+  right: false
+}
+
+let quickBarItem = 1
 
 function onMouseInput(e) {
   handleInput(e.clientX, e.clientY)
@@ -14,13 +23,6 @@ function handleInput(x, y) {
   updateDirection(dir)
 }
 
-let movement = {
-  up: false,
-  down: false,
-  left: false,
-  right: false
-}
-
 function handleInputKey() {
   moveEmit(movement)
 }
@@ -28,6 +30,7 @@ function handleInputKey() {
 function onMouseDown() {
   mouseClickEmit(true)
 }
+
 function onMouseUp() {
   mouseClickEmit(false)
 }
@@ -45,6 +48,18 @@ function onKeyDown(e) {
       break
     case 83: // S
       movement.down = true
+      break
+    case 49: // 1
+      quickBarItemEmit(1)
+      break
+    case 50: // 2
+      quickBarItemEmit(2)
+      break
+    case 51: // 3
+      quickBarItemEmit(3)
+      break
+    case 52: // 4
+      quickBarItemEmit(4)
       break
   }
   handleInputKey()

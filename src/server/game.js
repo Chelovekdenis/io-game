@@ -46,6 +46,12 @@ class Game {
     }
   }
 
+  ifQuickBar(socket, item) {
+    if (this.players[socket.id]) {
+      this.players[socket.id].setItem(item)
+    }
+  }
+
   update() {
     // Calculate time elapsed
     const now = Date.now()

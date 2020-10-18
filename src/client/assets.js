@@ -1,6 +1,15 @@
 const ASSET_NAMES = [
   'ship.svg',
   'bullet.svg',
+  'background.png',
+  'background2.png',
+  'player1.svg',
+  'player2.svg',
+  'player3.svg',
+  'player4.svg',
+  'axe.png',
+  'gun.png',
+  'hand.png',
 ]
 
 const assets = {}

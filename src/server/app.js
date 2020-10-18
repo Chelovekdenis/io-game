@@ -33,6 +33,7 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.INPUT, handleInput)
     socket.on(Constants.MSG_TYPES.MOVEMENT, movement)
     socket.on(Constants.MSG_TYPES.MOUSE_CLICK, mouseClick)
+    socket.on("quick_bar_item", quickBarItem)
     socket.on('disconnect', onDisconnect)
 })
 
@@ -57,4 +58,8 @@ function movement(move) {
 
 function mouseClick(click) {
     game.ifMouseClick(this, click)
+}
+
+function quickBarItem(item) {
+    game.ifQuickBar(this, item)
 }

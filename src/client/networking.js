@@ -32,7 +32,7 @@ export const play = username => {
   socket.emit(Constants.MSG_TYPES.JOIN_GAME, username)
 }
 
-export const updateDirection = throttle(10, dir => {
+export const updateDirection = throttle(5, dir => {
   socket.emit(Constants.MSG_TYPES.INPUT, dir)
 })
 
@@ -42,6 +42,10 @@ export const moveEmit = movement => {
 
 export const mouseClickEmit = click => {
   socket.emit(Constants.MSG_TYPES.MOUSE_CLICK, click)
+}
+
+export const quickBarItemEmit = item => {
+    socket.emit("quick_bar_item", item)
 }
 
 
