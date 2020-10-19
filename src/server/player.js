@@ -39,6 +39,9 @@ class Player extends ObjectClass {
       this.x += leftRight
     }
 
+    this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x))
+    this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y))
+
     if(this.click && this.item === 3) {
       this.fireCooldown -= dt
       if (this.fireCooldown <= 0) {
@@ -48,10 +51,6 @@ class Player extends ObjectClass {
         return new Bullet(this.id, sendX, sendY, this.direction)
       }
     }
-
-    this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x))
-    this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y))
-
     return null
   }
 

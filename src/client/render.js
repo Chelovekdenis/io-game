@@ -1,6 +1,7 @@
 import {debounce} from 'throttle-debounce'
 import {getAsset} from './assets'
 import {getCurrentState} from './state'
+import {myDir} from './input'
 
 const Constants = require('../shared/constants')
 
@@ -36,6 +37,8 @@ function render() {
   context.strokeRect(canvas.width / 2 - me.x, canvas.height / 2 - me.y, MAP_SIZE, MAP_SIZE)
   // Draw all bullets
   bullets.forEach(renderBullet.bind(null, me))
+  let me2 = me
+  me2.direction = myDir()
   // Draw all players
   renderPlayer(me, me)
   others.forEach(renderPlayer.bind(null, me))

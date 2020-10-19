@@ -18,9 +18,13 @@ function onTouchInput(e) {
   handleInput(touch.clientX, touch.clientY)
 }
 
+let dir = 0
 function handleInput(x, y) {
-  const dir = Math.atan2(x - window.innerWidth / 2, window.innerHeight / 2 - y)
+  dir = Math.atan2(x - window.innerWidth / 2, window.innerHeight / 2 - y)
   updateDirection(dir)
+}
+export function myDir() {
+  return dir
 }
 
 function handleInputKey() {
