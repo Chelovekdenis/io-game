@@ -40,7 +40,7 @@ function render() {
   let me2 = me
   me2.direction = myDir()
   // Draw all players
-  renderPlayer(me, me)
+  renderPlayer(me2, me)
   others.forEach(renderPlayer.bind(null, me))
   // Draw HUD
   renderHUD(me, leaderboard)
