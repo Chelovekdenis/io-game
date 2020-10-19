@@ -11,6 +11,10 @@ const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE, MAP_FPS } = Const
 const canvas = document.getElementById('game-canvas')
 const context = canvas.getContext('2d')
 setCanvasDimensions()
+const initialCanvasWidth = canvas.width
+const initialCanvasHeight = canvas.height
+let currentWScale = 1
+let currentHScale = 1
 
 
 function setCanvasDimensions() {
@@ -29,6 +33,17 @@ function render() {
   if (!me) {
     return
   }
+
+  // let wScale = canvas.width / initialCanvasWidth
+  // let hScale = canvas.height / initialCanvasHeight
+  //
+  // if (wScale !== currentWScale || hScale !== currentHScale) {
+  //   currentWScale = canvas.width / initialCanvasWidth
+  //   currentHScale = canvas.height / initialCanvasHeight
+  //   console.log(currentWScale, currentHScale)
+  //   context.scale(currentWScale, currentHScale)
+  // }
+
   // Draw background
   renderBackground(me.x, me.y)
   // Draw boundaries
@@ -40,8 +55,8 @@ function render() {
   let me2 = me
   me2.direction = myDir()
   // Draw all players
-  renderPlayer(me2, me)
   others.forEach(renderPlayer.bind(null, me))
+  renderPlayer(me2, me)
   // Draw HUD
   renderHUD(me, leaderboard)
 }
@@ -98,20 +113,17 @@ function renderPlayer(me, player) {
   context.rotate(direction)
   context.drawImage(
     getAsset(`player${Math.round(item)}.svg`),
-    -PLAYER_RADIUS * 4,
-    -PLAYER_RADIUS * 4,
-    PLAYER_RADIUS * 8,
-    PLAYER_RADIUS * 8,
+    -PLAYER_RADIUS * 3.5,
+    -PLAYER_RADIUS * 3.5,
+    PLAYER_RADIUS * 7,
+    PLAYER_RADIUS * 7,
   )
   context.restore()
   // Draw name
-  // Из за интерполяции в конец имени добовляется NaN, можно реализовать через одельный метод
-  // в обход интерпляции и чтобы методо сюда присылал имя, но это излишне и костыль снизу все
-  // испровляет player.username.length - 3
   context.fillStyle = 'white'
   context.textBaseline = "middle"
   context.textAlign = 'center'
-  context.fillText(player.username.slice(0, player.username.length - 3), canvasX, canvasY - PLAYER_RADIUS - 12)
+  context.fillText(player.username, canvasX, canvasY - PLAYER_RADIUS - 12)
   // Draw health bar
   context.fillStyle = 'white'
   context.fillRect(

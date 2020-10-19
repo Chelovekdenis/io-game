@@ -71,7 +71,39 @@ class Game {
     // Update each player
     Object.keys(this.sockets).forEach(playerID => {
       const player = this.players[playerID]
+      const earlyX = player.x
+      const earlyY = player.y
       const newBullet = player.update(dt)
+      // console.log(this.players)
+      let players = Object.values(this.players)
+      // let players = [1, 2, 3, 4, 5]
+      for(let i = 0; i < players.length; i++) {
+        for(let j = i+1; j < players.length; j++) {
+          // console.log(players)
+          if (
+              players[i].distanceTo(players[j]) <= Constants.PLAYER_RADIUS * 2
+          ) {
+            player.x = earlyX
+            player.y = earlyY
+          }
+        }
+      }
+      // Object.keys(this.players).forEach(key => {
+        // console.log(this.players[key].distanceTo({x:100,y:100}))
+        // let i = 0
+        // for ()
+        // if(this.players[key] ===)
+      // })
+      // for (let j = 0; j < players.length; j++) {
+      //   if (
+      //       bullet.parentID !== player.id &&
+      //       player.distanceTo(bullet) <= Constants.PLAYER_RADIUS + Constants.BULLET_RADIUS
+      //   ) {
+      //     destroyedBullets.push(bullet)
+      //     player.takeBulletDamage()
+      //     break
+      //   }
+      // }
       if (newBullet) {
         this.bullets.push(newBullet)
       }
