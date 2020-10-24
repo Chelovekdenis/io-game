@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
 import { throttle } from 'throttle-debounce'
-import { processGameUpdate } from './state'
+import { processGameUpdate, setNewSkillPoint } from './state'
 
 const Constants = require('../shared/constants')
 
@@ -18,6 +18,7 @@ export const connect = onGameOver => (
     // Register callbacks
     socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate)
     socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver)
+    socket.on(Constants.MSG_TYPES.SKILL_POINTS, (data) => setNewSkillPoint(data))
     socket.on('disconnect', () => {
       console.log('Disconnected from server.')
       document.getElementById('disconnect-modal').classList.remove('hidden')
@@ -46,6 +47,10 @@ export const mouseClickEmit = click => {
 
 export const quickBarItemEmit = item => {
     socket.emit("quick_bar_item", item)
+}
+
+export const chosenSkill = skill => {
+    socket.emit("chosen_skill", skill)
 }
 
 

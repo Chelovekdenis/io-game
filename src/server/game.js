@@ -1,22 +1,22 @@
 const Constants = require('../shared/constants')
 const Player = require('./player')
+const Tree = require('./tree')
 const applyCollisions = require('./collisions')
+const shortid = require('shortid')
 
 class Game {
   constructor() {
     this.sockets = {}
     this.players = {}
+    this.trees = {}
     this.bullets = []
     this.lastUpdateTime = Date.now()
     this.shouldSendUpdate = false
     setInterval(this.update.bind(this), Constants.MAP_FPS)
-
-    this.move = {}
   }
 
   addPlayer(socket, username) {
     this.sockets[socket.id] = socket
-
     // Generate a position to start this player at.
     const x = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5)
     const y = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5)
@@ -52,6 +52,25 @@ class Game {
     }
   }
 
+  ifChosenSkill(socket, item) {
+    if (this.players[socket.id]) {
+      if (this.players[socket.id].skillPoints > 0) {
+        this.players[socket.id].skills[item]++
+        this.players[socket.id].skillPoints--
+        this.players[socket.id].sendMsgSP = true
+      }
+    }
+  }
+
+  initGame() {
+    for(let i = 0; i < 5; i++) {
+      const x = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5)
+      const y = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5)
+      const id = shortid()
+      this.trees[id] = new Tree(id, x, y)
+    }
+  }
+
   update() {
     // Calculate time elapsed
     const now = Date.now()
@@ -74,12 +93,11 @@ class Game {
       const earlyX = player.x
       const earlyY = player.y
       const newBullet = player.update(dt)
-      // console.log(this.players)
+      // Player to Player collision
       let players = Object.values(this.players)
-      // let players = [1, 2, 3, 4, 5]
+      let trees = Object.values(this.trees)
       for(let i = 0; i < players.length; i++) {
         for(let j = i+1; j < players.length; j++) {
-          // console.log(players)
           if (
               players[i].distanceTo(players[j]) <= Constants.PLAYER_RADIUS * 2
           ) {
@@ -87,23 +105,41 @@ class Game {
             player.y = earlyY
           }
         }
+        for(let j = 0; j < players.length; j++) {
+          if (
+              players[i].item === 2 &&
+              players[i].giveDamage === true &&
+              players[i].weaponsHit(players[j]) <= Constants.PLAYER_RADIUS
+          ) {
+            // TODO надо сделать чтобы один персонаж получал лишь урон лишь один раз за удар
+            // console.log(`${players[i].username} HIT ${players[j].username}`)
+            players[j].takeBulletDamage(players[i].skills.attack)
+            players[i].onDealtDamage(1)
+          }
+        }
+        for(let j = 0; j < trees.length; j++) {
+          if (
+              players[i].distanceTo(trees[j]) <= Constants.PLAYER_RADIUS * 3
+          ) {
+            player.x = earlyX
+            player.y = earlyY
+            // console.log(player.x, player.y)
+            // const dx = player.x - trees[j].x
+            // const dy = player.y - trees[j].y
+            // const a = Math.sqrt(dx * dx + dy * dy)
+
+            // let dir = Math.atan2(player.x - trees[j].x, trees[j].y - player.y)
+            // console.log((Constants.PLAYER_RADIUS * 3 * Math.cos(dir))/1000,
+            //     (Constants.PLAYER_RADIUS * 3 * Math.sin(dir))/1000)
+            // player.x += (trees[j].x + Constants.PLAYER_RADIUS * 3 * Math.cos(dir))/1000
+            // player.y += (trees[j].y + Constants.PLAYER_RADIUS * 3 * Math.sin(dir))/1000
+
+            // console.log(trees[j].x + Constants.PLAYER_RADIUS * 3 * Math.cos(dir),
+            //     trees[j].y + Constants.PLAYER_RADIUS * 3 * Math.sin(dir))
+            // console.log(player.x, player.y)
+          }
+        }
       }
-      // Object.keys(this.players).forEach(key => {
-        // console.log(this.players[key].distanceTo({x:100,y:100}))
-        // let i = 0
-        // for ()
-        // if(this.players[key] ===)
-      // })
-      // for (let j = 0; j < players.length; j++) {
-      //   if (
-      //       bullet.parentID !== player.id &&
-      //       player.distanceTo(bullet) <= Constants.PLAYER_RADIUS + Constants.BULLET_RADIUS
-      //   ) {
-      //     destroyedBullets.push(bullet)
-      //     player.takeBulletDamage()
-      //     break
-      //   }
-      // }
       if (newBullet) {
         this.bullets.push(newBullet)
       }
@@ -113,20 +149,25 @@ class Game {
     const destroyedBullets = applyCollisions(Object.values(this.players), this.bullets)
     destroyedBullets.forEach(b => {
       if (this.players[b.parentID]) {
-        this.players[b.parentID].onDealtDamage()
+        this.players[b.parentID].onDealtDamage(Constants.SCORE_BULLET_HIT)
       }
     })
     this.bullets = this.bullets.filter(bullet => !destroyedBullets.includes(bullet))
 
-    // Check if any players are dead
+    // Check if any players are dead and if any players have skillPoints
     Object.keys(this.sockets).forEach(playerID => {
       const socket = this.sockets[playerID]
       const player = this.players[playerID]
-      if (player.hp <= 0) {
+      if (player.skills.hp <= 0) {
         socket.emit(Constants.MSG_TYPES.GAME_OVER)
         this.removePlayer(socket)
       }
+      if (player.sendMsgSP) {
+        socket.emit(Constants.MSG_TYPES.SKILL_POINTS, player.skillPoints)
+        player.sendMsgSP = false
+      }
     })
+
 
     // Send a game update to each player every other time
     if (this.shouldSendUpdate) {
@@ -161,6 +202,7 @@ class Game {
       me: player.serializeForUpdate(),
       others: nearbyPlayers.map(p => p.serializeForUpdate()),
       bullets: nearbyBullets.map(b => b.serializeForUpdate()),
+      trees: this.trees,
       leaderboard,
     }
   }

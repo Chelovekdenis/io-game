@@ -33,15 +33,17 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.INPUT, handleInput)
     socket.on(Constants.MSG_TYPES.MOVEMENT, movement)
     socket.on(Constants.MSG_TYPES.MOUSE_CLICK, mouseClick)
+    socket.on("chosen_skill", chosenSkill)
     socket.on("quick_bar_item", quickBarItem)
     socket.on('disconnect', onDisconnect)
 })
 
 // Setup the Game
 const game = new Game()
+game.initGame()
 
 function joinGame(username) {
-    game.addPlayer(this, username.slice(0,13))
+    game.addPlayer(this, username.slice(0,13) || "user123")
 }
 
 function handleInput(dir) {
@@ -62,4 +64,8 @@ function mouseClick(click) {
 
 function quickBarItem(item) {
     game.ifQuickBar(this, item)
+}
+
+function chosenSkill(skill) {
+    game.ifChosenSkill(this, skill)
 }

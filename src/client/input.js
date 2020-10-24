@@ -1,4 +1,4 @@
-import { updateDirection, moveEmit, mouseClickEmit, quickBarItemEmit } from './networking'
+import { updateDirection, moveEmit, mouseClickEmit, quickBarItemEmit, chosenSkill } from './networking'
 
 let movement = {
   up: false,
@@ -11,6 +11,24 @@ let quickBarItem = 1
 
 function onMouseInput(e) {
   handleInput(e.clientX, e.clientY)
+}
+
+let page = {
+  x: 0,
+  y: 0
+}
+function onMouseClick(e) {
+  page.x = e.pageX
+  page.y = e.pageY
+}
+export function onChooseSkill(sc) {
+  for (let i = 0; i < sc.length; i++) {
+    if (page.x >= sc[i].x && page.x <= sc[i].x + sc[i].w && page.y >= sc[i].y && page.y <= sc[i].y + sc[i].h) {
+    chosenSkill(sc[i].skill)
+      page.x = 0
+      page.y = 0
+    }
+  }
 }
 
 function onTouchInput(e) {
@@ -89,7 +107,7 @@ function onKeyUp(e) {
 
 export function startCapturingInput() {
   window.addEventListener('mousemove', onMouseInput)
-  // window.addEventListener('click', onMouseClick)
+  window.addEventListener('click', onMouseClick)
   window.addEventListener('mousedown', onMouseDown)
   window.addEventListener('mouseup', onMouseUp)
   window.addEventListener('touchstart', onTouchInput)
@@ -100,7 +118,7 @@ export function startCapturingInput() {
 
 export function stopCapturingInput() {
   window.removeEventListener('mousemove', onMouseInput)
-  // window.removeEventListener('click', onMouseClick)
+  window.removeEventListener('click', onMouseClick)
   window.addEventListener('mousedown', onMouseDown)
   window.addEventListener('mouseup', onMouseUp)
   window.removeEventListener('touchstart', onTouchInput)

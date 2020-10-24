@@ -5,6 +5,7 @@ const RENDER_DELAY = 100
 const gameUpdates = []
 let gameStart = 0
 let firstServerTimestamp = 0
+let newSkillPoint = 0
 
 
 export function initState() {
@@ -12,24 +13,33 @@ export function initState() {
   firstServerTimestamp = 0
 }
 
+
+export function setNewSkillPoint(data) {
+  newSkillPoint = data
+}
+export function getNewSkillPoint() {
+  return newSkillPoint
+}
+
+
 export function processGameUpdate(update) {
   if (!firstServerTimestamp) {
     firstServerTimestamp = update.t
     gameStart = Date.now()
   }
   gameUpdates.push(update)
-
   // Keep only one game update before the current server time
   const base = getBaseUpdate()
   if (base > 0) {
     gameUpdates.splice(0, base)
   }
-
 }
+
 
 function currentServerTime() {
   return firstServerTimestamp + (Date.now() - gameStart) - RENDER_DELAY
 }
+
 
 // Returns the index of the base update, the first game update before
 // current server time, or -1 if N/A.
@@ -42,6 +52,7 @@ function getBaseUpdate() {
   }
   return -1
 }
+
 
 // Returns { me, others, bullets }
 export function getCurrentState() {
@@ -62,10 +73,12 @@ export function getCurrentState() {
       me: interpolateObject(baseUpdate.me, next.me, ratio),
       others: interpolateObjectArray(baseUpdate.others, next.others, ratio),
       bullets: interpolateObjectArray(baseUpdate.bullets, next.bullets, ratio),
-      leaderboard: baseUpdate.leaderboard
+      leaderboard: baseUpdate.leaderboard,
+      trees: baseUpdate.trees
     }
   }
 }
+
 
 function interpolateObject(object1, object2, ratio) {
   if (!object2) {
@@ -75,7 +88,8 @@ function interpolateObject(object1, object2, ratio) {
   Object.keys(object1).forEach(key => {
     if (key === 'direction') {
       interpolated[key] = interpolateDirection(object1[key], object2[key], ratio)
-    } else if  (key === 'username' || key ===  "item" || key ===  "id") {
+    } else if  (key === 'username' || key ===  "item" || key ===  "id" || key ===  "click"
+        || key ===  "level" || key ===  "score" || key ===  "skills" || key ===  "skillPoints") {
       interpolated[key] = object2[key]
     } else {
       interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio
@@ -84,9 +98,11 @@ function interpolateObject(object1, object2, ratio) {
   return interpolated
 }
 
+
 function interpolateObjectArray(objects1, objects2, ratio) {
   return objects1.map(o => interpolateObject(o, objects2.find(o2 => o.id === o2.id), ratio))
 }
+
 
 // Determines the best way to rotate (cw or ccw) when interpolating a direction.
 // For example, when rotating from -3 radians to +3 radians, we should really rotate from
