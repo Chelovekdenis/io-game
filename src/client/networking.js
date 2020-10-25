@@ -19,6 +19,13 @@ export const connect = onGameOver => (
     socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate)
     socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver)
     socket.on(Constants.MSG_TYPES.SKILL_POINTS, (data) => setNewSkillPoint(data))
+    socket.on("number_of_players", serversInfo => {
+        const serverList = document.getElementById('server_list')
+        for (let i = 0; i < serversInfo.length; i++) {
+            let newOption = new Option(`Server ${i+1} - ${serversInfo[i]}/${Constants.GAME_MAX_PLAYER}`, `${i}`)
+            serverList.append(newOption)
+        }
+    })
     socket.on('disconnect', () => {
       console.log('Disconnected from server.')
       document.getElementById('disconnect-modal').classList.remove('hidden')
@@ -53,6 +60,13 @@ export const chosenSkill = skill => {
     socket.emit("chosen_skill", skill)
 }
 
+export const chosenServer = num => {
+    socket.emit("server", num)
+}
+
+export const informationAboutServers = () => {
+    socket.emit("servers_info")
+}
 
 
 

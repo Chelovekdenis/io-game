@@ -18,7 +18,6 @@ if (process.env.NODE_ENV === 'development') {
     app.use(express.static('dist'))
 }
 
-
 const port = process.env.PORT || 3000
 const server = app.listen(port)
 console.log(`Server listening on port ${port}`)
@@ -28,6 +27,25 @@ const io = socket(server)
 
 io.on('connection', socket => {
     console.log('Player connected!', socket.id)
+
+    socket.on("server", num => {
+        socket.gameNum = num
+    })
+
+    socket.on("servers_info", () => {
+        let information = []
+        games.forEach(game => {
+            information.push(game.gameInfo())
+        })
+        const reducer = (accumulator, currentValue) => accumulator + currentValue
+        // Добовление сервера если игроков на всех сервера максимум игроков
+        if(information.reduce(reducer) >= games.length * Constants.GAME_MAX_PLAYER - 1) {
+            games.push(new Game())
+            games[games.length-1].initGame()
+        }
+
+        socket.emit("number_of_players", information)
+    })
 
     socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame)
     socket.on(Constants.MSG_TYPES.INPUT, handleInput)
@@ -39,33 +57,37 @@ io.on('connection', socket => {
 })
 
 // Setup the Game
-const game = new Game()
-game.initGame()
+let games = []
+for(let i = 0; i < 3; i++) {
+    games.push(new Game())
+    games[i].initGame()
+}
+
 
 function joinGame(username) {
-    game.addPlayer(this, username.slice(0,13) || "user123")
+    games[this.gameNum].addPlayer(this, username.slice(0,13) || "user123")
 }
 
 function handleInput(dir) {
-    game.handleInput(this, dir)
+    games[this.gameNum].handleInput(this, dir)
 }
 
 function onDisconnect() {
-    game.removePlayer(this)
+    if (this.gameNum) games[this.gameNum].removePlayer(this)
 }
 
 function movement(move) {
-    game.ifMovement(this, move)
+    games[this.gameNum].ifMovement(this, move)
 }
 
 function mouseClick(click) {
-    game.ifMouseClick(this, click)
+    games[this.gameNum].ifMouseClick(this, click)
 }
 
 function quickBarItem(item) {
-    game.ifQuickBar(this, item)
+    games[this.gameNum].ifQuickBar(this, item)
 }
 
 function chosenSkill(skill) {
-    game.ifChosenSkill(this, skill)
+    games[this.gameNum].ifChosenSkill(this, skill)
 }

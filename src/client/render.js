@@ -173,14 +173,14 @@ function renderObjects(me, trees) {
   const backgroundY =  canvas.height / 2 - me.y
   Object.keys(trees).forEach(treeId => {
     const tree = trees[treeId]
-    context.beginPath()
-    context.arc(backgroundX + tree.x, backgroundY + tree.y, 50, 0, 2*Math.PI, false)
-    context.closePath()
-    context.stroke()
-    // context.drawImage(
-    //     getAsset('tree.svg'),
-    //     backgroundX + tree.x - 300, backgroundY + tree.y - 300, 600, 600
-    // )
+    // context.beginPath()
+    // context.arc(backgroundX + tree.x, backgroundY + tree.y, 50, 0, 2*Math.PI, false)
+    // context.closePath()
+    // context.stroke()
+    context.drawImage(
+        getAsset('tree.svg'),
+        backgroundX + tree.x - 300, backgroundY + tree.y - 300, 600, 600
+    )
   })
 }
 
@@ -253,32 +253,50 @@ function renderHUD(me, leaderboard, currentWScale, currentHScale, newSkillPoint)
 
   // Distribution of skill points
   if (newSkillPoint > 0) {
+    let thisHeight = canvas.height/2 * currentHScale - 100
+
     context.fillStyle = "rgba(132,132,132,0.7)"
-    context.fillRect( 10, canvas.height/2 * currentHScale, 200 , 200)
+    context.fillRect( 20, thisHeight, 200 , 200)
+
     context.fillStyle = 'black'
-    context.textBaseline = "middle"
+    context.textBaseline = "bottom"
     context.textAlign = 'center'
     context.font = "16px Verdana"
-    let skillCoordinates = [{skill: 'attack', x: 40, y: canvas.height/2 * currentHScale + 40, w: 30, h: 20},
-      {skill: 'defense',x: 40, y: canvas.height/2 * currentHScale + 80, w: 30, h: 20},
-      {skill: 'regeneration',x: 40, y: canvas.height/2 * currentHScale + 120, w: 30, h: 20},
-      {skill: 'maxHp',x: 40, y: canvas.height/2 * currentHScale + 160, w: 30, h: 20}]
-    context.fillText(`Attack`, skillCoordinates[0].x, skillCoordinates[0].y)
-    context.fillText(`Defense`, skillCoordinates[1].x, skillCoordinates[1].y)
-    context.fillText(`Regeneration`, skillCoordinates[2].x, skillCoordinates[2].y)
-    context.fillText(`Max HP`, skillCoordinates[3].x, skillCoordinates[3].y)
+    context.fillText(`Choose skill`, 120, thisHeight + 24)
+
+    context.textAlign = 'start'
+
+    let skillCoordinates = []
+    let attributes = ['attack', 'defense', 'regeneration', 'maxHp']
+    for (let i = 0; i < 4; i++) {
+      skillCoordinates.push({skill: attributes[i], x: 160, y: thisHeight + 40 * (i+1), w: 20, h: 20})
+      context.fillStyle = "rgba(235,235,235,0.7)"
+      context.fillRect( 160, thisHeight + 40 * (i+1), 20 , 20)
+      context.fillStyle = 'black'
+      context.fillText(`+`, 160 + 4, thisHeight + 40 * (i+1) + 18)
+    }
+
+    context.fillText(`Attack`, skillCoordinates[0].x - 120, skillCoordinates[0].y + skillCoordinates[0].h)
+    context.fillText(`Defense`, skillCoordinates[1].x - 120, skillCoordinates[1].y + skillCoordinates[1].h)
+    context.fillText(`Regeneration`, skillCoordinates[2].x - 120, skillCoordinates[2].y + skillCoordinates[2].h)
+    context.fillText(`Max HP`, skillCoordinates[3].x - 120, skillCoordinates[3].y + skillCoordinates[3].h)
     onChooseSkill(skillCoordinates)
   }
 }
 
 
+// TODO убрать костыль
+let bb = 0
 function renderMainMenu() {
   // из-за того что renderBackground(x, y) начинает
   // рендерить до загрузки картинок, получается ошибка
-  const t = Date.now() / 7500
-  const x = MAP_SIZE / 2 + 800 * Math.cos(t)
-  const y = MAP_SIZE / 2 + 800 * Math.sin(t)
-  renderBackground(x, y)
+  bb++
+  if (bb > 45) {
+    const t = Date.now() / 7500
+    const x = MAP_SIZE / 2 + 800 * Math.cos(t)
+    const y = MAP_SIZE / 2 + 800 * Math.sin(t)
+    renderBackground(x, y)
+  }
 }
 
 
@@ -294,6 +312,7 @@ export function startRendering() {
 
 // Replaces game rendering with main menu rendering.
 export function stopRendering() {
+  setNewSkillPoint(0)
   clearInterval(renderInterval)
   renderInterval = setInterval(renderMainMenu, MAP_FPS)
 }

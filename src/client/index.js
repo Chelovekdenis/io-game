@@ -1,4 +1,4 @@
-import { connect, play } from './networking'
+import { connect, play, chosenServer, informationAboutServers } from './networking'
 import { startRendering, stopRendering } from './render'
 import { startCapturingInput, stopCapturingInput } from './input'
 import { downloadAssets } from './assets'
@@ -13,15 +13,19 @@ import './css/main.css'
 const playMenu = document.getElementById('play-menu')
 const playButton = document.getElementById('play-button')
 const usernameInput = document.getElementById('username-input')
+const serverList = document.getElementById('server_list')
 
 
 Promise.all([
   downloadAssets(),
   connect(onGameOver),
 ]).then(() => {
+  informationAboutServers()
   playMenu.classList.remove('hidden')
   usernameInput.focus()
   playButton.onclick = () => {
+    let value = serverList.options[serverList.selectedIndex].value // Значение value для выбранного option
+    chosenServer(value)
     // Play!
     play(usernameInput.value)
     playMenu.classList.add('hidden')
@@ -32,6 +36,8 @@ Promise.all([
 }).catch(console.error)
 
 function onGameOver() {
+  $('#server_list').find('option').remove(); //удаление старых данных
+  informationAboutServers()
   stopCapturingInput()
   stopRendering()
   playMenu.classList.remove('hidden')

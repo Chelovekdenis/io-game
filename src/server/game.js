@@ -21,6 +21,12 @@ class Game {
     const x = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5)
     const y = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5)
     this.players[socket.id] = new Player(socket.id, username, x, y)
+
+
+    if (Object.keys(this.players).length > Constants.GAME_MAX_PLAYER) {
+      socket.emit(Constants.MSG_TYPES.GAME_OVER)
+      this.removePlayer(socket)
+    }
   }
 
   removePlayer(socket) {
@@ -58,6 +64,7 @@ class Game {
         this.players[socket.id].skills[item]++
         this.players[socket.id].skillPoints--
         this.players[socket.id].sendMsgSP = true
+        console.log(this.players[socket.id].skills)
       }
     }
   }
@@ -69,6 +76,10 @@ class Game {
       const id = shortid()
       this.trees[id] = new Tree(id, x, y)
     }
+  }
+
+  gameInfo() {
+    return Object.keys(this.players).length
   }
 
   update() {
@@ -119,7 +130,7 @@ class Game {
         }
         for(let j = 0; j < trees.length; j++) {
           if (
-              players[i].distanceTo(trees[j]) <= Constants.PLAYER_RADIUS * 3
+              players[i].distanceTo(trees[j]) <= Constants.TREE_RADIUS + Constants.PLAYER_RADIUS
           ) {
             player.x = earlyX
             player.y = earlyY
@@ -152,6 +163,8 @@ class Game {
         this.players[b.parentID].onDealtDamage(Constants.SCORE_BULLET_HIT)
       }
     })
+    // destroyedBullets.push(applyCollisions.acgo(this.trees, this.bullets))
+    // console.log(destroyedBullets)
     this.bullets = this.bullets.filter(bullet => !destroyedBullets.includes(bullet))
 
     // Check if any players are dead and if any players have skillPoints
@@ -164,6 +177,7 @@ class Game {
       }
       if (player.sendMsgSP) {
         socket.emit(Constants.MSG_TYPES.SKILL_POINTS, player.skillPoints)
+        console.log("Emit new level ", player.username, "skill points: " + player.skillPoints)
         player.sendMsgSP = false
       }
     })

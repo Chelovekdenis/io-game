@@ -22,4 +22,22 @@ function applyCollisions(players, bullets) {
   return destroyedBullets
 }
 
+function applyCollisionsGameObjects(objects, bullets) {
+  const destroyedBullets = []
+  for (let i = 0; i < bullets.length; i++) {
+    for (let j = 0; j < objects.length; j++) {
+      const bullet = bullets[i]
+      const object = objects[j]
+      if (
+          object.distanceTo(bullet) <= Constants.TREE_RADIUS + Constants.BULLET_RADIUS
+      ) {
+        destroyedBullets.push(bullet)
+        break
+      }
+    }
+  }
+  return destroyedBullets
+}
+
 module.exports = applyCollisions
+// module.exports.ad = applyCollisionsGameObjects

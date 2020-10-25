@@ -1,38 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>War .io game</title>
+    <title>Our War .io game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="/assets/icon64.png">
-    <meta property="description" content="A complete example multiplayer .io web game implemented from scratch. Built with Javascript and Node.js. Open source on Github.">
-    <meta property="og:title" content="An example .io game">
-    <meta property="og:description" content="A complete example multiplayer .io web game implemented from scratch. Built with Javascript and Node.js. Open source on Github.">
-    <meta property="og:image" content="/assets/icon1200.png">
+    <link rel="shortcut icon" href="/assets/favicon.ico">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.js" integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
 </head>
+<body>
 <canvas id="game-canvas"></canvas>
 <div id="play-menu" class="hidden">
-    <h1>War .io game</h1>
+    <h1>Our War .io game</h1>
     <p>
         Stay alive and shoot other players.
         <br />
         Use your mouse to rotating and shooting.
     </p>
     <hr />
+    <p>
+        Select server
+        <br />
+    </p>
+    <label>
+        <select id="server_list">
+<!--            <option value = "0">Server 1</option>-->
+<!--            <option value = "1">Server 2</option>-->
+<!--            <option value = "2">Server 3</option>-->
+        </select>
+    </label>
+    <hr />
     <input type="text" id="username-input" placeholder="Username" />
     <button id="play-button">PLAY</button>
-</div>
-<div id="leaderboard" class="hidden">
-    <table>
-        <tr>
-            <th>Username</th>
-            <th>Score</th>
-        </tr>
-        <tr><td></td><td></td></tr>
-        <tr><td></td><td></td></tr>
-        <tr><td></td><td></td></tr>
-        <tr><td></td><td></td></tr>
-        <tr><td></td><td></td></tr>
-    </table>
 </div>
 <div id="disconnect-modal" class="hidden">
     <div>
