@@ -22,8 +22,8 @@
   <line transform="rotate(6 422.3545837402344,408.0784301757817) " stroke="#7c542e" stroke-linecap="null" stroke-linejoin="null" id="svg_11" y2="405.046366" x2="445.014822" y1="411.11052" x1="399.694325" stroke-width="8" fill="#d19155"/>
   <line transform="rotate(-9 422.10345458984386,388.64813232421864) " stroke-linecap="null" stroke-linejoin="null" id="svg_10" y2="396.148144" x2="442.103461" y1="381.148144" x1="402.103461" stroke-width="8" stroke="#7c542e" fill="#d19155"/>
   <ellipse stroke="#7c542e" ry="14" rx="14" id="svg_4" cy="396.251283" cx="395.294029" stroke-width="8" fill="#d19155"/>
-  <ellipse ry="35" rx="35" id="svg_7" cy="415" cx="435" stroke-width="14" stroke="#a5874a" fill="#ffd36d"/>
-  <ellipse ry="35" rx="35" id="svg_6" cy="415" cx="565" stroke-width="14" stroke="#a5874a" fill="#ffd36d"/>
-  <ellipse ry="100" rx="100" id="svg_1" cy="500" cx="500" stroke-width="14" stroke="#a5874a" fill="#ffd36d"/>
+  <ellipse ry="35" rx="35" id="svg_7" cy="415" cx="435" stroke-width="14" stroke="#187018" fill="#00bf00"/>
+  <ellipse ry="35" rx="35" id="svg_6" cy="415" cx="565" stroke-width="14" stroke="#187018" fill="#00bf00"/>
+  <ellipse ry="100" rx="100" id="svg_1" cy="500" cx="500" stroke-width="14" stroke="#187018" fill="#00bf00"/>
  </g>
 </svg>

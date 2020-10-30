@@ -343,28 +343,37 @@ function renderHUD(me, leaderboard, currentWScale, currentHScale, newSkillPoint,
     let thisHeight = canvas.height/4 * currentHScale - 100
 
     context.fillStyle = "rgba(132,132,132,0.7)"
-    context.fillRect( 20, thisHeight, 200 , 200)
+    context.fillRect( 20, thisHeight, 270 , 200)
 
     context.fillStyle = 'black'
     context.textBaseline = "bottom"
     context.textAlign = 'center'
     context.font = "16px Verdana"
-    context.fillText(`Choose class`, 120, thisHeight + 24)
+    context.fillText(`Choose class`, 155, thisHeight + 24)
 
     context.textAlign = 'start'
 
     let skillCoordinates = []
     let attributes = ['warrior', 'archer']
     for (let i = 0; i < 2; i++) {
-      skillCoordinates.push({c: attributes[i], x: 160, y: thisHeight + 40 * (i+1), w: 20, h: 20})
+      skillCoordinates.push({c: attributes[i], x: 240, y: thisHeight + 70 * (i+1), w: 20, h: 20})
+      context.save()
+      context.drawImage(
+          getAsset(`${attributes[i]}.svg`),
+          -PLAYER_RADIUS * 4 + 150,
+          -PLAYER_RADIUS * 4 + thisHeight + 80 * (i+1),
+          PLAYER_RADIUS * 8,
+          PLAYER_RADIUS * 8,
+      )
+      context.restore()
       context.fillStyle = "rgba(235,235,235,0.7)"
-      context.fillRect( 160, thisHeight + 40 * (i+1), 20 , 20)
+      context.fillRect( 240, thisHeight + 70 * (i+1), 20 , 20)
       context.fillStyle = 'black'
-      context.fillText(`+`, 160 + 4, thisHeight + 40 * (i+1) + 18)
+      context.fillText(`+`, 240 + 4, thisHeight + 70 * (i+1) + 18)
     }
 
-    context.fillText(`Warrior`, skillCoordinates[0].x - 120, skillCoordinates[0].y + skillCoordinates[0].h)
-    context.fillText(`Archer`, skillCoordinates[1].x - 120, skillCoordinates[1].y + skillCoordinates[1].h)
+    context.fillText(`Warrior`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
+    context.fillText(`Archer`, skillCoordinates[1].x - 200, skillCoordinates[1].y + skillCoordinates[1].h)
     onChooseClass(skillCoordinates)
   }
 }

@@ -299,7 +299,8 @@ class Game {
             const player = this.players[playerID]
             if (player.hp <= 0) {
                 socket.emit(Constants.MSG_TYPES.GAME_OVER)
-                this.players[player.lastHit].onKill(player.level)
+                if(this.players[player.lastHit])
+                    this.players[player.lastHit].onKill(player.level)
                 this.removePlayer(socket)
             }
             if (player.sendMsgSP) {
