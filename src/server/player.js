@@ -2,6 +2,15 @@ const ObjectClass = require('./object')
 const Bullet = require('./bullet')
 const Constants = require('../shared/constants')
 
+// TODO
+// Сделать чтобы с апом уровня статы еще немного увеличивались
+// Сделать показ что повысился уровень
+// Изменить инвентарь и код чтобы было только одно оружие
+// Добавить одного Босса
+// Изменить покрытие карты
+// Добавить класс Воин и Лучник
+// Добавить показатель скорость атаки и бега
+
 
 class Player extends ObjectClass {
   constructor(id, username, x, y) {
@@ -22,26 +31,34 @@ class Player extends ObjectClass {
 
     this.weaponX = 0
     this.weaponY = 0
+    this.weaponX2 = 0
+    this.weaponY2 = 0
     this.giveDamage = false
     this.meleeAttackCD = 0
 
+    this.damage = 1
+    this.hp = Constants.PLAYER_MAX_HP
+    this.defense = 1
+    this.maxHp = this.hp
+
     this.skills = {
-      attack: 1,
-      defense: 1,
+      attack: 0,
+      defense: 0,
       regeneration: 0,
-      hp: Constants.PLAYER_MAX_HP,
-      maxHp: Constants.PLAYER_MAX_HP
+      maxHp: 0
     }
+
+    this.lastHit = ''
   }
 
   // Returns a newly created bullet, or null.
   update(dt) {
     this.score += dt * Constants.SCORE_PER_SECOND
 
-    if(this.skills.maxHp > this.skills.hp) {
-      this.skills.hp += dt * this.skills.regeneration
-      if(this.skills.maxHp < this.skills.hp) {
-        this.skills.hp = this.skills.maxHp
+    if(this.maxHp > this.hp) {
+      this.hp += dt * this.skills.regeneration
+      if(this.maxHp < this.hp) {
+        this.hp = this.maxHp
       }
     }
 
@@ -50,7 +67,6 @@ class Player extends ObjectClass {
       this.skillPoints++
       this.sendMsgSP = true
     }
-
     let upDown = this.move.left || this.move.right ? dt * this.speed * 0.8 : dt * this.speed
 
     if (this.move.up) {
@@ -81,11 +97,11 @@ class Player extends ObjectClass {
         // Двинуть передсобой, чтобы вылетали из дула
         let sendX = this.x + dt * this.speed * Math.sin(this.direction) * 15
         let sendY = this.y - dt * this.speed * Math.cos(this.direction) * 15
-        return new Bullet(this.id, sendX, sendY, this.direction, this.skills.attack)
+        return new Bullet(this.id, sendX, sendY, this.direction, this.damage)
       }
     }
     // Анимация удара
-    let animationTime = 50
+    let animationTime = 60
     if (this.item !== 2 ) {
       this.count = 0
       this.hitAnimation = 0
@@ -111,8 +127,12 @@ class Player extends ObjectClass {
     }
     // Ставит точку где оружие, которая наносит урон при попадании
     if (this.item === 2) {
-      this.weaponX = this.x + dt * this.speed * Math.sin(this.direction + Math.PI/4 + this.hitAnimation) * 15
-      this.weaponY = this.y - dt * this.speed * Math.cos(this.direction + Math.PI/4 + this.hitAnimation) * 15
+      let a = dt * this.speed * Math.sin(this.direction + Math.PI/4 + this.hitAnimation)
+      let b = dt * this.speed * Math.cos(this.direction + Math.PI/4 + this.hitAnimation)
+      this.weaponX = this.x + a * 15
+      this.weaponY = this.y - b * 15
+      this.weaponX2 = this.x + a * 7
+      this.weaponY2 = this.y - b * 7
     }
 
     // console.log(this.username, this.weaponX, this.weaponY)
@@ -122,7 +142,9 @@ class Player extends ObjectClass {
   weaponsHit(object) {
     const dx = this.weaponX - object.x
     const dy = this.weaponY - object.y
-    return Math.sqrt(dx * dx + dy * dy)
+    const dx2 = this.weaponX2 - object.x
+    const dy2 = this.weaponY2 - object.y
+    return Math.min(Math.sqrt(dx * dx + dy * dy), Math.sqrt(dx2 * dx2 + dy2 * dy2))
   }
 
   setMovement(move) {
@@ -137,20 +159,39 @@ class Player extends ObjectClass {
     this.item = item
   }
 
-
-  takeBulletDamage(damage) {
-    this.skills.hp -= damage / this.skills.defense
+  setDamage() {
+    this.damage = 1 + 0.3 * this.skills.attack
   }
 
-  onDealtDamage(score) {
-    this.score += score
+  setDefense() {
+    this.defense = 1 - ((0.06 * this.skills.defense)/(1 + 0.06 * Math.abs(this.skills.defense)))
+  }
+
+  setHp() {
+    let hpProportion = this.hp / this.maxHp
+    this.maxHp = Constants.PLAYER_MAX_HP * (1.1 ** this.skills.maxHp)
+    this.hp = this.maxHp * hpProportion
+  }
+
+  takeDamage(damage, id) {
+    this.hp -= damage * this.defense
+    this.lastHit = id
+  }
+
+  onDealtDamage() {
+    this.score += this.damage
+  }
+
+  onKill(level) {
+    this.score += Constants.EXP_FOR_LEVEL_UP[level]/2
   }
 
   serializeForUpdate() {
     return {
       ...(super.serializeForUpdate()),
       direction: this.direction,
-      skills: this.skills,
+      hp: this.hp,
+      maxHp: this.maxHp,
       username: this.username,
       score: this.score,
       level: this.level,

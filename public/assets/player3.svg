@@ -1,18 +1,20 @@
-<svg width="700" height="700" xmlns="http://www.w3.org/2000/svg">
+<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg">
  <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
 
  <g>
   <title>background</title>
-  <rect x="-1" y="-1" width="702" height="702" id="canvas_background" fill="none"/>
+  <rect x="-1" y="-1" width="1002" height="1002" id="canvas_background" fill="none"/>
   <g id="canvasGrid" display="none">
    <rect id="svg_2" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>
   </g>
  </g>
  <g>
   <title>Layer 1</title>
-  <ellipse fill="#ffd36d" stroke="#000" stroke-width="8" cx="336.894627" cy="222" id="svg_6" rx="35" ry="35"/>
-  <ellipse fill="#ffd36d" stroke="#000" stroke-width="8" cx="384.894627" cy="232" id="svg_7" rx="35" ry="35"/>
-  <ellipse fill="#ffd36d" stroke="#000" stroke-width="14" cx="349.894627" cy="350" id="svg_1" rx="100" ry="100"/>
-  <rect id="svg_3" height="93" width="41" y="122.453125" x="356.5" stroke-opacity="null" stroke-width="8" stroke="#000" fill="#333333"/>
+  <path stroke="#7c542e" transform="rotate(-90 499.80517578125006,336.1705627441407) " id="svg_34" d="m503.676921,336.170572l-38.340176,-160.852737l68.936868,160.852737l-68.936868,160.85265l38.340176,-160.85265z" stroke-width="8" fill="#d19155"/>
+  <path id="svg_38" d="m339.922481,370.542636" opacity="0.5" fill-opacity="null" stroke-opacity="null" stroke-width="14" stroke="#a5874a" fill="#ffd36d"/>
+  <path id="svg_39" d="m342.248062,371.317829c0,0 122.346058,12.403101 158.139535,12.403101c35.793477,0 158.139535,-12.403101 157.751942,-13.178292" stroke-width="5" stroke="#4c4c4c" fill="none"/>
+  <ellipse fill="#ffd36d" stroke="#a5874a" stroke-width="14" cx="430.348837" cy="344.457363" id="svg_7" rx="35" ry="35"/>
+  <ellipse fill="#ffd36d" stroke="#a5874a" stroke-width="14" cx="539.418605" cy="407.248062" id="svg_6" rx="35" ry="35"/>
+  <ellipse fill="#ffd36d" stroke="#a5874a" stroke-width="14" cx="500" cy="500" id="svg_1" rx="100" ry="100"/>
  </g>
 </svg>

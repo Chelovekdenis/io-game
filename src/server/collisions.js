@@ -1,43 +1,65 @@
 const Constants = require('../shared/constants')
 
 // Returns an array of bullets to be destroyed.
-function applyCollisions(players, bullets) {
-  const destroyedBullets = []
-  for (let i = 0; i < bullets.length; i++) {
-    // Look for a player (who didn't create the bullet) to collide each bullet with.
-    // As soon as we find one, break out of the loop to prevent double counting a bullet.
-    for (let j = 0; j < players.length; j++) {
-      const bullet = bullets[i]
-      const player = players[j]
-      if (
-        bullet.parentID !== player.id &&
-        player.distanceTo(bullet) <= Constants.PLAYER_RADIUS + Constants.BULLET_RADIUS
-      ) {
-        destroyedBullets.push(bullet)
-        player.takeBulletDamage(Constants.BULLET_DAMAGE * bullet.attack)
-        break
-      }
+exports.applyCollisions = (objects, bullets) => {
+    const destroyedBullets = []
+    for (let i = 0; i < bullets.length; i++) {
+        // Look for a player (who didn't create the bullet) to collide each bullet with.
+        // As soon as we find one, break out of the loop to prevent double counting a bullet.
+        const bullet = bullets[i]
+        for (let j = 0; j < objects.length; j++) {
+            const object = objects[j]
+            if (
+                bullet.parentID !== object.id &&
+                object.distanceTo(bullet) <= Constants.PLAYER_RADIUS + Constants.BULLET_RADIUS
+            ) {
+                destroyedBullets.push(bullet)
+                object.takeDamage(bullet.attack, bullet.parentID)
+                break
+            }
+        }
     }
-  }
-  return destroyedBullets
+    return destroyedBullets
 }
 
-function applyCollisionsGameObjects(objects, bullets) {
-  const destroyedBullets = []
-  for (let i = 0; i < bullets.length; i++) {
-    for (let j = 0; j < objects.length; j++) {
-      const bullet = bullets[i]
-      const object = objects[j]
-      if (
-          object.distanceTo(bullet) <= Constants.TREE_RADIUS + Constants.BULLET_RADIUS
-      ) {
-        destroyedBullets.push(bullet)
-        break
-      }
+circleToCircle = (objects1, objects2, r1, r2) => {
+    for (let i = 0; i < objects1.length; i++) {
+        for (let j = 0; j < objects2.length; j++) {
+            const object1 = objects1[i]
+            const object2 = objects2[j]
+            if (object1.distanceTo(object2) <= r1 + r2)
+                return true
+        }
     }
-  }
-  return destroyedBullets
+    return false
 }
 
-module.exports = applyCollisions
-// module.exports.ad = applyCollisionsGameObjects
+exports.circleToCircleLite = (object1, objects2, r1, r2, i) => {
+    for (let j = 0 + i; j < objects2.length; j++) {
+        if (object1.distanceTo(objects2[j]) <= r1 + r2)
+            return true
+    }
+    return false
+}
+
+exports.hitPlayer = (object1, objects2, r) => {
+    for (let j = 0; j < objects2.length; j++) {
+        if (object1.weaponsHit(objects2[j]) <= r)
+            return objects2[j]
+    }
+    return false
+}
+
+exports.spawn = (arr, r1, r2) => {
+    while (true) {
+        let x = Constants.MAP_SIZE * (0.1 + Math.random() * 0.8)
+        let y = Constants.MAP_SIZE * (0.1 + Math.random() * 0.8)
+        if (
+            !circleToCircle(arr, [{x: x, y: y}], r1, r2)
+        ) {
+            return {x: x, y: y}
+        }
+    }
+}
+
+exports.circleToCircle = circleToCircle

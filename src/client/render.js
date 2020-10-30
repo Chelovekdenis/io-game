@@ -29,7 +29,7 @@ window.addEventListener('resize', debounce(40, setCanvasDimensions))
 
 
 function render() {
-  const { me, others, bullets, leaderboard, trees } = getCurrentState()
+  const { me, others, bullets, leaderboard, trees, enemies } = getCurrentState()
   if (!me) {
     return
   }
@@ -50,8 +50,11 @@ function render() {
   context.strokeStyle = 'black'
   context.lineWidth = 1
   context.strokeRect(canvas.width / 2 - me.x, canvas.height / 2 - me.y, MAP_SIZE, MAP_SIZE)
+
   // Draw all bullets
   bullets.forEach(renderBullet.bind(null, me))
+  // Draw Enemies
+  enemies.forEach(renderEnemies.bind(null, me))
   // Draw all players
   let me2 = me
   me2.direction = myDir()
@@ -59,6 +62,7 @@ function render() {
   renderPlayer(me2, me)
   // Draw mapObjects
   renderObjects(me, trees)
+
   // Draw HUD
   renderHUD(me, leaderboard, currentWScale, currentHScale, getNewSkillPoint())
 }
@@ -70,37 +74,41 @@ function renderBackground(x, y) {
   const backgroundX = HALF_MAP_SIZE - x + canvas.width / 2
   const backgroundY = HALF_MAP_SIZE - y + canvas.height / 2
 
-  context.fillStyle = "darkgreen"
+  context.fillStyle = "gray"
   context.fillRect(0, 0, canvas.width, canvas.height)
 
-  context.drawImage(
-      getAsset('background2.png'),
-      backgroundX-HALF_MAP_SIZE,
-      backgroundY-HALF_MAP_SIZE,
-      HALF_MAP_SIZE,
-      HALF_MAP_SIZE,
-  )
-  context.drawImage(
-      getAsset('background.png'),
-      backgroundX,
-      backgroundY,
-      HALF_MAP_SIZE,
-      HALF_MAP_SIZE,
-  )
-  context.drawImage(
-      getAsset('background.png'),
-      backgroundX-HALF_MAP_SIZE,
-      backgroundY,
-      HALF_MAP_SIZE,
-      HALF_MAP_SIZE,
-  )
-  context.drawImage(
-      getAsset('background2.png'),
-      backgroundX,
-      backgroundY-HALF_MAP_SIZE,
-      HALF_MAP_SIZE,
-      HALF_MAP_SIZE,
-  )
+  for(let i = 0; i < 4; i++) {
+    let y = -Constants.MAP_SIZE + 1000*i
+    for(let j = 0; j < 4; j++) {
+      let x = -Constants.MAP_SIZE + 1000*j
+      if(y === -2000 || x === -2000 || y === 1000 || x === 1000) {
+        context.drawImage(
+            getAsset('back_swamp.svg'),
+            backgroundX - x - 1000,
+            backgroundY - y - 1000,
+            1000,
+            1000,
+        )
+      } else {
+        context.drawImage(
+            getAsset('back.svg'),
+            backgroundX - x - 1000,
+            backgroundY - y - 1000,
+            1000,
+            1000,
+        )
+      }
+    }
+  }
+  // for(let i = 0; i < 12; i++) {
+  //   context.drawImage(
+  //       getAsset('back_swamp.svg'),
+  //       backgroundX,
+  //       backgroundY,
+  //       1000,
+  //       1000,
+  //   )
+  // }
 }
 
 // Renders a ship at the given coordinates
@@ -118,10 +126,10 @@ function renderPlayer(me, player) {
 
   context.drawImage(
     getAsset(`player${Math.round(item)}.svg`),
-    -PLAYER_RADIUS * 3.5,
-    -PLAYER_RADIUS * 3.5,
-    PLAYER_RADIUS * 7,
-    PLAYER_RADIUS * 7,
+    -PLAYER_RADIUS * 5,
+    -PLAYER_RADIUS * 5,
+    PLAYER_RADIUS * 10,
+    PLAYER_RADIUS * 10,
   )
   context.restore()
   // context.fillStyle = "red"
@@ -133,6 +141,7 @@ function renderPlayer(me, player) {
   //     10,
   //     10,
   // )
+
   // Draw name
   context.fillStyle = 'white'
   context.textBaseline = "middle"
@@ -148,9 +157,9 @@ function renderPlayer(me, player) {
   )
   context.fillStyle = 'red'
   context.fillRect(
-    canvasX - PLAYER_RADIUS + PLAYER_RADIUS * 2 * player.skills.hp / PLAYER_MAX_HP,
+    canvasX - PLAYER_RADIUS + PLAYER_RADIUS * 2 * player.hp / player.maxHp,
     canvasY + PLAYER_RADIUS + 8,
-    PLAYER_RADIUS * 2 * (1 - player.skills.hp / PLAYER_MAX_HP),
+    PLAYER_RADIUS * 2 * (1 - player.hp / player.maxHp),
     2,
   )
 }
@@ -158,13 +167,24 @@ function renderPlayer(me, player) {
 
 function renderBullet(me, bullet) {
   const { x, y } = bullet
+  const canvasX = canvas.width / 2 + x - me.x
+  const canvasY = canvas.height / 2 + y - me.y
+  // Draw player
+  context.save()
+  context.translate(canvasX, canvasY)
+
+  // Animation hit
+  context.rotate(bullet.direction)
+
+
   context.drawImage(
     getAsset('bullet.svg'),
-    canvas.width / 2 + x - me.x - BULLET_RADIUS,
-    canvas.height / 2 + y - me.y - BULLET_RADIUS,
-    BULLET_RADIUS * 2,
-    BULLET_RADIUS * 2,
+      - BULLET_RADIUS*10,
+     - BULLET_RADIUS*10,
+    BULLET_RADIUS * 20,
+    BULLET_RADIUS * 20,
   )
+  context.restore()
 }
 
 
@@ -184,23 +204,60 @@ function renderObjects(me, trees) {
   })
 }
 
+function renderEnemies(me, enemy) {
+  const { x, y, direction, hitAnimation } = enemy
+  const canvasX = canvas.width / 2 + x - me.x
+  const canvasY = canvas.height / 2 + y - me.y
+  // Draw player
+  context.save()
+  context.translate(canvasX, canvasY)
+
+  // Animation hit
+  context.rotate(direction + hitAnimation)
+
+
+  context.drawImage(
+      getAsset(`enemy.svg`),
+      -PLAYER_RADIUS * 4,
+      -PLAYER_RADIUS * 4,
+      PLAYER_RADIUS * 8,
+      PLAYER_RADIUS * 8,
+  )
+  context.restore()
+
+  context.fillStyle = 'white'
+  context.fillRect(
+      canvasX - PLAYER_RADIUS,
+      canvasY + PLAYER_RADIUS + 8,
+      PLAYER_RADIUS * 2,
+      2,
+  )
+  context.fillStyle = 'red'
+  context.fillRect(
+      canvasX - PLAYER_RADIUS + PLAYER_RADIUS * 2 * enemy.hp / enemy.maxHp,
+      canvasY + PLAYER_RADIUS + 8,
+      PLAYER_RADIUS * 2 * (1 - enemy.hp / enemy.maxHp),
+      2,
+  )
+}
+
 
 function renderHUD(me, leaderboard, currentWScale, currentHScale, newSkillPoint) {
   // Quick bar
-  let items = ['hand.png', 'axe.png', 'gun.png', 'hand.png']
-  for(let i = 0; i < 4; i++) {
-    context.fillStyle = "rgba(132,132,132,0.7)"
-    context.fillRect(canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80, 40, 40)
-    context.drawImage(
-        getAsset(items[i]),
-        canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80, 40, 40
-    )
-    context.fillStyle = 'black'
-    context.textBaseline = "middle"
-    context.textAlign = 'center'
-    context.font = "16px Verdana"
-    context.fillText(`${i+1}`,canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80)
-  }
+  // let items = ['hand.png', 'axe.png', 'gun.png', 'hand.png']
+  // for(let i = 0; i < 4; i++) {
+  //   context.fillStyle = "rgba(132,132,132,0.7)"
+  //   context.fillRect(canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80, 40, 40)
+  //   context.drawImage(
+  //       getAsset(items[i]),
+  //       canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80, 40, 40
+  //   )
+  //   context.fillStyle = 'black'
+  //   context.textBaseline = "middle"
+  //   context.textAlign = 'center'
+  //   context.font = "16px Verdana"
+  //   context.fillText(`${i+1}`,canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80)
+  // }
   // Mini map
   context.fillStyle = "rgba(132,132,132,0.7)"
   context.fillRect( 20 * currentWScale, (canvas.height - 220) * currentHScale, 200 , 200)

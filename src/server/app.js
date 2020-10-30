@@ -58,10 +58,9 @@ io.on('connection', socket => {
 
 // Setup the Game
 let games = []
-for(let i = 0; i < 3; i++) {
-    games.push(new Game())
-    games[i].initGame()
-}
+games.push(new Game())
+games[0].initGame()
+
 
 
 function joinGame(username) {

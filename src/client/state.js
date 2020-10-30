@@ -74,7 +74,8 @@ export function getCurrentState() {
       others: interpolateObjectArray(baseUpdate.others, next.others, ratio),
       bullets: interpolateObjectArray(baseUpdate.bullets, next.bullets, ratio),
       leaderboard: baseUpdate.leaderboard,
-      trees: baseUpdate.trees
+      trees: baseUpdate.trees,
+      enemies: interpolateObjectArray(baseUpdate.enemies, next.enemies, ratio)
     }
   }
 }
