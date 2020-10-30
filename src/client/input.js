@@ -1,4 +1,4 @@
-import { updateDirection, moveEmit, mouseClickEmit, quickBarItemEmit, chosenSkill } from './networking'
+import { updateDirection, moveEmit, mouseClickEmit, quickBarItemEmit, chosenSkill, chosenClass } from './networking'
 
 let movement = {
   up: false,
@@ -25,6 +25,16 @@ export function onChooseSkill(sc) {
   for (let i = 0; i < sc.length; i++) {
     if (page.x >= sc[i].x && page.x <= sc[i].x + sc[i].w && page.y >= sc[i].y && page.y <= sc[i].y + sc[i].h) {
     chosenSkill(sc[i].skill)
+      page.x = 0
+      page.y = 0
+    }
+  }
+}
+
+export function onChooseClass(sc) {
+  for (let i = 0; i < sc.length; i++) {
+    if (page.x >= sc[i].x && page.x <= sc[i].x + sc[i].w && page.y >= sc[i].y && page.y <= sc[i].y + sc[i].h) {
+      chosenClass(sc[i].c)
       page.x = 0
       page.y = 0
     }

@@ -6,6 +6,7 @@ const gameUpdates = []
 let gameStart = 0
 let firstServerTimestamp = 0
 let newSkillPoint = 0
+let newClassPoint = 0
 
 
 export function initState() {
@@ -20,6 +21,14 @@ export function setNewSkillPoint(data) {
 export function getNewSkillPoint() {
   return newSkillPoint
 }
+
+export function setNewClassPoint(data) {
+  newClassPoint = data
+}
+export function getNewClassPoint() {
+  return newClassPoint
+}
+
 
 
 export function processGameUpdate(update) {
@@ -90,7 +99,7 @@ function interpolateObject(object1, object2, ratio) {
     if (key === 'direction') {
       interpolated[key] = interpolateDirection(object1[key], object2[key], ratio)
     } else if  (key === 'username' || key ===  "item" || key ===  "id" || key ===  "click"
-        || key ===  "level" || key ===  "score" || key ===  "skills" || key ===  "skillPoints") {
+        || key ===  "level" || key ===  "score" || key ===  "skills" || key ===  "className") {
       interpolated[key] = object2[key]
     } else {
       interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio

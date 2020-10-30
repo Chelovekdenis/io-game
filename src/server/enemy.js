@@ -17,7 +17,7 @@ class Enemy extends ObjectClass {
         this.weaponX = 0
         this.weaponY = 0
 
-        this.damage = 1
+        this.damage = 0.5
 
         this.lastHit = ''
     }

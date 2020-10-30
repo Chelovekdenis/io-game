@@ -1,7 +1,7 @@
 import { debounce } from 'throttle-debounce'
 import { getAsset } from './assets'
-import { getCurrentState, setNewSkillPoint, getNewSkillPoint } from './state'
-import { myDir, onChooseSkill } from './input'
+import {getCurrentState, setNewSkillPoint, getNewSkillPoint, getNewClassPoint, setNewClassPoint} from './state'
+import {myDir, onChooseClass, onChooseSkill} from './input'
 
 const Constants = require('../shared/constants')
 
@@ -64,7 +64,7 @@ function render() {
   renderObjects(me, trees)
 
   // Draw HUD
-  renderHUD(me, leaderboard, currentWScale, currentHScale, getNewSkillPoint())
+  renderHUD(me, leaderboard, currentWScale, currentHScale, getNewSkillPoint(), getNewClassPoint())
 }
 
 
@@ -113,7 +113,7 @@ function renderBackground(x, y) {
 
 // Renders a ship at the given coordinates
 function renderPlayer(me, player) {
-  const { x, y, direction, item, hitAnimation } = player
+  const { x, y, direction, className, hitAnimation } = player
   const canvasX = canvas.width / 2 + x - me.x
   const canvasY = canvas.height / 2 + y - me.y
   // Draw player
@@ -123,9 +123,8 @@ function renderPlayer(me, player) {
   // Animation hit
   context.rotate(direction + hitAnimation)
 
-
   context.drawImage(
-    getAsset(`player${Math.round(item)}.svg`),
+    getAsset(`${className}.svg`),
     -PLAYER_RADIUS * 5,
     -PLAYER_RADIUS * 5,
     PLAYER_RADIUS * 10,
@@ -242,7 +241,7 @@ function renderEnemies(me, enemy) {
 }
 
 
-function renderHUD(me, leaderboard, currentWScale, currentHScale, newSkillPoint) {
+function renderHUD(me, leaderboard, currentWScale, currentHScale, newSkillPoint, newClassPoint) {
   // Quick bar
   // let items = ['hand.png', 'axe.png', 'gun.png', 'hand.png']
   // for(let i = 0; i < 4; i++) {
@@ -339,6 +338,35 @@ function renderHUD(me, leaderboard, currentWScale, currentHScale, newSkillPoint)
     context.fillText(`Max HP`, skillCoordinates[3].x - 120, skillCoordinates[3].y + skillCoordinates[3].h)
     onChooseSkill(skillCoordinates)
   }
+
+  if (newClassPoint > 0) {
+    let thisHeight = canvas.height/4 * currentHScale - 100
+
+    context.fillStyle = "rgba(132,132,132,0.7)"
+    context.fillRect( 20, thisHeight, 200 , 200)
+
+    context.fillStyle = 'black'
+    context.textBaseline = "bottom"
+    context.textAlign = 'center'
+    context.font = "16px Verdana"
+    context.fillText(`Choose class`, 120, thisHeight + 24)
+
+    context.textAlign = 'start'
+
+    let skillCoordinates = []
+    let attributes = ['warrior', 'archer']
+    for (let i = 0; i < 2; i++) {
+      skillCoordinates.push({c: attributes[i], x: 160, y: thisHeight + 40 * (i+1), w: 20, h: 20})
+      context.fillStyle = "rgba(235,235,235,0.7)"
+      context.fillRect( 160, thisHeight + 40 * (i+1), 20 , 20)
+      context.fillStyle = 'black'
+      context.fillText(`+`, 160 + 4, thisHeight + 40 * (i+1) + 18)
+    }
+
+    context.fillText(`Warrior`, skillCoordinates[0].x - 120, skillCoordinates[0].y + skillCoordinates[0].h)
+    context.fillText(`Archer`, skillCoordinates[1].x - 120, skillCoordinates[1].y + skillCoordinates[1].h)
+    onChooseClass(skillCoordinates)
+  }
 }
 
 
@@ -370,6 +398,7 @@ export function startRendering() {
 // Replaces game rendering with main menu rendering.
 export function stopRendering() {
   setNewSkillPoint(0)
+  setNewClassPoint(0)
   clearInterval(renderInterval)
   renderInterval = setInterval(renderMainMenu, MAP_FPS)
 }

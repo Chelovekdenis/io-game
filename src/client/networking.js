@@ -1,6 +1,6 @@
 import io from 'socket.io-client'
 import { throttle } from 'throttle-debounce'
-import { processGameUpdate, setNewSkillPoint } from './state'
+import { processGameUpdate, setNewSkillPoint, setNewClassPoint } from './state'
 
 const Constants = require('../shared/constants')
 
@@ -19,6 +19,7 @@ export const connect = onGameOver => (
     socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate)
     socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver)
     socket.on(Constants.MSG_TYPES.SKILL_POINTS, (data) => setNewSkillPoint(data))
+    socket.on("class_point", (data) => setNewClassPoint(data))
     socket.on("number_of_players", serversInfo => {
         const serverList = document.getElementById('server_list')
         for (let i = 0; i < serversInfo.length; i++) {
@@ -58,6 +59,10 @@ export const quickBarItemEmit = item => {
 
 export const chosenSkill = skill => {
     socket.emit("chosen_skill", skill)
+}
+
+export const chosenClass = c => {
+    socket.emit("chosen_class", c)
 }
 
 export const chosenServer = num => {

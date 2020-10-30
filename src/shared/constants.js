@@ -28,6 +28,11 @@ let obj = {
       MOVEMENT: "movement",
       MOUSE_CLICK: "mouse_click",
       SKILL_POINTS: "skill_points"
+    },
+    CLASSES: {
+        FIGHTER: "fighter",
+        WARRIOR: "warrior",
+        ARCHER: "archer"
     }
 }
 

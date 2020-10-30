@@ -52,6 +52,7 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.MOVEMENT, movement)
     socket.on(Constants.MSG_TYPES.MOUSE_CLICK, mouseClick)
     socket.on("chosen_skill", chosenSkill)
+    socket.on("chosen_class", chosenClass)
     socket.on("quick_bar_item", quickBarItem)
     socket.on('disconnect', onDisconnect)
 })
@@ -89,4 +90,8 @@ function quickBarItem(item) {
 
 function chosenSkill(skill) {
     games[this.gameNum].ifChosenSkill(this, skill)
+}
+
+function chosenClass(c) {
+    games[this.gameNum].ifChosenClass(this, c)
 }

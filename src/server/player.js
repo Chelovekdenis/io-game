@@ -1,14 +1,11 @@
 const ObjectClass = require('./object')
-const Bullet = require('./bullet')
+const Warrior = require('./warrior')
+const Archer = require('./archer')
 const Constants = require('../shared/constants')
 
 // TODO
-// Сделать чтобы с апом уровня статы еще немного увеличивались
 // Сделать показ что повысился уровень
-// Изменить инвентарь и код чтобы было только одно оружие
 // Добавить одного Босса
-// Изменить покрытие карты
-// Добавить класс Воин и Лучник
 // Добавить показатель скорость атаки и бега
 
 
@@ -25,9 +22,12 @@ class Player extends ObjectClass {
     this.count = 0
 
     this.level = 0
-    this.score = 0
+    this.score = 10070
     this.skillPoints = 0
     this.sendMsgSP = false
+
+    this.classPoint = 0
+    this.sendMsgCP = false
 
     this.weaponX = 0
     this.weaponY = 0
@@ -41,6 +41,7 @@ class Player extends ObjectClass {
     this.defense = 1
     this.maxHp = this.hp
 
+
     this.skills = {
       attack: 0,
       defense: 0,
@@ -49,6 +50,16 @@ class Player extends ObjectClass {
     }
 
     this.lastHit = ''
+
+    this.className = Constants.CLASSES.FIGHTER
+    this.class = new Warrior(this.x, this.y, this.click, this.direction, this.speed)
+    // this.class2 = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage)
+
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction)
+      this.class.update(dt)
+      this.giveDamage = this.class.getInfo()
+    }
   }
 
   // Returns a newly created bullet, or null.
@@ -66,6 +77,20 @@ class Player extends ObjectClass {
       this.level++
       this.skillPoints++
       this.sendMsgSP = true
+
+      this.skills.attack += 0.2
+      this.skills.defense += 0.2
+      this.skills.regeneration += 0.2
+      this.skills.maxHp += 0.2
+
+      this.setDamage()
+      this.setDefense()
+      this.setHp()
+
+      if(this.classPoint <= 0) {
+        this.classPoint++
+        this.sendMsgCP = true
+      }
     }
     let upDown = this.move.left || this.move.right ? dt * this.speed * 0.8 : dt * this.speed
 
@@ -89,62 +114,18 @@ class Player extends ObjectClass {
     // Не дает зайти за барьер
     this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x))
     this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y))
-    // Стрельба если выбран пистолет на третьем слоте
-    if(this.click && this.item === 3) {
-      this.fireCooldown -= dt
-      if (this.fireCooldown <= 0) {
-        this.fireCooldown += Constants.PLAYER_FIRE_COOLDOWN
-        // Двинуть передсобой, чтобы вылетали из дула
-        let sendX = this.x + dt * this.speed * Math.sin(this.direction) * 15
-        let sendY = this.y - dt * this.speed * Math.cos(this.direction) * 15
-        return new Bullet(this.id, sendX, sendY, this.direction, this.damage)
-      }
-    }
-    // Анимация удара
-    let animationTime = 60
-    if (this.item !== 2 ) {
-      this.count = 0
-      this.hitAnimation = 0
-    }
-    if (this.item === 2 && this.click && this.count === 0) {
-      this.count = 1
-    }
-    if (this.count >= animationTime / 2 ) {
-      this.hitAnimation += Math.PI * 1.5 / animationTime
-      this.giveDamage = false
-    }
-    else if (this.count >= 1) {
-      this.hitAnimation -= Math.PI * 1.5 / animationTime
-      this.giveDamage = true
-    }
-    if (this.count !== 0) {
-      this.count++
-    }
-    // console.log(this.direction)
-    if (this.count === animationTime) {
-      this.count = 0
-      this.hitAnimation = 0
-    }
-    // Ставит точку где оружие, которая наносит урон при попадании
-    if (this.item === 2) {
-      let a = dt * this.speed * Math.sin(this.direction + Math.PI/4 + this.hitAnimation)
-      let b = dt * this.speed * Math.cos(this.direction + Math.PI/4 + this.hitAnimation)
-      this.weaponX = this.x + a * 15
-      this.weaponY = this.y - b * 15
-      this.weaponX2 = this.x + a * 7
-      this.weaponY2 = this.y - b * 7
-    }
 
-    // console.log(this.username, this.weaponX, this.weaponY)
-    return null
+
+
+    // this.class2.setInfo(this.x, this.y, this.click, this.direction, this.damage)
+    // return this.class2.update(dt)
+
+    return this.updateClass(dt)
+
   }
 
   weaponsHit(object) {
-    const dx = this.weaponX - object.x
-    const dy = this.weaponY - object.y
-    const dx2 = this.weaponX2 - object.x
-    const dy2 = this.weaponY2 - object.y
-    return Math.min(Math.sqrt(dx * dx + dy * dy), Math.sqrt(dx2 * dx2 + dy2 * dy2))
+    return this.class.weaponsHit(object)
   }
 
   setMovement(move) {
@@ -186,9 +167,41 @@ class Player extends ObjectClass {
     this.score += Constants.EXP_FOR_LEVEL_UP[level]/2
   }
 
+  chosenClass(c) {
+    switch (c) {
+      case Constants.CLASSES.WARRIOR:
+        this.className = Constants.CLASSES.WARRIOR
+        this.class = new Warrior(this.x, this.y, this.click, this.direction, this.speed)
+
+        this.skills.attack += 5
+        this.skills.defense += 3
+        this.skills.regeneration += 3
+        this.skills.maxHp += 5
+        this.setDamage()
+        this.setDefense()
+        this.setHp()
+
+        this.updateClass = (dt) => {
+          this.class.setInfo(this.x, this.y, this.click, this.direction)
+          this.class.update(dt)
+          this.giveDamage = this.class.getInfo()
+        }
+        break
+      case Constants.CLASSES.ARCHER:
+        this.className = Constants.CLASSES.ARCHER
+        this.class = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage)
+        this.updateClass = (dt) => {
+          this.class.setInfo(this.x, this.y, this.click, this.direction, this.damage)
+          return this.class.update(dt)
+        }
+        break
+    }
+  }
+
   serializeForUpdate() {
     return {
       ...(super.serializeForUpdate()),
+      ...(this.class.serializeForUpdate()),
       direction: this.direction,
       hp: this.hp,
       maxHp: this.maxHp,
@@ -197,9 +210,7 @@ class Player extends ObjectClass {
       level: this.level,
       item: this.item,
       click: this.click,
-      hitAnimation: this.hitAnimation,
-      weaponX: this.weaponX,
-      weaponY: this.weaponY
+      className: this.className
     }
   }
 }

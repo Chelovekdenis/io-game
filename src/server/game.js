@@ -88,6 +88,24 @@ class Game {
         }
     }
 
+    ifChosenClass(socket, c) {
+        let player = this.players[socket.id]
+        if (player) {
+            if(player.classPoint > 0) {
+                player.classPoint--
+                player.sendMsgCP = true
+                switch (c) {
+                    case "warrior":
+                        player.chosenClass(Constants.CLASSES.WARRIOR)
+                        break
+                    case "archer":
+                        player.chosenClass(Constants.CLASSES.ARCHER)
+                        break
+                }
+            }
+        }
+    }
+
     initGame() {
         for (let i = 0; i < 5; i++) {
             const x = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5)
@@ -95,7 +113,7 @@ class Game {
             const id = shortid()
             this.trees[id] = new Tree(id, x, y)
         }
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 1; i++) {
             this.spawnEnemy()
         }
     }
@@ -149,7 +167,8 @@ class Game {
                 player.y = earlyY
             }
 
-            if(player.item === 2 && player.giveDamage === true) {
+            if((player.className === Constants.CLASSES.WARRIOR || player.className === Constants.CLASSES.FIGHTER)
+                && player.giveDamage === true) {
                 let beaten = hitPlayer(player, players, Constants.PLAYER_RADIUS)
                 let beatenEnemy = hitPlayer(player, enemies, Constants.ENEMY_RADIUS)
                 if(beaten) {
@@ -189,17 +208,18 @@ class Game {
         let p = Object.values(this.players)
         let e = Object.values(this.enemies)
         let t = Object.values(this.trees)
-        const destroyedBullets = applyCollisions(p.concat(e), this.bullets)
+
+        let destroyedBullets = applyCollisions(p.concat(e), this.bullets)
         destroyedBullets.forEach(b => {
             if (this.players[b.parentID]) {
                 this.players[b.parentID].onDealtDamage()
             }
         })
-        console.log(applyCollisions(t, this.bullets))
-        destroyedBullets.concat(applyCollisions(t, this.bullets))
+        // console.log(applyCollisions(t, this.bullets))
+        let destroyedBullets2 = applyCollisions(t, this.bullets)
         // destroyedBullets.push(applyCollisions.acgo(this.trees, this.bullets))
-        // console.log(destroyedBullets)
         this.bullets = this.bullets.filter(bullet => !destroyedBullets.includes(bullet))
+        this.bullets = this.bullets.filter(bullet => !destroyedBullets2.includes(bullet))
 
         // Обновление противников
         Object.keys(this.enemies).forEach((enemyId, i) => {
@@ -237,12 +257,13 @@ class Game {
                         closest.y = this.players[enemy.lastHit].y
                     }
                 }
-                enemy.toAttack = dis <= 100
 
             }
 
-            if(closest.x)
+            if(closest.x) {
+                enemy.toAttack = closest.dis <= 100
                 enemy.update(dt, closest.x, closest.y)
+            }
 
             if (
                 circleToCircleLite(enemy, players, Constants.ENEMY_RADIUS, Constants.PLAYER_RADIUS, 0) ||
@@ -278,11 +299,16 @@ class Game {
             const player = this.players[playerID]
             if (player.hp <= 0) {
                 socket.emit(Constants.MSG_TYPES.GAME_OVER)
+                this.players[player.lastHit].onKill(player.level)
                 this.removePlayer(socket)
             }
             if (player.sendMsgSP) {
                 socket.emit(Constants.MSG_TYPES.SKILL_POINTS, player.skillPoints)
                 player.sendMsgSP = false
+            }
+            if (player.sendMsgCP) {
+                socket.emit("class_point", player.classPoint)
+                player.sendMsgCP = false
             }
         })
 
