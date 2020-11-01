@@ -1,7 +1,7 @@
 const Constants = require('../shared/constants')
 
 // Returns an array of bullets to be destroyed.
-exports.applyCollisions = (objects, bullets) => {
+exports.applyCollisions = (objects, bullets, r) => {
     const destroyedBullets = []
     for (let i = 0; i < bullets.length; i++) {
         const bullet = bullets[i]
@@ -9,7 +9,7 @@ exports.applyCollisions = (objects, bullets) => {
             const object = objects[j]
             if (
                 bullet.parentID !== object.id &&
-                object.distanceTo(bullet) <= Constants.PLAYER_RADIUS + Constants.BULLET_RADIUS
+                object.distanceTo(bullet) <= r + Constants.BULLET_RADIUS
             ) {
                 destroyedBullets.push(bullet)
                 object.takeDamage(bullet.attack, bullet.parentID)
@@ -36,6 +36,14 @@ exports.circleToCircleLite = (object1, objects2, r1, r2, i) => {
     for (let j = 0 + i; j < objects2.length; j++) {
         if (object1.distanceTo(objects2[j]) <= r1 + r2)
             return true
+    }
+    return false
+}
+
+exports.circleToCircleWithReturn = (object1, objects2, r1, r2) => {
+    for (let j = 0; j < objects2.length; j++) {
+        if (object1.distanceTo(objects2[j]) <= r1 + r2)
+            return objects2[j]
     }
     return false
 }

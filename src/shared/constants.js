@@ -12,6 +12,8 @@ let obj = {
 
     ENEMY_RADIUS: 20,
 
+    BOSS_RADIUS: 80,
+
     TREE_RADIUS: 50,
 
     SCORE_BULLET_HIT: 20,

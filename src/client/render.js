@@ -29,7 +29,7 @@ window.addEventListener('resize', debounce(40, setCanvasDimensions))
 
 
 function render() {
-  const { me, others, bullets, leaderboard, trees, enemies } = getCurrentState()
+  const { me, others, bullets, leaderboard, trees, enemies, boss } = getCurrentState()
   if (!me) {
     return
   }
@@ -62,9 +62,11 @@ function render() {
   renderPlayer(me2, me)
   // Draw mapObjects
   renderObjects(me, trees)
-
+  // Draw BOSS
+  if(boss.length !== 0)
+    boss.forEach(renderBoss.bind(null, me))
   // Draw HUD
-  renderHUD(me, leaderboard, currentWScale, currentHScale, getNewSkillPoint(), getNewClassPoint())
+  renderHUD(me, boss, leaderboard, currentWScale, currentHScale, getNewSkillPoint(), getNewClassPoint())
 }
 
 
@@ -113,7 +115,7 @@ function renderBackground(x, y) {
 
 // Renders a ship at the given coordinates
 function renderPlayer(me, player) {
-  const { x, y, direction, className, hitAnimation } = player
+  const { x, y, direction, className, hitAnimation, skills } = player
   const canvasX = canvas.width / 2 + x - me.x
   const canvasY = canvas.height / 2 + y - me.y
   // Draw player
@@ -123,20 +125,48 @@ function renderPlayer(me, player) {
   // Animation hit
   context.rotate(direction + hitAnimation)
 
+  let atk = skills.attack
+  if(className === "fighter") {
+    if(player.level === 2) {
+      atk = 2
+    } else
+      atk = 1
+  } else {
+    if(atk > 15)
+      atk = 5
+    else if (atk > 11)
+      atk = 4
+    else if (atk > 7)
+      atk = 3
+    else if (atk > 3)
+      atk = 2
+    else if (atk >= 0)
+      atk = 1
+  }
+
+
+
   context.drawImage(
-    getAsset(`${className}.svg`),
+    getAsset(`${className}${atk}.svg`),
     -PLAYER_RADIUS * 5,
     -PLAYER_RADIUS * 5,
     PLAYER_RADIUS * 10,
     PLAYER_RADIUS * 10,
   )
   context.restore()
-  // context.fillStyle = "red"
-  // // console.log(canvas.width / 2 + x - me.weaponX - PLAYER_RADIUS, canvas.height / 2 + y - me.weaponY - PLAYER_RADIUS)
-  //
+
+  context.fillStyle = "red"
+  // console.log(canvas.width / 2 + x - me.weaponX - PLAYER_RADIUS, canvas.height / 2 + y - me.weaponY - PLAYER_RADIUS)
+
   // context.fillRect(
   //     canvas.width / 2 + player.weaponX - me.x - 5,
   //     canvas.height / 2 + player.weaponY - me.y - 5,
+  //     10,
+  //     10,
+  // )
+  // context.fillRect(
+  //     canvas.width / 2 + player.weaponX2 - me.x - 5,
+  //     canvas.height / 2 + player.weaponY2 - me.y - 5,
   //     10,
   //     10,
   // )
@@ -146,8 +176,12 @@ function renderPlayer(me, player) {
   context.textBaseline = "middle"
   context.textAlign = 'center'
   context.fillText(player.username, canvasX, canvasY - PLAYER_RADIUS - 12)
+  context.save()
+  // Draw level
+  context.font = "12px Verdana"
+  context.fillText(`${player.level} lvl`, canvasX, canvasY - PLAYER_RADIUS - 24)
+  context.restore()
   // Draw health bar
-  context.fillStyle = 'white'
   context.fillRect(
     canvasX - PLAYER_RADIUS,
     canvasY + PLAYER_RADIUS + 8,
@@ -161,6 +195,7 @@ function renderPlayer(me, player) {
     PLAYER_RADIUS * 2 * (1 - player.hp / player.maxHp),
     2,
   )
+
 }
 
 
@@ -177,7 +212,7 @@ function renderBullet(me, bullet) {
 
 
   context.drawImage(
-    getAsset('bullet.svg'),
+    getAsset('arrow.svg'),
       - BULLET_RADIUS*10,
      - BULLET_RADIUS*10,
     BULLET_RADIUS * 20,
@@ -240,8 +275,51 @@ function renderEnemies(me, enemy) {
   )
 }
 
+function renderBoss(me, boss) {
+  const { x, y, direction, hitAnimation } = boss
+  const canvasX = canvas.width / 2 + x - me.x
+  const canvasY = canvas.height / 2 + y - me.y
+  // Draw player
+  context.save()
+  context.translate(canvasX, canvasY)
 
-function renderHUD(me, leaderboard, currentWScale, currentHScale, newSkillPoint, newClassPoint) {
+  // Animation hit
+  context.rotate(direction + hitAnimation)
+
+
+  context.drawImage(
+      getAsset(`boss.svg`),
+      -PLAYER_RADIUS * 16,
+      -PLAYER_RADIUS * 16,
+      PLAYER_RADIUS * 32,
+      PLAYER_RADIUS * 32,
+  )
+  context.restore()
+
+  // context.fillRect(
+  //     canvas.width / 2 + boss.weaponX - me.x - 5,
+  //     canvas.height / 2 + boss.weaponY - me.y - 5,
+  //     10,
+  //     10,
+  // )
+
+  context.fillStyle = 'white'
+  context.fillRect(
+      canvasX - PLAYER_RADIUS * 2.5,
+      canvasY + PLAYER_RADIUS * 5 + 8,
+      PLAYER_RADIUS * 5,
+      3,
+  )
+  context.fillStyle = 'red'
+  context.fillRect(
+      canvasX - PLAYER_RADIUS * 2.5 + PLAYER_RADIUS * 5 * boss.hp / boss.maxHp,
+      canvasY + PLAYER_RADIUS * 5 + 8,
+      PLAYER_RADIUS * 5 * (1 - boss.hp / boss.maxHp),
+      3,
+  )
+}
+
+function renderHUD(me, boss, leaderboard, currentWScale, currentHScale, newSkillPoint, newClassPoint) {
   // Quick bar
   // let items = ['hand.png', 'axe.png', 'gun.png', 'hand.png']
   // for(let i = 0; i < 4; i++) {
@@ -273,6 +351,26 @@ function renderHUD(me, leaderboard, currentWScale, currentHScale, newSkillPoint,
       canvas.height - 220 + mmPlayerY - mmPlayerSizeHalf,
       mmPlayerSize, mmPlayerSize)
 
+  if(boss.length !== 0) {
+    let mmBossX = boss[0].x / mmScale
+    let mmBossY = boss[0].y / mmScale
+    let mmBossSize = 5
+    let mmBossSizeHalf = mmBossSize/2
+
+    // context.fillStyle = "red"
+    //
+    // context.fillRect( 20 + mmBossX - mmBossSizeHalf,
+    //     canvas.height - 220 + mmBossY - mmBossSizeHalf,
+    //     mmBossSize, mmBossSize)
+
+    context.fillStyle = 'white'
+    context.textBaseline = "middle"
+    context.textAlign = 'center'
+    context.font = "12px Verdana"
+    context.fillText("B", 20 + mmBossX, canvas.height - 220 + mmBossY)
+  }
+
+
   // Leaderboard
   context.fillStyle = "rgba(235,235,235,0.7)"
   context.fillRect( canvas.width-170, 10, 160, 200)
@@ -285,7 +383,7 @@ function renderHUD(me, leaderboard, currentWScale, currentHScale, newSkillPoint,
   context.fillText("Score", canvas.width-50, 30)
 
   for(let i = 0; i < leaderboard.length; i++) {
-    context.fillText(leaderboard[i].username, canvas.width-130, 60+i*30)
+    context.fillText(leaderboard[i].username.slice(0,7), canvas.width-130, 60+i*30)
     context.fillText(leaderboard[i].score, canvas.width-50, 60+i*30)
   }
 
@@ -340,41 +438,82 @@ function renderHUD(me, leaderboard, currentWScale, currentHScale, newSkillPoint,
   }
 
   if (newClassPoint > 0) {
-    let thisHeight = canvas.height/4 * currentHScale - 100
+    if(me.classStage === 1) {
+      let thisHeight = 120 * currentHScale - 100
 
-    context.fillStyle = "rgba(132,132,132,0.7)"
-    context.fillRect( 20, thisHeight, 270 , 200)
+      context.fillStyle = "rgba(132,132,132,0.7)"
+      context.fillRect( 20, thisHeight, 270 , 200)
 
-    context.fillStyle = 'black'
-    context.textBaseline = "bottom"
-    context.textAlign = 'center'
-    context.font = "16px Verdana"
-    context.fillText(`Choose class`, 155, thisHeight + 24)
-
-    context.textAlign = 'start'
-
-    let skillCoordinates = []
-    let attributes = ['warrior', 'archer']
-    for (let i = 0; i < 2; i++) {
-      skillCoordinates.push({c: attributes[i], x: 240, y: thisHeight + 70 * (i+1), w: 20, h: 20})
-      context.save()
-      context.drawImage(
-          getAsset(`${attributes[i]}.svg`),
-          -PLAYER_RADIUS * 4 + 150,
-          -PLAYER_RADIUS * 4 + thisHeight + 80 * (i+1),
-          PLAYER_RADIUS * 8,
-          PLAYER_RADIUS * 8,
-      )
-      context.restore()
-      context.fillStyle = "rgba(235,235,235,0.7)"
-      context.fillRect( 240, thisHeight + 70 * (i+1), 20 , 20)
       context.fillStyle = 'black'
-      context.fillText(`+`, 240 + 4, thisHeight + 70 * (i+1) + 18)
-    }
+      context.textBaseline = "bottom"
+      context.textAlign = 'center'
+      context.font = "16px Verdana"
+      context.fillText(`Choose class`, 155, thisHeight + 24)
 
-    context.fillText(`Warrior`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
-    context.fillText(`Archer`, skillCoordinates[1].x - 200, skillCoordinates[1].y + skillCoordinates[1].h)
-    onChooseClass(skillCoordinates)
+      context.textAlign = 'start'
+
+      let skillCoordinates = []
+      let attributes = me.className === "warrior" ? "warlord" : "sniper"
+      for (let i = 0; i < 1; i++) {
+        skillCoordinates.push({c: attributes, x: 240, y: thisHeight + 70 * (i+1), w: 20, h: 20})
+        context.save()
+        context.drawImage(
+            getAsset(`${attributes}1.svg`),
+            -PLAYER_RADIUS * 4 + 150,
+            -PLAYER_RADIUS * 4 + thisHeight + 80 * (i+1),
+            PLAYER_RADIUS * 8,
+            PLAYER_RADIUS * 8,
+        )
+        context.restore()
+        context.fillStyle = "rgba(235,235,235,0.7)"
+        context.fillRect( 240, thisHeight + 70 * (i+1), 20 , 20)
+        context.fillStyle = 'black'
+        context.fillText(`+`, 240 + 4, thisHeight + 70 * (i+1) + 18)
+      }
+      if(attributes === 'warlord')
+        context.fillText(`Warlord`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
+      else
+        context.fillText(`Sniper`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
+
+      onChooseClass(skillCoordinates)
+    } else {
+
+      let thisHeight = 120 * currentHScale - 100
+
+      context.fillStyle = "rgba(132,132,132,0.7)"
+      context.fillRect( 20, thisHeight, 270 , 200)
+
+      context.fillStyle = 'black'
+      context.textBaseline = "bottom"
+      context.textAlign = 'center'
+      context.font = "16px Verdana"
+      context.fillText(`Choose class`, 155, thisHeight + 24)
+
+      context.textAlign = 'start'
+
+      let skillCoordinates = []
+      let attributes = ['warrior', 'archer']
+      for (let i = 0; i < 2; i++) {
+        skillCoordinates.push({c: attributes[i], x: 240, y: thisHeight + 70 * (i+1), w: 20, h: 20})
+        context.save()
+        context.drawImage(
+            getAsset(`${attributes[i]}1.svg`),
+            -PLAYER_RADIUS * 4 + 150,
+            -PLAYER_RADIUS * 4 + thisHeight + 80 * (i+1),
+            PLAYER_RADIUS * 8,
+            PLAYER_RADIUS * 8,
+        )
+        context.restore()
+        context.fillStyle = "rgba(235,235,235,0.7)"
+        context.fillRect( 240, thisHeight + 70 * (i+1), 20 , 20)
+        context.fillStyle = 'black'
+        context.fillText(`+`, 240 + 4, thisHeight + 70 * (i+1) + 18)
+      }
+
+      context.fillText(`Warrior`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
+      context.fillText(`Archer`, skillCoordinates[1].x - 200, skillCoordinates[1].y + skillCoordinates[1].h)
+      onChooseClass(skillCoordinates)
+    }
   }
 }
 

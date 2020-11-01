@@ -1,0 +1,24 @@
+<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="1002" width="1002" y="-1" x="-1"/>
+  <g display="none" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%" id="svg_2"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line fill="#b00020" stroke-width="18" x1="389.824141" y1="411.852302" x2="612.566954" y2="411.852302" id="svg_16" stroke-linejoin="null" stroke-linecap="null" stroke="#5e1622"/>
+  <path stroke-linejoin="null" stroke-linecap="null" stroke="#666666" id="svg_22" d="m638.876612,394.117039l192.650826,-13.291605l66.186786,29.431417l-66.186786,28.482016l-193.241778,-13.291608l0.590952,-31.33022z" stroke-width="8" fill="#b2b2b2"/>
+  <path stroke-linejoin="null" stroke-linecap="null" stroke="#666666" id="svg_32" d="m641.8852,402.565984l170.372921,-6.406365l58.533021,14.185521l-58.533021,13.727923l-170.895534,-6.406365l0.522613,-15.100715z" stroke-width="3" fill="#b2b2b2"/>
+  <path stroke-linejoin="null" stroke-linecap="null" stroke="#666666" id="svg_23" d="m602.24541,409.60117l22.30767,-44.61538l22.30767,44.61538l-22.30767,44.61538l-22.30767,-44.61538z" stroke-width="8" fill="#b2b2b2"/>
+  <path stroke-linejoin="null" stroke-linecap="null" id="svg_33" d="m360.095386,411.112752l20.769238,-20.769239l20.769238,20.769239l-20.769238,20.769239l-20.769238,-20.769239z" stroke-width="4" stroke="#666666" fill="#b2b2b2"/>
+  <path stroke-linejoin="null" stroke-linecap="null" stroke="#666666" id="svg_34" d="m371.703391,411.182274l9.230765,-9.23077l9.23077,9.23077l-9.23077,9.23077l-9.230765,-9.23077z" stroke-width="3" fill="#b2b2b2"/>
+  <ellipse ry="35" rx="35" id="svg_7" cy="415" cx="435" stroke-width="14" stroke="#a5874a" fill="#ffd36d"/>
+  <ellipse ry="35" rx="35" id="svg_6" cy="415" cx="565" stroke-width="14" stroke="#a5874a" fill="#ffd36d"/>
+  <ellipse ry="100" rx="100" id="svg_1" cy="500" cx="500" stroke-width="14" stroke="#a5874a" fill="#ffd36d"/>
+  <path stroke-linejoin="null" stroke-linecap="null" stroke="#666666" id="svg_25" d="m615.246163,409.662973l9.23075,-18.461517l9.23075,18.461517l-9.23075,18.461517l-9.23075,-18.461517z" stroke-width="3" fill="#b2b2b2"/>
+ </g>
+</svg>

@@ -2,8 +2,8 @@ const ObjectClass = require('./object')
 const Constants = require('../shared/constants')
 
 class Enemy extends ObjectClass {
-    constructor(id, x, y) {
-        super(id, x, y, Constants.PLAYER_SPEED * 0.6)
+    constructor(id, x, y, speed) {
+        super(id, x, y, speed)
         this.direction = 0
         this.hp = 50
         this.maxHp = 50

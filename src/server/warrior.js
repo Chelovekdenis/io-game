@@ -42,10 +42,12 @@ class Warrior {
             this.hitAnimation = 0
         }
         // Ставит точку где оружие, которая наносит урон при попадании
-        let a = dt * this.speed * Math.sin(this.direction + Math.PI/4 + this.hitAnimation)
-        let b = dt * this.speed * Math.cos(this.direction + Math.PI/4 + this.hitAnimation)
+        let a = dt * this.speed * Math.sin(this.direction + Math.PI/3 + this.hitAnimation)
+        let b = dt * this.speed * Math.cos(this.direction + Math.PI/3 + this.hitAnimation)
         this.weaponX = this.x + a * 15
         this.weaponY = this.y - b * 15
+        a = dt * this.speed * Math.sin(this.direction + Math.PI/4 + this.hitAnimation)
+        b = dt * this.speed * Math.cos(this.direction + Math.PI/4 + this.hitAnimation)
         this.weaponX2 = this.x + a * 7
         this.weaponY2 = this.y - b * 7
     }

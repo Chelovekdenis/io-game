@@ -84,6 +84,7 @@ export function getCurrentState() {
       bullets: interpolateObjectArray(baseUpdate.bullets, next.bullets, ratio),
       leaderboard: baseUpdate.leaderboard,
       trees: baseUpdate.trees,
+      boss: interpolateObjectArray(baseUpdate.boss, next.boss, ratio),
       enemies: interpolateObjectArray(baseUpdate.enemies, next.enemies, ratio)
     }
   }
@@ -99,7 +100,7 @@ function interpolateObject(object1, object2, ratio) {
     if (key === 'direction') {
       interpolated[key] = interpolateDirection(object1[key], object2[key], ratio)
     } else if  (key === 'username' || key ===  "item" || key ===  "id" || key ===  "click"
-        || key ===  "level" || key ===  "score" || key ===  "skills" || key ===  "className") {
+        || key ===  "level" || key ===  "score" || key ===  "skills" || key ===  "className" || key === "classStage") {
       interpolated[key] = object2[key]
     } else {
       interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio

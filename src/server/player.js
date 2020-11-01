@@ -5,8 +5,11 @@ const Constants = require('../shared/constants')
 
 // TODO
 // Сделать показ что повысился уровень
-// Добавить одного Босса
 // Добавить показатель скорость атаки и бега
+// Всплывающее окно перед закрытием
+// За просмотр рекламы восрешение с 20% опыт от смерти
+
+// Поправить хитбоксы оружия !!!!!!!!!!!!!!!
 
 
 class Player extends ObjectClass {
@@ -26,6 +29,7 @@ class Player extends ObjectClass {
     this.skillPoints = 0
     this.sendMsgSP = false
 
+    this.classStage = 0
     this.classPoint = 0
     this.sendMsgCP = false
 
@@ -64,7 +68,7 @@ class Player extends ObjectClass {
 
   // Returns a newly created bullet, or null.
   update(dt) {
-    this.score += dt * Constants.SCORE_PER_SECOND
+    this.score += dt * Constants.SCORE_PER_SECOND * 4000
 
     if(this.maxHp > this.hp) {
       this.hp += dt * this.skills.regeneration
@@ -87,12 +91,16 @@ class Player extends ObjectClass {
       this.setDefense()
       this.setHp()
 
-      if(this.classPoint <= 0) {
+      if(this.level === 3) {
+        this.classPoint++
+        this.sendMsgCP = true
+      }
+      if(this.level === 21) {
         this.classPoint++
         this.sendMsgCP = true
       }
     }
-    let upDown = this.move.left || this.move.right ? dt * this.speed * 0.8 : dt * this.speed
+    let upDown = this.move.left || this.move.right ? dt * this.speed * 0.6 : dt * this.speed
 
     if (this.move.up) {
       this.y -= upDown
@@ -159,8 +167,8 @@ class Player extends ObjectClass {
     this.lastHit = id
   }
 
-  onDealtDamage() {
-    this.score += this.damage
+  onDealtDamage(dopScore) {
+    this.score += this.damage + dopScore
   }
 
   onKill(level) {
@@ -168,6 +176,7 @@ class Player extends ObjectClass {
   }
 
   chosenClass(c) {
+    if(this.classStage === 0)
     switch (c) {
       case Constants.CLASSES.WARRIOR:
         this.className = Constants.CLASSES.WARRIOR
@@ -196,6 +205,36 @@ class Player extends ObjectClass {
         }
         break
     }
+    else
+      switch (c) {
+        case "warlord":
+          this.className = "warlord"
+          this.class = new Warrior(this.x, this.y, this.click, this.direction, this.speed)
+
+          this.skills.attack += 5
+          this.skills.defense += 3
+          this.skills.regeneration += 3
+          this.skills.maxHp += 5
+          this.setDamage()
+          this.setDefense()
+          this.setHp()
+
+          this.updateClass = (dt) => {
+            this.class.setInfo(this.x, this.y, this.click, this.direction)
+            this.class.update(dt)
+            this.giveDamage = this.class.getInfo()
+          }
+          break
+        case "sniper":
+          this.className = "sniper"
+          this.class = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage)
+          this.updateClass = (dt) => {
+            this.class.setInfo(this.x, this.y, this.click, this.direction, this.damage)
+            return this.class.update(dt)
+          }
+          break
+      }
+    this.classStage++
   }
 
   serializeForUpdate() {
@@ -210,7 +249,9 @@ class Player extends ObjectClass {
       level: this.level,
       item: this.item,
       click: this.click,
-      className: this.className
+      className: this.className,
+      classStage: this.classStage,
+      skills: this.skills
     }
   }
 }

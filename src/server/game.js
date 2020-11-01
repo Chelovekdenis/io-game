@@ -2,7 +2,8 @@ const Constants = require('../shared/constants')
 const Player = require('./player')
 const Tree = require('./tree')
 const Enemy = require('./enemy')
-const {applyCollisions, circleToCircle, circleToCircleLite, hitPlayer, spawn} = require('./collisions')
+const Boss = require('./boss')
+const {applyCollisions, circleToCircleWithReturn, circleToCircleLite, hitPlayer, spawn} = require('./collisions')
 const shortid = require('shortid')
 
 class Game {
@@ -11,6 +12,7 @@ class Game {
         this.players = {}
         this.trees = {}
         this.enemies = {}
+        this.boss = {}
         this.bullets = []
         this.lastUpdateTime = Date.now()
         this.shouldSendUpdate = false
@@ -101,6 +103,12 @@ class Game {
                     case "archer":
                         player.chosenClass(Constants.CLASSES.ARCHER)
                         break
+                    case "warlord":
+                        player.chosenClass("warlord")
+                        break
+                    case "sniper":
+                        player.chosenClass("sniper")
+                        break
                 }
             }
         }
@@ -113,18 +121,30 @@ class Game {
             const id = shortid()
             this.trees[id] = new Tree(id, x, y)
         }
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < 3; i++) {
             this.spawnEnemy()
         }
+        this.spawnBoss()
     }
 
     spawnEnemy() {
         let t = Object.values(this.trees)
         let p = Object.values(this.players)
+        let b = Object.values(this.boss)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t), Constants.TREE_RADIUS, Constants.ENEMY_RADIUS)
+        let xy = spawn(p.concat(t, b), Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS)
         const id = shortid()
-        this.enemies[id] = new Enemy(id, xy.x, xy.y)
+        this.enemies[id] = new Enemy(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.6)
+    }
+
+    spawnBoss() {
+        let t = Object.values(this.trees)
+        let p = Object.values(this.players)
+        let e = Object.values(this.enemies)
+        // Нужно передать больший радиус из массива объектов
+        let xy = spawn(p.concat(t, e), Constants.TREE_RADIUS, Constants.BOSS_RADIUS)
+        const id = shortid()
+        this.boss[id] = new Boss(id, xy.x, xy.y, Constants.PLAYER_SPEED)
     }
 
     gameInfo() {
@@ -157,28 +177,37 @@ class Game {
             let players = Object.values(this.players).filter( p => p !== player)
             let trees = Object.values(this.trees)
             let enemies = Object.values(this.enemies)
+            let boss = Object.values(this.boss)
 
             if (
                 circleToCircleLite(player, players, Constants.PLAYER_RADIUS, Constants.PLAYER_RADIUS, 0) ||
                 circleToCircleLite(player, enemies, Constants.PLAYER_RADIUS, Constants.ENEMY_RADIUS, 0) ||
+                circleToCircleLite(player, boss, Constants.PLAYER_RADIUS, Constants.BOSS_RADIUS, 0) ||
                 circleToCircleLite(player, trees, Constants.PLAYER_RADIUS, Constants.TREE_RADIUS, 0)
             ) {
                 player.x = earlyX
                 player.y = earlyY
             }
 
-            if((player.className === Constants.CLASSES.WARRIOR || player.className === Constants.CLASSES.FIGHTER)
+            if((player.className === Constants.CLASSES.WARRIOR || player.className === Constants.CLASSES.FIGHTER
+                || player.className === "warlord")
                 && player.giveDamage === true) {
                 let beaten = hitPlayer(player, players, Constants.PLAYER_RADIUS)
                 let beatenEnemy = hitPlayer(player, enemies, Constants.ENEMY_RADIUS)
+                let beatenBoss = hitPlayer(player, boss, Constants.BOSS_RADIUS)
                 if(beaten) {
                     beaten.takeDamage(player.damage, player.id)
-                    player.onDealtDamage()
+                    player.onDealtDamage(0)
 
                 }
                 if(beatenEnemy) {
                     beatenEnemy.takeDamage(player.damage, player.id)
-                    player.onDealtDamage()
+                    player.onDealtDamage(0)
+
+                }
+                if(beatenBoss) {
+                    beatenBoss.takeDamage(player.damage, player.id)
+                    player.onDealtDamage(0)
 
                 }
 
@@ -208,18 +237,33 @@ class Game {
         let p = Object.values(this.players)
         let e = Object.values(this.enemies)
         let t = Object.values(this.trees)
+        let b = Object.values(this.boss)
 
-        let destroyedBullets = applyCollisions(p.concat(e), this.bullets)
-        destroyedBullets.forEach(b => {
+        let destroyedBullets1 = applyCollisions(p, this.bullets, Constants.PLAYER_RADIUS)
+        let destroyedBullets2 = applyCollisions(e, this.bullets, Constants.ENEMY_RADIUS)
+        let destroyedBullets3 = applyCollisions(b, this.bullets, Constants.BOSS_RADIUS)
+        destroyedBullets1.forEach(b => {
             if (this.players[b.parentID]) {
-                this.players[b.parentID].onDealtDamage()
+                this.players[b.parentID].onDealtDamage(Constants.BULLET_DAMAGE)
+            }
+        })
+        destroyedBullets2.forEach(b => {
+            if (this.players[b.parentID]) {
+                this.players[b.parentID].onDealtDamage(Constants.BULLET_DAMAGE)
+            }
+        })
+        destroyedBullets3.forEach(b => {
+            if (this.players[b.parentID]) {
+                this.players[b.parentID].onDealtDamage(Constants.BULLET_DAMAGE)
             }
         })
         // console.log(applyCollisions(t, this.bullets))
-        let destroyedBullets2 = applyCollisions(t, this.bullets)
+        let destroyedBullets4 = applyCollisions(t, this.bullets, Constants.TREE_RADIUS)
         // destroyedBullets.push(applyCollisions.acgo(this.trees, this.bullets))
-        this.bullets = this.bullets.filter(bullet => !destroyedBullets.includes(bullet))
+        this.bullets = this.bullets.filter(bullet => !destroyedBullets1.includes(bullet))
         this.bullets = this.bullets.filter(bullet => !destroyedBullets2.includes(bullet))
+        this.bullets = this.bullets.filter(bullet => !destroyedBullets3.includes(bullet))
+        this.bullets = this.bullets.filter(bullet => !destroyedBullets4.includes(bullet))
 
         // Обновление противников
         Object.keys(this.enemies).forEach((enemyId, i) => {
@@ -235,6 +279,7 @@ class Game {
             let players = Object.values(this.players)
             let trees = Object.values(this.trees)
             let enemies = Object.values(this.enemies).filter( e => e !== enemy)
+            let boss = Object.values(this.boss)
 
             for (let i = 0; i < players.length; i++) {
                 let dis = enemy.distanceTo(players[i])
@@ -268,7 +313,8 @@ class Game {
             if (
                 circleToCircleLite(enemy, players, Constants.ENEMY_RADIUS, Constants.PLAYER_RADIUS, 0) ||
                 circleToCircleLite(enemy, enemies, Constants.ENEMY_RADIUS, Constants.ENEMY_RADIUS, 0) ||
-                circleToCircleLite(enemy, trees, Constants.ENEMY_RADIUS, Constants.TREE_RADIUS, 0)
+                circleToCircleLite(enemy, trees, Constants.ENEMY_RADIUS, Constants.TREE_RADIUS, 0) ||
+                circleToCircleLite(enemy, boss, Constants.ENEMY_RADIUS, Constants.BOSS_RADIUS, 0)
             ) {
                 enemy.x = earlyX
                 enemy.y = earlyY
@@ -285,14 +331,62 @@ class Game {
         Object.keys(this.enemies).forEach(enemyId => {
             const enemy = this.enemies[enemyId]
             if (enemy.hp <= 0) {
-                console.log(enemy.lastHit)
+                // console.log(enemy.lastHit)
                 this.players[enemy.lastHit].onKill(enemy.level)
                 delete this.enemies[enemyId]
                 this.spawnEnemy()
             }
         })
 
+        // БОСС
+        Object.keys(this.boss).forEach((enemyId) => {
+            const boss = this.boss[enemyId]
+            const earlyX = boss.x
+            const earlyY = boss.y
 
+            let players = Object.values(this.players)
+            let trees = Object.values(this.trees)
+            let enemies = Object.values(this.enemies)
+
+
+            let targetId = boss.chosenTarget(players, 1000, 500)
+
+            if (targetId) {
+                let player = this.players[targetId]
+                boss.toAttack = player.distanceTo(boss)<= 200
+                boss.update(dt, player.x, player.y)
+            }
+
+            if (
+                circleToCircleLite(boss, players, Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS, 0) ||
+                circleToCircleLite(boss, enemies, Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS, 0)
+            ) {
+                boss.x = earlyX
+                boss.y = earlyY
+            }
+            let destroyedTree = circleToCircleWithReturn(boss, trees, Constants.BOSS_RADIUS, Constants.TREE_RADIUS)
+            if (destroyedTree) {
+                delete this.trees[destroyedTree.id]
+            }
+
+            if (boss.giveDamage === true) {
+                let beaten = hitPlayer(boss, players, Constants.PLAYER_RADIUS)
+                if (beaten) {
+                    beaten.takeDamage(boss.damage, boss.id)
+                }
+            }
+        })
+
+        // Убит ли БОСС>
+        Object.keys(this.boss).forEach((enemyId) => {
+            const boss = this.boss[enemyId]
+            if (boss.hp <= 0) {
+                this.players[boss.lh].onKill(boss.level)
+                delete this.boss[enemyId]
+            }
+        })
+
+        // console.log(Object.values(this.players))
         // Check if any players are dead and if any players have skillPoints
         Object.keys(this.sockets).forEach(playerID => {
             const socket = this.sockets[playerID]
@@ -342,6 +436,9 @@ class Game {
         const nearbyEnemies = Object.values(this.enemies).filter(
             e => e.distanceTo(player) <= Constants.MAP_SIZE / 2,
         )
+        // const nearbyBoss = Object.values(this.boss).filter(
+        //     boss => boss.distanceTo(player) <= Constants.MAP_SIZE / 2,
+        // )
         const nearbyBullets = this.bullets.filter(
             b => b.distanceTo(player) <= Constants.MAP_SIZE / 2,
         )
@@ -352,6 +449,7 @@ class Game {
             bullets: nearbyBullets.map(b => b.serializeForUpdate()),
             trees: this.trees,
             enemies: nearbyEnemies.map(e => e.serializeForUpdate()),
+            boss: Object.values(this.boss).map(boss => boss.serializeForUpdate()),
             leaderboard,
         }
     }
