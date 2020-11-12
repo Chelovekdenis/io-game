@@ -4,6 +4,11 @@ class Object {
     this.x = x
     this.y = y
     this.speed = speed
+
+    this.needKick = {
+      need:false,
+      dir: 0
+    }
   }
 
   distanceTo(object) {

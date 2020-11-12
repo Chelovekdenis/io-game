@@ -20,6 +20,11 @@ let obj = {
     SCORE_PER_SECOND: 1,
     EXP_FOR_LEVEL_UP: expForLevelUp(),
 
+    PI_15: Math.PI * 1.5,
+    PI_25: Math.PI / 2.5,
+    PI_30: Math.PI / 3,
+    PI_40: Math.PI / 4,
+
     MAP_SIZE: 2000,
     MAP_FPS: 1000/90,
     MSG_TYPES: {
@@ -34,7 +39,9 @@ let obj = {
     CLASSES: {
         FIGHTER: "fighter",
         WARRIOR: "warrior",
-        ARCHER: "archer"
+        ARCHER: "archer",
+        WARLORD: "warlord",
+        SNIPER: "sniper"
     }
 }
 

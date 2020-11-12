@@ -9,6 +9,10 @@ class Tree extends ObjectClass {
         this.defense = 0
     }
 
+    hitKick(dir) {
+
+    }
+
     takeDamage(damage, id) {
         this.hp -= damage * this.defense
         this.lastHit = id

@@ -55,6 +55,10 @@ export function myDir() {
   return dir
 }
 
+export function myMovement() {
+  return movement
+}
+
 function handleInputKey() {
   moveEmit(movement)
 }

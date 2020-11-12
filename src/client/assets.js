@@ -27,6 +27,13 @@ const ASSET_NAMES = [
   'warlord4.svg',
   'sniper5.svg',
   'warlord5.svg',
+  'agl.svg',
+  'atkspd.svg',
+  'damage.svg',
+  'defense.svg',
+  'int.svg',
+  'speed.svg',
+  'str.svg',
 
 ]
 

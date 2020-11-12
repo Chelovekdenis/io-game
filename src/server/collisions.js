@@ -13,11 +13,40 @@ exports.applyCollisions = (objects, bullets, r) => {
             ) {
                 destroyedBullets.push(bullet)
                 object.takeDamage(bullet.attack, bullet.parentID)
+                object.needKick.need = true
+                object.needKick.dir = bullet.direction
+                object.needKick.power = 75
                 break
             }
         }
     }
     return destroyedBullets
+}
+
+exports.circleToCircleRetObjSame = (objects, r) => {
+    const revertedObjects = []
+    for (let i = 0; i < objects.length; i++) {
+        const object1 = objects[i]
+        for (let j = 0; j < objects.length; j++) {
+            const object2 = objects[j]
+            if (object1.id !== object2.id && object1.distanceTo(object2) <= r*2)
+                revertedObjects.push(object1)
+        }
+    }
+    return revertedObjects
+}
+
+exports.circleToCircleRetObj = (objects1, objects2, r1, r2) => {
+    const revertedObjects = []
+    for (let i = 0; i < objects1.length; i++) {
+        const object1 = objects1[i]
+        for (let j = 0; j < objects2.length; j++) {
+            const object2 = objects2[j]
+            if (object1.distanceTo(object2) <= r1 + r2)
+                revertedObjects.push(object1)
+        }
+    }
+    return revertedObjects
 }
 
 circleToCircle = (objects1, objects2, r1, r2) => {
@@ -32,8 +61,8 @@ circleToCircle = (objects1, objects2, r1, r2) => {
     return false
 }
 
-exports.circleToCircleLite = (object1, objects2, r1, r2, i) => {
-    for (let j = 0 + i; j < objects2.length; j++) {
+exports.circleToCircleLite = (object1, objects2, r1, r2) => {
+    for (let j = 0; j < objects2.length; j++) {
         if (object1.distanceTo(objects2[j]) <= r1 + r2)
             return true
     }

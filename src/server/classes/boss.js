@@ -1,5 +1,4 @@
-const Enemy = require('./enemy')
-const Constants = require('../shared/constants')
+const Enemy = require('../enemy')
 
 class Boss extends Enemy {
     constructor(id, x, y, speed) {
@@ -8,7 +7,7 @@ class Boss extends Enemy {
         this.maxHp = 2000
         this.level = 20
 
-        this.damage = 1
+        this.damage = 0.1
 
         this.lastHit = []
         this.lh = ''
@@ -29,6 +28,10 @@ class Boss extends Enemy {
         let b = dt * this.speed * Math.cos(this.direction + Math.PI/3 + this.hitAnimation)
         this.weaponX = this.x + a * 30
         this.weaponY = this.y - b * 30
+    }
+
+    hitKick(dir) {
+
     }
 
     weaponsHit(object) {

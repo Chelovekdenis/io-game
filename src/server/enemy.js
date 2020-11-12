@@ -60,6 +60,12 @@ class Enemy extends ObjectClass {
         return Math.sqrt(dx * dx + dy * dy)
     }
 
+    hitKick() {
+        this.x += this.needKick.power * Math.sin(this.needKick.dir)
+        this.y -= this.needKick.power * Math.cos(this.needKick.dir)
+        this.needKick.need = false
+    }
+
     takeDamage(damage, id) {
         this.hp -= damage
         this.lastHit = id

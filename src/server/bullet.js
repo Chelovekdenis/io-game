@@ -7,7 +7,7 @@ class Bullet extends ObjectClass {
     super(shortid(), x, y, Constants.BULLET_SPEED)
     this.direction = dir
     this.parentID = parentID
-    this.attack = attack * Constants.BULLET_DAMAGE
+    this.attack = attack
     this.livetime = 1
   }
 
