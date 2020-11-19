@@ -40,6 +40,13 @@ class Player extends ObjectClass {
     }
     this.needStun = false
 
+    this.abilityCd = {
+      first: 0
+    }
+    this.abilityMaxCd = {
+      first: 5
+    }
+
     this.listDamaged = []
     this.attackSpeed = 0.6
     this.weaponX = 0
@@ -175,13 +182,19 @@ class Player extends ObjectClass {
     })
   }
 
-  setItem(item, sec) {
-    this.item = item
-    this.lastDir = this.direction
-    this.functionStack.push({
-      func: this.class.spellOne.bind(this),
-      sec: sec
-    })
+  setAbility(item, sec) {
+    if (this.abilityCd.first <= 0) {
+      this.item = item
+      this.lastDir = this.direction
+      this.functionStack.push({
+        func: this.class.spellOne.bind(this),
+        sec: sec
+      })
+      this.functionStack.push({
+        func: function(dt) {if(this.abilityCd.first <= 0) {this.abilityCd.first = this.abilityMaxCd.first} this.abilityCd.first -= dt}.bind(this),
+        sec: this.abilityMaxCd.first
+      })
+    }
   }
 
   hitKick(dt) {
@@ -332,7 +345,8 @@ class Player extends ObjectClass {
       skills: this.skills,
       speed: this.speed,
       defense: this.defense,
-      attributes: this.attributes
+      attributes: this.attributes,
+      abilityCd: this.abilityCd
     }
   }
 }

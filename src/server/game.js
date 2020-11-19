@@ -60,9 +60,8 @@ class Game {
     }
 
     ifQuickBar(socket, item) {
-        if (this.players[socket.id]) {
-            this.players[socket.id].setItem(item, 0.4)
-        }
+        if (this.players[socket.id])
+            this.players[socket.id].setAbility(item, 0.4)
     }
 
     ifChosenSkill(socket, item) {

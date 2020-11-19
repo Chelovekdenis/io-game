@@ -7,20 +7,20 @@ const context = canvas.getContext('2d')
 
 export function renderHUD(me, boss, leaderboard, currentWScale, currentHScale, newSkillPoint, newClassPoint) {
     // Quick bar
-    // let items = ['hand.png', 'axe.png', 'gun.png', 'hand.png']
-    // for(let i = 0; i < 4; i++) {
-    //   context.fillStyle = "rgba(132,132,132,0.7)"
-    //   context.fillRect(canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80, 40, 40)
-    //   context.drawImage(
-    //       getAsset(items[i]),
-    //       canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80, 40, 40
-    //   )
-    //   context.fillStyle = 'black'
-    //   context.textBaseline = "middle"
-    //   context.textAlign = 'center'
-    //   context.font = "16px Verdana"
-    //   context.fillText(`${i+1}`,canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80)
-    // }
+    for(let i = 0; i < 4; i++) {
+      //  canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80, 40, 40
+      context.fillStyle = "rgba(51, 46, 61,0.7)"
+      fillRoundedRect(context, canvas.width/2 - 4 * 40 + 15 + 80 * i * currentWScale,
+          canvas.height - 120 * currentHScale, 50, 50, Math.PI*1.5)
+      context.fillStyle = 'white'
+      context.textBaseline = "middle"
+      context.textAlign = 'center'
+      context.font = "16px Verdana"
+      context.fillText(`${i+1}`,canvas.width/2 - 4 * 40 + 15 + 80 * i, canvas.height - 120)
+      if(i === 0) {
+          context.fillText(`${me.abilityCd.first.toFixed(1)}`, canvas.width/2 - 4 * 40 + 34 + 80 * i, canvas.height - 100)
+      }
+    }
     // Mini map
     context.fillStyle = "rgba(51, 46, 61,0.7)"
     // context.fillRect( 20 * currentWScale, (canvas.height - 220) * currentHScale, 200 , 200)
