@@ -34,6 +34,16 @@ const ASSET_NAMES = [
   'int.svg',
   'speed.svg',
   'str.svg',
+  'enemy_bandit1.svg',
+  'enemy_bandit2.svg',
+  'enemy_bandit3.svg',
+  'enemy_bandit4.svg',
+  'enemy_bandit5.svg',
+  'enemy_warrior1.svg',
+  'enemy_warrior2.svg',
+  'enemy_warrior3.svg',
+  'enemy_warrior4.svg',
+  'enemy_warrior5.svg',
 
 ]
 

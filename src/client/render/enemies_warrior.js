@@ -3,7 +3,7 @@ const Constants = require('../../shared/constants')
 const canvas = document.getElementById('game-canvas')
 const context = canvas.getContext('2d')
 
-export function renderEnemies(me, enemy) {
+export function renderEnemiesWarrior(me, enemy) {
     const { x, y, direction, hitAnimation } = enemy
     const canvasX = canvas.width / 2 + x - me.x
     const canvasY = canvas.height / 2 + y - me.y
@@ -16,25 +16,24 @@ export function renderEnemies(me, enemy) {
 
     let lvl = enemy.level
 
-    if(lvl > 9)
+    if(lvl > 19)
         lvl = 5
-    else if (lvl > 6)
+    else if (lvl > 17)
         lvl = 4
-    else if (lvl > 4)
+    else if (lvl > 15)
         lvl = 3
-    else if (lvl > 2)
+    else if (lvl > 13)
         lvl = 2
     else
         lvl = 1
 
 
-
     context.drawImage(
-        getAsset(`enemy_bandit${lvl}.svg`),
-        -Constants.PLAYER_RADIUS * 4,
-        -Constants.PLAYER_RADIUS * 4,
-        Constants.PLAYER_RADIUS * 8,
-        Constants.PLAYER_RADIUS * 8,
+        getAsset(`enemy_warrior${lvl}.svg`),
+        -Constants.PLAYER_RADIUS * 5,
+        -Constants.PLAYER_RADIUS * 5,
+        Constants.PLAYER_RADIUS * 10,
+        Constants.PLAYER_RADIUS * 10,
     )
     context.restore()
     // Draw level
@@ -43,7 +42,7 @@ export function renderEnemies(me, enemy) {
     context.fillStyle = 'white'
     context.textBaseline = "middle"
     context.textAlign = 'center'
-    context.fillText(`${enemy.level} ${lvlString}`, canvasX, canvasY - Constants.ENEMY_RADIUS - 18)
+    context.fillText(`${enemy.level} ${lvlString}`, canvasX, canvasY - Constants.ENEMY_RADIUS - 24)
     context.restore()
 
     context.fillStyle = 'white'

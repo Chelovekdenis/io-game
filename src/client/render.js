@@ -6,6 +6,7 @@ import { renderPlayer } from './render/player'
 import { renderBullet } from './render/bullet'
 import { renderObjects } from './render/objects'
 import { renderEnemies } from './render/enemies'
+import { renderEnemiesWarrior } from './render/enemies_warrior'
 import { renderBoss } from './render/boss'
 import { renderHUD } from './render/hud'
 
@@ -35,7 +36,7 @@ window.addEventListener('resize', debounce(40, setCanvasDimensions))
 
 
 function render() {
-  const { me, others, bullets, leaderboard, trees, enemies, boss } = getCurrentState()
+  const { me, others, bullets, leaderboard, trees, enemies, enemies_warrior, boss } = getCurrentState()
   if (!me) {
     return
   }
@@ -73,7 +74,6 @@ function render() {
   if (me2.move.right) {
     me.x = ((me2.x + leftRight) + me.x)/2
   }
-
   // Draw background
   renderBackground(context, canvas, me.x, me.y)
   // Draw boundaries
@@ -84,6 +84,8 @@ function render() {
   bullets.forEach(renderBullet.bind(null, me))
   // Draw Enemies
   enemies.forEach(renderEnemies.bind(null, me))
+  // Draw EnemiesWarrior
+  enemies_warrior.forEach(renderEnemiesWarrior.bind(null, me))
   // Draw all players
   others.forEach(renderPlayer.bind(null, me))
   renderPlayer(me2, me)

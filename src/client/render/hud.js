@@ -7,18 +7,24 @@ const context = canvas.getContext('2d')
 
 export function renderHUD(me, boss, leaderboard, currentWScale, currentHScale, newSkillPoint, newClassPoint) {
     // Quick bar
+    let qikBarW = canvas.width > 1600 ? canvas.width / 7 : canvas.width / 5
+    let qikBarWHalf = qikBarW / 2
+    let qikBarItemInter = (qikBarW - 200) / 3
     for(let i = 0; i < 4; i++) {
       //  canvas.width/2 - 4 * 40 + 20 + 80 * i, canvas.height - 80, 40, 40
       context.fillStyle = "rgba(51, 46, 61,0.7)"
-      fillRoundedRect(context, canvas.width/2 - 4 * 40 + 15 + 80 * i * currentWScale,
+      fillRoundedRect(context, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter),
           canvas.height - 120 * currentHScale, 50, 50, Math.PI*1.5)
       context.fillStyle = 'white'
       context.textBaseline = "middle"
       context.textAlign = 'center'
       context.font = "16px Verdana"
-      context.fillText(`${i+1}`,canvas.width/2 - 4 * 40 + 15 + 80 * i, canvas.height - 120)
+      context.fillText(`${i+1}`, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter), canvas.height - 120)
       if(i === 0) {
-          context.fillText(`${me.abilityCd.first.toFixed(1)}`, canvas.width/2 - 4 * 40 + 34 + 80 * i, canvas.height - 100)
+          if(me.abilityCd.first > 0)
+              context.fillText(`${me.abilityCd.first.toFixed(1)}`, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter) + 25, canvas.height - 95)
+          else
+              context.fillText(`${me.abilityName1}`, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter) + 25, canvas.height - 95)
       }
     }
     // Mini map

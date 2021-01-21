@@ -1,8 +1,9 @@
 const Constants = require('../shared/constants')
 const Player = require('./player')
 const Tree = require('./tree')
-const Enemy = require('./enemy')
-const Boss = require('./classes/boss')
+const Enemy = require('./enemies/enemy')
+const EnemyWarrior = require('./enemies/enemy_warrior')
+const Boss = require('./enemies/boss')
 const {applyCollisions, circleToCircleWithReturn, circleToCircleLite, hitPlayer, spawn} = require('./collisions')
 const shortid = require('shortid')
 
@@ -12,11 +13,19 @@ class Game {
         this.players = {}
         this.trees = {}
         this.enemies = {}
+        this.enemies_warrior = {}
         this.boss = {}
         this.bullets = []
         this.lastUpdateTime = Date.now()
         this.shouldSendUpdate = false
         setInterval(this.update.bind(this), Constants.MAP_FPS)
+    }
+
+    // Надо вывести в отдельный скрипт
+    randomInteger(min, max) {
+        // получить случайное число от (min-0.5) до (max+0.5)
+        let rand = min - 0.5 + Math.random() * (max - min + 1);
+        return Math.round(rand);
     }
 
     addPlayer(socket, username) {
@@ -32,7 +41,9 @@ class Game {
         let e = Object.values(this.enemies)
         let b = Object.values(this.boss)
         let p = Object.values(this.players)
-        let xy = spawn(e.concat(t, b, p), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS)
+        let ew = Object.values(this.enemies_warrior)
+        // Может лучше радиус Босса?
+        let xy = spawn(e.concat(t, b, p, ew), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS)
         this.players[socket.id] = new Player(socket.id, username, xy.x, xy.y)
     }
 
@@ -120,10 +131,11 @@ class Game {
             const id = shortid()
             this.trees[id] = new Tree(id, x, y)
         }
-        // for (let i = 0; i < 3; i++) {
-        //     this.spawnEnemy()
-        // }
-        // this.spawnBoss()
+        for (let i = 0; i < 3; i++) {
+            this.spawnEnemy()
+            this.spawnEnemyWarrior()
+        }
+        this.spawnBoss()
     }
 
     spawnEnemy() {
@@ -131,18 +143,32 @@ class Game {
         let p = Object.values(this.players)
         let b = Object.values(this.boss)
         let e = Object.values(this.enemies)
+        let ew = Object.values(this.enemies_warrior)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, b, e), Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS)
+        let xy = spawn(p.concat(t, b, e, ew), Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS)
         const id = shortid()
-        this.enemies[id] = new Enemy(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.6)
+        this.enemies[id] = new Enemy(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.6, this.randomInteger(1, 10))
+    }
+
+    spawnEnemyWarrior() {
+        let t = Object.values(this.trees)
+        let p = Object.values(this.players)
+        let b = Object.values(this.boss)
+        let e = Object.values(this.enemies)
+        let ew = Object.values(this.enemies_warrior)
+        // Нужно передать больший радиус из массива объектов
+        let xy = spawn(p.concat(t, b, e, ew), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS)
+        const id = shortid()
+        this.enemies_warrior[id] = new EnemyWarrior(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.9, this.randomInteger(11, 20))
     }
 
     spawnBoss() {
         let t = Object.values(this.trees)
         let p = Object.values(this.players)
         let e = Object.values(this.enemies)
+        let ew = Object.values(this.enemies_warrior)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, e), Constants.TREE_RADIUS, Constants.BOSS_RADIUS)
+        let xy = spawn(p.concat(t, e, ew), Constants.TREE_RADIUS, Constants.BOSS_RADIUS)
         const id = shortid()
         this.boss[id] = new Boss(id, xy.x, xy.y, Constants.PLAYER_SPEED)
     }
@@ -154,6 +180,7 @@ class Game {
     update() {
         let trees = Object.values(this.trees)
         let enemies = Object.values(this.enemies)
+        let enemies_warrior = Object.values(this.enemies_warrior)
         let boss = Object.values(this.boss)
         let players = []
 
@@ -186,9 +213,20 @@ class Game {
                 player.setKick(0.1)
             // Player to Player collision
             players = Object.values(this.players).filter( p => p !== player)
+
+            let collided = circleToCircleWithReturn(player, players, Constants.PLAYER_RADIUS, Constants.PLAYER_RADIUS)
+            if (collided) {
+                if(player.ifStun) {
+                    collided.setStun(3)
+                    player.ifStun = false
+                }
+                player.x = earlyX
+                player.y = earlyY
+            }
+
             if (
-                circleToCircleLite(player, players, Constants.PLAYER_RADIUS, Constants.PLAYER_RADIUS) ||
                 circleToCircleLite(player, enemies, Constants.PLAYER_RADIUS, Constants.ENEMY_RADIUS) ||
+                circleToCircleLite(player, enemies_warrior, Constants.PLAYER_RADIUS, Constants.PLAYER_RADIUS) ||
                 circleToCircleLite(player, boss, Constants.PLAYER_RADIUS, Constants.BOSS_RADIUS) ||
                 circleToCircleLite(player, trees, Constants.PLAYER_RADIUS, Constants.TREE_RADIUS)
             ) {
@@ -201,6 +239,7 @@ class Game {
                 && player.giveDamage === true) {
                 let beaten = hitPlayer(player, players, Constants.PLAYER_RADIUS)
                 let beatenEnemy = hitPlayer(player, enemies, Constants.ENEMY_RADIUS)
+                let beatenEnemyWarrior = hitPlayer(player, enemies_warrior, Constants.PLAYER_RADIUS)
                 let beatenBoss = hitPlayer(player, boss, Constants.BOSS_RADIUS)
                 let canHit = player.listDamaged.find(element => {
                     if (element.id === beaten.id)
@@ -224,6 +263,19 @@ class Game {
                     beatenEnemy.needKick.dir = Math.atan2(beatenEnemy.x - player.x, player.y - beatenEnemy.y)
                     beatenEnemy.needKick.power = player.className === Constants.CLASSES.WARLORD ? 300 : 250
                     player.listDamaged.push({id: beatenEnemy.id, count: player.attackSpeed})
+                    player.onDealtDamage(0)
+
+                }
+                canHit = player.listDamaged.find(element => {
+                    if (element.id === beatenEnemyWarrior.id)
+                        return true
+                })
+                if(beatenEnemyWarrior && !canHit) {
+                    beatenEnemyWarrior.takeDamage(player.damage, player.id)
+                    beatenEnemyWarrior.needKick.need = true
+                    beatenEnemyWarrior.needKick.dir = Math.atan2(beatenEnemyWarrior.x - player.x, player.y - beatenEnemyWarrior.y)
+                    beatenEnemyWarrior.needKick.power = player.className === Constants.CLASSES.WARLORD ? 200 : 150
+                    player.listDamaged.push({id: beatenEnemyWarrior.id, count: player.attackSpeed})
                     player.onDealtDamage(0)
 
                 }
@@ -263,6 +315,7 @@ class Game {
         let destroyedBullets = applyCollisions(players, this.bullets, Constants.PLAYER_RADIUS)
             .concat(
                 applyCollisions(enemies, this.bullets, Constants.ENEMY_RADIUS),
+                applyCollisions(enemies_warrior, this.bullets, Constants.PLAYER_RADIUS),
                 applyCollisions(boss, this.bullets, Constants.BOSS_RADIUS)
             )
         destroyedBullets.forEach(b => {
@@ -273,73 +326,42 @@ class Game {
         this.bullets = this.bullets.filter(bullet => !destroyedBullets.includes(bullet))
 
         boss = Object.values(this.boss)
+        enemies_warrior = Object.values(this.enemies_warrior)
 
         // Обновление противников
         Object.keys(this.enemies).forEach(enemyId => {
             const enemy = this.enemies[enemyId]
-            const earlyX = enemy.x
-            const earlyY = enemy.y
-            let closest = {
-                dis: 0,
-                x: null,
-                y: null
-            }
+            let targetId = enemy.chosenTarget(players, 1000, 300)
 
-            enemies = enemies.filter( e => e !== enemy)
-
-            for (let i = 0; i < players.length; i++) {
-                let dis = enemy.distanceTo(players[i])
-                if( dis <= 300) {
-                    if (closest.dis !== 0) {
-                        if (closest.dis > dis) {
-                            closest.dis = dis
-                            closest.x = players[i].x
-                            closest.y = players[i].y
-                        }
-                    } else {
-                        closest.dis = dis
-                        closest.x = players[i].x
-                        closest.y = players[i].y
-                    }
-                } else if (dis <= 1000) {
-                    if(this.players[enemy.lastHit]) {
-                        closest.dis = dis
-                        closest.x = this.players[enemy.lastHit].x
-                        closest.y = this.players[enemy.lastHit].y
-                    }
+            if (targetId) {
+                enemies = enemies.filter( e => e !== enemy)
+                const earlyX = enemy.x
+                const earlyY = enemy.y
+                let player = this.players[targetId]
+                enemy.toAttack = player.distanceTo(enemy)<= 100
+                enemy.update(dt, player.x, player.y)
+                if (
+                        circleToCircleLite(enemy, players, Constants.ENEMY_RADIUS, Constants.PLAYER_RADIUS) ||
+                        circleToCircleLite(enemy, enemies, Constants.ENEMY_RADIUS, Constants.ENEMY_RADIUS) ||
+                        circleToCircleLite(enemy, enemies_warrior, Constants.ENEMY_RADIUS, Constants.PLAYER_RADIUS) ||
+                        circleToCircleLite(enemy, trees, Constants.ENEMY_RADIUS, Constants.TREE_RADIUS) ||
+                        circleToCircleLite(enemy, boss, Constants.ENEMY_RADIUS, Constants.BOSS_RADIUS)
+                ) {
+                        enemy.x = earlyX
+                        enemy.y = earlyY
                 }
-
-            }
-
-            if(closest.x) {
-                enemy.toAttack = closest.dis <= 100
-                enemy.update(dt, closest.x, closest.y)
-            }
-
-            if (enemy.needKick.need)
-                enemy.hitKick()
-
-            if (
-                circleToCircleLite(enemy, players, Constants.ENEMY_RADIUS, Constants.PLAYER_RADIUS) ||
-                circleToCircleLite(enemy, enemies, Constants.ENEMY_RADIUS, Constants.ENEMY_RADIUS) ||
-                circleToCircleLite(enemy, trees, Constants.ENEMY_RADIUS, Constants.TREE_RADIUS) ||
-                circleToCircleLite(enemy, boss, Constants.ENEMY_RADIUS, Constants.BOSS_RADIUS)
-            ) {
-                enemy.x = earlyX
-                enemy.y = earlyY
-            }
-
-            if(enemy.giveDamage === true) {
-                let beaten = hitPlayer(enemy, players, Constants.PLAYER_RADIUS)
-                if (beaten)
-                    beaten.takeDamage(enemy.damage, enemy.id)
+                if(enemy.giveDamage === true) {
+                    let beaten = hitPlayer(enemy, players, Constants.PLAYER_RADIUS)
+                    if (beaten)
+                        beaten.takeDamage(enemy.damage, enemy.id)
+                }
             }
         })
         // Убиты ли противники
         Object.keys(this.enemies).forEach(enemyId => {
             const enemy = this.enemies[enemyId]
             if (enemy.hp <= 0) {
-                this.players[enemy.lastHit].onKill(enemy.level)
+                this.players[enemy.lh].onKill(enemy.level)
                 delete this.enemies[enemyId]
                 this.spawnEnemy()
             }
@@ -348,37 +370,83 @@ class Game {
 
         players = Object.values(this.players)
         enemies = Object.values(this.enemies)
+        enemies_warrior = Object.values(this.enemies_warrior)
 
-        // БОСС
-        Object.keys(this.boss).forEach((enemyId) => {
-            boss = this.boss[enemyId]
-            const earlyX = boss.x
-            const earlyY = boss.y
+        // Обновление противников
+        Object.keys(this.enemies_warrior).forEach(enemyId => {
 
-            let targetId = boss.chosenTarget(players, 1000, 500)
+            const enemy_warrior = this.enemies_warrior[enemyId]
+            let targetId = enemy_warrior.chosenTarget(players, 1000, 400)
 
             if (targetId) {
+                enemies_warrior = enemies_warrior.filter( e => e !== enemy_warrior)
+                const earlyX = enemy_warrior.x
+                const earlyY = enemy_warrior.y
+                let player = this.players[targetId]
+                enemy_warrior.toAttack = player.distanceTo(enemy_warrior)<= 100
+                enemy_warrior.update(dt, player.x, player.y)
+                if (
+                    circleToCircleLite(enemy_warrior, players, Constants.PLAYER_RADIUS, Constants.PLAYER_RADIUS) ||
+                    circleToCircleLite(enemy_warrior, enemies, Constants.PLAYER_RADIUS, Constants.ENEMY_RADIUS) ||
+                    circleToCircleLite(enemy_warrior, enemies_warrior, Constants.PLAYER_RADIUS, Constants.PLAYER_RADIUS) ||
+                    circleToCircleLite(enemy_warrior, trees, Constants.PLAYER_RADIUS, Constants.TREE_RADIUS) ||
+                    circleToCircleLite(enemy_warrior, boss, Constants.PLAYER_RADIUS, Constants.BOSS_RADIUS)
+                ) {
+                    enemy_warrior.x = earlyX
+                    enemy_warrior.y = earlyY
+                }
+                if(enemy_warrior.giveDamage === true) {
+                    let beaten = hitPlayer(enemy_warrior, players, Constants.PLAYER_RADIUS)
+                    if (beaten)
+                        beaten.takeDamage(enemy_warrior.damage, enemy_warrior.id)
+                }
+            }
+        })
+        // Убиты ли противники
+        Object.keys(this.enemies_warrior).forEach(enemyId => {
+            const enemy_warrior = this.enemies_warrior[enemyId]
+            if (enemy_warrior.hp <= 0) {
+                this.players[enemy_warrior.lh].onKill(enemy_warrior.level)
+                delete this.enemies_warrior[enemyId]
+                this.spawnEnemyWarrior()
+            }
+        })
+
+        players = Object.values(this.players)
+        enemies = Object.values(this.enemies)
+        enemies_warrior = Object.values(this.enemies_warrior)
+
+        // БОСС
+        // Если заагрить БОССа лучником и между поставить война,
+        // то война он атаковать не сможет, а к лучнику пройти
+        Object.keys(this.boss).forEach((enemyId) => {
+            boss = this.boss[enemyId]
+            let targetId = boss.chosenTarget(players, 1000, 500)
+            if (targetId) {
+                const earlyX = boss.x
+                const earlyY = boss.y
+
                 let player = this.players[targetId]
                 boss.toAttack = player.distanceTo(boss)<= 200
                 boss.update(dt, player.x, player.y)
-            }
 
+                if (
+                    circleToCircleLite(boss, players, Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS) ||
+                    circleToCircleLite(boss, enemies_warrior, Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS) ||
+                    circleToCircleLite(boss, enemies, Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS)
+                ) {
+                    boss.x = earlyX
+                    boss.y = earlyY
+                }
+                let destroyedTree = circleToCircleWithReturn(boss, trees, Constants.BOSS_RADIUS, Constants.TREE_RADIUS)
+                if (destroyedTree)
+                    delete this.trees[destroyedTree.id]
 
-            if (
-                circleToCircleLite(boss, players, Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS) ||
-                circleToCircleLite(boss, enemies, Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS)
-            ) {
-                boss.x = earlyX
-                boss.y = earlyY
-            }
-            let destroyedTree = circleToCircleWithReturn(boss, trees, Constants.BOSS_RADIUS, Constants.TREE_RADIUS)
-            if (destroyedTree)
-                delete this.trees[destroyedTree.id]
-
-            if (boss.giveDamage === true) {
-                let beaten = hitPlayer(boss, players, Constants.PLAYER_RADIUS)
-                if (beaten)
-                    beaten.takeDamage(boss.damage, boss.id)
+                if (boss.giveDamage === true) {
+                    let beaten = hitPlayer(boss, players, Constants.PLAYER_RADIUS)
+                    if (beaten)
+                        beaten.takeDamage(boss.damage, boss.id)
+                }
             }
         })
 
@@ -440,6 +508,9 @@ class Game {
         const nearbyEnemies = Object.values(this.enemies).filter(
             e => e.distanceTo(player) <= Constants.MAP_SIZE / 2,
         )
+        const nearbyEnemiesWarrior = Object.values(this.enemies_warrior).filter(
+            ew => ew.distanceTo(player) <= Constants.MAP_SIZE / 2,
+        )
         // const nearbyBoss = Object.values(this.boss).filter(
         //     boss => boss.distanceTo(player) <= Constants.MAP_SIZE / 2,
         // )
@@ -453,6 +524,7 @@ class Game {
             bullets: nearbyBullets.map(b => b.serializeForUpdate()),
             trees: this.trees,
             enemies: nearbyEnemies.map(e => e.serializeForUpdate()),
+            enemies_warrior: nearbyEnemiesWarrior.map(ew => ew.serializeForUpdate()),
             boss: Object.values(this.boss).map(boss => boss.serializeForUpdate()),
             leaderboard,
         }

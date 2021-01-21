@@ -1,43 +1,70 @@
-const Enemy = require('../enemy')
+const ObjectClass = require('../object')
+const Constants = require('../../shared/constants')
 
-class Boss extends Enemy {
-    constructor(id, x, y, speed) {
+class Enemy extends ObjectClass {
+    constructor(id, x, y, speed, lvl) {
         super(id, x, y, speed)
-        this.hp = 2000
-        this.maxHp = 2000
-        this.level = 20
+        this.direction = 0
+        this.maxHp = 35 + 15 * lvl
+        this.hp = this.maxHp
+        this.level = lvl
 
-        this.damage = 0.1
-
-        this.lastHit = []
-        this.lh = ''
+        this.toAttack = false
+        this.count = 0
+        this.hitAnimation = 0
+        this.giveDamage = false
 
         this.weaponX = 0
         this.weaponY = 0
+
+        // this.damage = 0.3 + 0.1 * lvl
+        this.damage = 0.1
+        this.lastHit = []
+        this.lh = ''
     }
 
     update(dt, x, y) {
-        super.update(dt, x, y)
+        this.direction = Math.atan2(x - this.x, this.y - y)
+        this.x = this.x + dt * this.speed * Math.sin(this.direction)
+        this.y = this.y - dt * this.speed * Math.cos(this.direction)
 
-        // Уменьшение показателя агресивности со временем
-        this.lastHit.forEach(item => {
-            item.count -= item.count >= 0? dt * 0.1 : 0
-        })
-
-        let a = dt * this.speed * Math.sin(this.direction + Math.PI/3 + this.hitAnimation)
-        let b = dt * this.speed * Math.cos(this.direction + Math.PI/3 + this.hitAnimation)
-        this.weaponX = this.x + a * 30
-        this.weaponY = this.y - b * 30
-    }
-
-    hitKick(dir) {
+        let animationTime = 60
+        if (this.toAttack && this.count === 0) {
+            this.count = 1
+        }
+        if (this.count >= animationTime / 2 ) {
+            this.hitAnimation += Math.PI * 1.5 / animationTime
+            this.giveDamage = false
+        }
+        else if (this.count >= 1) {
+            this.hitAnimation -= Math.PI * 1.5 / animationTime
+            this.giveDamage = true
+            let a = dt * this.speed * Math.sin(this.direction + Math.PI/4 + this.hitAnimation)
+            let b = dt * this.speed * Math.cos(this.direction + Math.PI/4 + this.hitAnimation)
+            this.weaponX = this.x + a * 12
+            this.weaponY = this.y - b * 12
+        }
+        if (this.count !== 0) {
+            this.count++
+        }
+        // console.log(this.direction)
+        if (this.count === animationTime) {
+            this.count = 0
+            this.hitAnimation = 0
+        }
 
     }
 
     weaponsHit(object) {
-        const dx = (this.weaponX - object.x)/10
-        const dy = (this.weaponY - object.y)/10
+        const dx = this.weaponX - object.x
+        const dy = this.weaponY - object.y
         return Math.sqrt(dx * dx + dy * dy)
+    }
+
+    hitKick(dt) {
+        this.x += this.needKick.power * Math.sin(this.needKick.dir) / 10
+        this.y -= this.needKick.power * Math.cos(this.needKick.dir) / 10
+        this.needKick.need = false
     }
 
     chosenTarget(players, biggerDis, smallerDis) {
@@ -80,9 +107,7 @@ class Boss extends Enemy {
                 minDis.dis = dis
             }
         })
-
         return minDis.id
-
     }
 
     takeDamage(damage, id) {
@@ -103,10 +128,13 @@ class Boss extends Enemy {
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
-            weaponX: this.weaponX,
-            weaponY: this.weaponY,
+            direction: this.direction,
+            hp: this.hp,
+            maxHp: this.maxHp,
+            hitAnimation: this.hitAnimation,
+            level: this.level
         }
     }
 }
 
-module.exports = Boss
+module.exports = Enemy

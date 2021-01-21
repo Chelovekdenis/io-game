@@ -11,6 +11,7 @@ const Constants = require('../shared/constants')
 // За просмотр рекламы восрешение с 20% опыт от смерти
 
 
+// Корона за первое место и показывание на карте + какой-то баф
 
 class Player extends ObjectClass {
   constructor(id, username, x, y) {
@@ -33,6 +34,14 @@ class Player extends ObjectClass {
     this.classPoint = 0
     this.sendMsgCP = false
 
+    this.pureSpeed = this.speed
+    this.ifStun = false
+    this.canSpell = true
+    this.canAttack = true
+
+    this.ifSlowBullet = false
+    this.ifSlowBulletCount = true
+
     this.needKick = {
       need:false,
       dir: 0,
@@ -40,11 +49,16 @@ class Player extends ObjectClass {
     }
     this.needStun = false
 
+
+    this.reductionCd = 1
     this.abilityCd = {
       first: 0
     }
     this.abilityMaxCd = {
-      first: 5
+      first: 2
+    }
+    this.defualtAbilityMaxCd = {
+      first: 2
     }
 
     this.listDamaged = []
@@ -62,6 +76,8 @@ class Player extends ObjectClass {
 
     this.functionStack = []
     this.lastDir = 0
+    this.lastMove = {}
+    this.lastClick = false
 
     this.skills = {
       attack: 0,
@@ -74,6 +90,13 @@ class Player extends ObjectClass {
       strength: 0,
       agility: 0,
       intelligence: 0
+    }
+
+    this.effects = {
+      stunned: {
+        yes: false,
+        time: 0
+      }
     }
 
     this.lastHit = ''
@@ -92,15 +115,14 @@ class Player extends ObjectClass {
   // Returns a newly created bullet, or null.
   update(dt) {
     this.functionStack.forEach((item, i) => {
-      item.func(dt)
       item.sec -= dt
+      item.func(dt, item.sec)
       if(item.sec <= 0) {
         if(item.rec)
-          this.speed = item.rec
+          item.rec(item.recData)
         this.functionStack.splice(i, 1)
       }
     })
-
     this.score += dt * Constants.SCORE_PER_SECOND * (this.level + 1)
 
     this.listDamaged.forEach(item => {
@@ -164,7 +186,8 @@ class Player extends ObjectClass {
     this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x))
     this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y))
 
-    return this.updateClass(dt)
+    if(this.canAttack)
+      return this.updateClass(dt)
   }
 
   setKick(sec) {
@@ -175,23 +198,33 @@ class Player extends ObjectClass {
   }
 
   setStun(sec) {
+    this.effects.stunned.time = sec
     this.functionStack.push({
       func: this.stun.bind(this),
       sec: sec,
-      rec: this.speed
+      rec: this.afterStun.bind(this),
+      recData: this.pureSpeed
     })
   }
 
   setAbility(item, sec) {
-    if (this.abilityCd.first <= 0) {
+    if (this.abilityCd.first <= 0 && this.canSpell) {
       this.item = item
       this.lastDir = this.direction
+      this.lastMove = this.move
+      this.lastClick = this.click
       this.functionStack.push({
         func: this.class.spellOne.bind(this),
-        sec: sec
+        sec: sec,
+        rec: this.class.afterSpellOne.bind(this),
+        recData: false,
       })
       this.functionStack.push({
-        func: function(dt) {if(this.abilityCd.first <= 0) {this.abilityCd.first = this.abilityMaxCd.first} this.abilityCd.first -= dt}.bind(this),
+        func: function(dt) {
+          if(this.abilityCd.first <= 0)
+            this.abilityCd.first = this.abilityMaxCd.first
+          this.abilityCd.first -= dt
+        }.bind(this),
         sec: this.abilityMaxCd.first
       })
     }
@@ -203,9 +236,21 @@ class Player extends ObjectClass {
     this.needKick.need = false
   }
 
-  stun() {
+  stun(dt, sec) {
     this.speed = 0
     this.needStun = false
+    this.canSpell = false
+    this.canAttack = false
+    this.effects.stunned.yes = true
+    this.effects.stunned.time = sec
+  }
+
+  afterStun(speed) {
+    this.speed = speed
+    this.canSpell = true
+    this.canAttack = true
+    this.effects.stunned.yes = false
+    this.effects.stunned.time = 0
   }
 
   weaponsHit(object) {
@@ -234,6 +279,15 @@ class Player extends ObjectClass {
     this.hp = this.maxHp * hpProportion
   }
 
+  setCdReduction() {
+      this.reductionCd = this.attributes.intelligence <= 20 ? 1 - this.attributes.intelligence * 0.02 : 0.6
+      for (let key in this.abilityMaxCd) {
+          this.abilityMaxCd[key] = this.defualtAbilityMaxCd[key] * this.reductionCd
+          console.log(this.abilityMaxCd[key])
+      }
+
+  }
+
   takeDamage(damage, id) {
     this.hp -= damage * this.defense
     this.lastHit = id
@@ -244,7 +298,7 @@ class Player extends ObjectClass {
   }
 
   onKill(level) {
-    this.score += Constants.EXP_FOR_LEVEL_UP[level]/2
+    this.score += Constants.EXP_FOR_LEVEL_UP[level]/4
   }
 
   setAttributes(item) {
@@ -255,6 +309,7 @@ class Player extends ObjectClass {
     this.skills.maxHp += newSkills.hp
 
     this.speed += newSkills.speed
+    this.pureSpeed += newSkills.speed
     this.attackSpeed -= newSkills.atkSpeed
 
     this.attributes.strength += newSkills.str
@@ -264,6 +319,7 @@ class Player extends ObjectClass {
     this.setDamage()
     this.setDefense()
     this.setHp()
+    this.setCdReduction()
   }
 
   chosenClass(c) {
@@ -289,9 +345,9 @@ class Player extends ObjectClass {
         break
       case Constants.CLASSES.ARCHER:
         this.className = Constants.CLASSES.ARCHER
-        this.class = new Archer(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+        this.class = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
         this.updateClass = (dt) => {
-          this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed)
+          this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick)
           return this.class.update(dt)
         }
         break
@@ -318,15 +374,38 @@ class Player extends ObjectClass {
           break
         case "sniper":
           this.className = "sniper"
-          this.class = new Sniper(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+          this.class = new Sniper(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
           this.updateClass = (dt) => {
-            this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed)
+            this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick)
             return this.class.update(dt)
           }
           break
       }
     this.classStage++
   }
+
+  //  Можно сделать передачу аргумента среди всех наследованных классов к самому первому
+  //  Так можно сделать массив спелов которые есть и их и показывать
+  // let a = {
+  //   arr: [1, 2, 3, 4]
+  // }
+  //
+  // function A (ttr) {
+  //   return {
+  //     x: 10,
+  //     y: 20,
+  //     z: ttr
+  //   }
+  // }
+  //
+  // function B () {
+  //   return {
+  //     ...(A(["spell1", "spell2"])),
+  //     f: 40
+  //   }
+  // }
+  //
+  // console.log(B().z.forEach(item=> console.log(item)))
 
   serializeForUpdate() {
     return {
@@ -346,7 +425,8 @@ class Player extends ObjectClass {
       speed: this.speed,
       defense: this.defense,
       attributes: this.attributes,
-      abilityCd: this.abilityCd
+      abilityCd: this.abilityCd,
+      effects: this.effects
     }
   }
 }

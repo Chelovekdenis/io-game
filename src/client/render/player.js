@@ -61,6 +61,12 @@ export function renderPlayer(me, player) {
     // )
 
     // Draw name
+    let lvlString = "lvl"
+    if(player.effects.stunned.yes === true) {
+        player.username = "STUN"
+        player.level = player.effects.stunned.time.toFixed(1)
+        lvlString = ""
+    }
     context.fillStyle = 'white'
     context.textBaseline = "middle"
     context.textAlign = 'center'
@@ -68,7 +74,7 @@ export function renderPlayer(me, player) {
     context.save()
     // Draw level
     context.font = "12px Verdana"
-    context.fillText(`${player.level} lvl`, canvasX, canvasY - Constants.PLAYER_RADIUS - 24)
+    context.fillText(`${player.level} ${lvlString}`, canvasX, canvasY - Constants.PLAYER_RADIUS - 24)
     context.restore()
     // Draw health bar
     context.fillRect(

@@ -20,7 +20,6 @@ class Warrior {
     }
     update(dt) {
         // Анимация удара
-
         let animationTime = 90 * this.attackSpeed
         let rotationVal = Constants.PI_15  / animationTime
         // Обнуление анимации при смени того что в руках
@@ -47,16 +46,23 @@ class Warrior {
             this.count = 0
             this.hitAnimation = 0
         }
+
+        // console.log("rrrr " + this.ifStun)
         // Ставит точку где оружие, которая наносит урон при попадании
         this.weaponsTargets(dt)
     }
 
     spellOne(dt) {
+        this.ifStun = true
         this.move = {}
         this.direction = this.lastDir
         this.click = false
         this.x += 1000 * Math.sin(this.direction) * dt
         this.y -= 1000 * Math.cos(this.direction) * dt
+    }
+
+    afterSpellOne(data) {
+        this.ifStun = data
     }
 
     setInfo(x, y, click, direction, atkSpeed, damage) {
@@ -131,7 +137,8 @@ class Warrior {
             weaponX2: this.weaponX2,
             weaponY2: this.weaponY2,
             damage: this.damage,
-            atkSpeed: this.attackSpeed
+            atkSpeed: this.attackSpeed,
+            abilityName1: "Rush"
         }
     }
 }

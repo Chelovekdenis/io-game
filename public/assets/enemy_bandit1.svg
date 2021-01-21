@@ -1,0 +1,25 @@
+<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="1002" width="1002" y="-1" x="-1"/>
+  <g display="none" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%" id="svg_2"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line stroke="#7c542e" transform="rotate(-45 590.7529907226561,387.3431701660155) " fill="#d19155" stroke-width="14" x1="568.758143" y1="387.343178" x2="612.7478" y2="387.343178" id="svg_16" stroke-linejoin="null" stroke-linecap="null"/>
+  <rect stroke="#d19155" transform="rotate(-45 632.7276000976561,345.0043029785155) " fill="#d19155" stroke-width="8" x="591.293825" y="331.461892" width="82.867587" height="27.084776" id="svg_29" stroke-linecap="null" stroke-linejoin="null"/>
+  <ellipse ry="35" rx="35" id="svg_7" cy="415" cx="435" stroke-width="14" stroke="#187018" fill="#00bf00"/>
+  <ellipse ry="35" rx="35" id="svg_6" cy="415" cx="565" stroke-width="14" stroke="#187018" fill="#00bf00"/>
+  <ellipse ry="100" rx="100" id="svg_1" cy="500" cx="500" stroke-width="14" stroke="#187018" fill="#00bf00"/>
+  <path fill="#b2b2b2" stroke-width="8" d="m661.058732,314.663835l0,-7.248721l7.248721,7.248721l-7.248721,0z" id="svg_31" transform="rotate(177.17344665527344 664.68310546875,311.0394592285156) " stroke="#d19155"/>
+  <line stroke="#7c542e" transform="rotate(-45 673.8643188476561,314.10528564453114) " fill="#b2b2b2" stroke-width="8" x1="684.716275" y1="303.253286" x2="663.012304" y2="324.957257" id="svg_27" stroke-linejoin="null" stroke-linecap="null"/>
+  <line stroke="#7c542e" transform="rotate(-45 661.8630371093749,302.9237365722656) " fill="#d19155" stroke-width="8" x1="652.262608" y1="293.749781" x2="671.463575" y2="312.097689" id="svg_26" stroke-linejoin="null" stroke-linecap="null"/>
+  <line transform="rotate(-45 622.0202636718748,331.4158630371093) " stroke="#7c542e" fill="#d19155" stroke-width="8" x1="663.684706" y1="331.415883" x2="580.355851" y2="331.415883" id="svg_3" stroke-linejoin="null" stroke-linecap="null"/>
+  <line transform="rotate(-45 645.874084472656,355.7031249999999) " stroke="#7c542e" fill="#d19155" stroke-width="8" x1="687.209567" y1="355.703145" x2="604.538606" y2="355.703145" id="svg_28" stroke-linejoin="null" stroke-linecap="null"/>
+  <rect stroke="#7c542e" transform="rotate(-45 606.19140625,371.41006469726557) " fill="#d19155" stroke-width="4" x="598.630291" y="343.05585" width="15.122261" height="56.708478" id="svg_17" stroke-linecap="null" stroke-linejoin="null"/>
+ </g>
+</svg>

@@ -1,0 +1,26 @@
+<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="1002" width="1002" y="-1" x="-1"/>
+  <g display="none" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%" id="svg_2"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <line fill="none" stroke-width="14" x1="389.824141" y1="411.852302" x2="612.566954" y2="411.852302" id="svg_16" stroke-linejoin="null" stroke-linecap="null" stroke="#666666"/>
+  <rect fill="#b2b2b2" stroke-width="8" x="637.435654" y="395.275544" width="177.666711" height="33.236908" id="svg_29" stroke-linecap="null" stroke-linejoin="null" stroke="#b2b2b2"/>
+  <rect fill="#b2b2b2" stroke-width="8" x="615.364223" y="373.835066" width="20" height="75" id="svg_17" stroke-linecap="null" stroke-linejoin="null" stroke="#666666"/>
+  <ellipse fill="#b2b2b2" stroke-width="8" cx="381.173192" cy="411.13435" id="svg_15" rx="12.5" ry="12.5" stroke-linecap="null" stroke-linejoin="null" stroke="#666666"/>
+  <ellipse ry="35" rx="35" id="svg_7" cy="415" cx="435" stroke-width="14" stroke="#187018" fill="#00bf00"/>
+  <ellipse ry="35" rx="35" id="svg_6" cy="415" cx="565" stroke-width="14" stroke="#187018" fill="#00bf00"/>
+  <ellipse ry="100" rx="100" id="svg_1" cy="500" cx="500" stroke-width="14" stroke="#187018" fill="#00bf00"/>
+  <line fill="#b2b2b2" stroke="#666666" stroke-width="8" x1="637.864184" y1="392.824633" x2="818.370405" y2="392.824633" id="svg_24" stroke-linejoin="null" stroke-linecap="null"/>
+  <line fill="#b2b2b2" stroke="#666666" stroke-width="8" x1="817.904789" y1="430.58062" x2="637.404108" y2="430.58062" id="svg_28" stroke-linejoin="null" stroke-linecap="null"/>
+  <path fill="#b2b2b2" stroke-width="8" d="m818.42516,415.15723l0,-7.24872l7.24873,7.24872l-7.24873,0z" id="svg_31" transform="rotate(-136 822.0495605468749,411.5328674316406) " stroke="#b2b2b2"/>
+  <line fill="#b2b2b2" stroke-width="8" x1="838.533203" y1="408.898308" x2="815.26816" y2="432.163351" id="svg_27" stroke-linejoin="null" stroke-linecap="null" stroke="#666666"/>
+  <line fill="#b2b2b2" stroke-width="8" x1="815.718807" y1="392.193367" x2="837.557056" y2="413.482726" id="svg_26" stroke-linejoin="null" stroke-linecap="null" stroke="#666666"/>
+ </g>
+</svg>

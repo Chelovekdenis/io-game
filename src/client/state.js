@@ -85,7 +85,8 @@ export function getCurrentState() {
       leaderboard: baseUpdate.leaderboard,
       trees: baseUpdate.trees,
       boss: interpolateObjectArray(baseUpdate.boss, next.boss, ratio),
-      enemies: interpolateObjectArray(baseUpdate.enemies, next.enemies, ratio)
+      enemies: interpolateObjectArray(baseUpdate.enemies, next.enemies, ratio),
+      enemies_warrior: interpolateObjectArray(baseUpdate.enemies_warrior, next.enemies_warrior, ratio),
     }
   }
 }
@@ -101,7 +102,8 @@ function interpolateObject(object1, object2, ratio) {
       interpolated[key] = interpolateDirection(object1[key], object2[key], ratio)
     } else if  (key === 'username' || key ===  "item" || key ===  "id" || key ===  "click"
         || key ===  "level" || key ===  "score" || key ===  "skills" || key ===  "className" || key === "classStage"
-        || key === "damage" || key === "atkSpeed" || key === "speed" || key === "defense" || key === "attributes" || key === "abilityCd") {
+        || key === "damage" || key === "atkSpeed" || key === "speed" || key === "defense" || key === "attributes" || key === "abilityCd"
+        || key === "abilityName1" || key === "effects") {
       interpolated[key] = object2[key]
     } else {
       interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio
