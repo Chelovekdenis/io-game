@@ -11,12 +11,12 @@ class Warlord extends Warrior {
     }
 
     weaponsTargets(dt) {
-        let a = dt * this.speed * Math.sin(this.direction + Constants.PI_25 + this.hitAnimation)
-        let b = dt * this.speed * Math.cos(this.direction + Constants.PI_25 + this.hitAnimation)
+        let a = dt * 400 * Math.sin(this.direction + Constants.PI_25 + this.hitAnimation)
+        let b = dt * 400 * Math.cos(this.direction + Constants.PI_25 + this.hitAnimation)
         this.weaponX = this.x + a * 20
         this.weaponY = this.y - b * 20
-        a = dt * this.speed * Math.sin(this.direction + Constants.PI_30 + this.hitAnimation)
-        b = dt * this.speed * Math.cos(this.direction + Constants.PI_30 + this.hitAnimation)
+        a = dt * 400 * Math.sin(this.direction + Constants.PI_30 + this.hitAnimation)
+        b = dt * 400 * Math.cos(this.direction + Constants.PI_30 + this.hitAnimation)
         this.weaponX2 = this.x + a * 10
         this.weaponY2 = this.y - b * 10
     }

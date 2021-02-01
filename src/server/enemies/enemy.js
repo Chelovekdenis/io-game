@@ -3,7 +3,7 @@ const Constants = require('../../shared/constants')
 
 class Enemy extends ObjectClass {
     constructor(id, x, y, speed, lvl) {
-        super(id, x, y, speed)
+        super(id, x, y, speed, Constants.ENEMY_RADIUS)
         this.direction = 0
         this.maxHp = 35 + 15 * lvl
         this.hp = this.maxHp
@@ -21,36 +21,75 @@ class Enemy extends ObjectClass {
         this.damage = 0.1
         this.lastHit = []
         this.lh = ''
+
+        this.functionStack = []
+
+        this.effects = {
+            stunned: {
+                yes: false,
+                time: 0
+            }
+        }
+
+        this.needKick = {
+            need:false,
+            dir: 0,
+            power: 0
+        }
+        this.needStun = false
+
+        this.pureSpeed = this.speed
+        this.ifStun = false
+        this.canSpell = true
+        this.canAttack = true
     }
 
     update(dt, x, y) {
-        this.direction = Math.atan2(x - this.x, this.y - y)
+        this.functionStack.forEach((item, i) => {
+            item.sec -= dt
+            item.func(dt, item.sec)
+            if(item.sec <= 0) {
+                if(item.rec)
+                    item.rec(item.recData)
+                this.functionStack.splice(i, 1)
+            }
+        })
+
+        // Уменьшение показателя агресивности со временем
+        this.lastHit.forEach(item => {
+            item.count -= item.count >= 0? dt * 0.1 : 0
+        })
+
+        if (!this.effects.stunned.yes)
+            this.direction = Math.atan2(x - this.x, this.y - y)
         this.x = this.x + dt * this.speed * Math.sin(this.direction)
         this.y = this.y - dt * this.speed * Math.cos(this.direction)
 
-        let animationTime = 60
-        if (this.toAttack && this.count === 0) {
-            this.count = 1
-        }
-        if (this.count >= animationTime / 2 ) {
-            this.hitAnimation += Math.PI * 1.5 / animationTime
-            this.giveDamage = false
-        }
-        else if (this.count >= 1) {
-            this.hitAnimation -= Math.PI * 1.5 / animationTime
-            this.giveDamage = true
-            let a = dt * this.speed * Math.sin(this.direction + Math.PI/4 + this.hitAnimation)
-            let b = dt * this.speed * Math.cos(this.direction + Math.PI/4 + this.hitAnimation)
-            this.weaponX = this.x + a * 12
-            this.weaponY = this.y - b * 12
-        }
-        if (this.count !== 0) {
-            this.count++
-        }
-        // console.log(this.direction)
-        if (this.count === animationTime) {
-            this.count = 0
-            this.hitAnimation = 0
+        if(this.canAttack) {
+            let animationTime = 60
+            if (this.toAttack && this.count === 0) {
+                this.count = 1
+            }
+            if (this.count >= animationTime / 2) {
+                this.hitAnimation += Math.PI * 1.5 / animationTime
+                this.giveDamage = false
+            }
+            else if (this.count >= 1) {
+                this.hitAnimation -= Math.PI * 1.5 / animationTime
+                this.giveDamage = true
+                let a = dt * 400 * Math.sin(this.direction + Constants.PI_25 + this.hitAnimation)
+                let b = dt * 400 * Math.cos(this.direction + Constants.PI_25 + this.hitAnimation)
+                this.weaponX = this.x + a * 9
+                this.weaponY = this.y - b * 9
+            }
+            if (this.count !== 0) {
+                this.count++
+            }
+            // console.log(this.direction)
+            if (this.count >= animationTime) {
+                this.count = 0
+                this.hitAnimation = 0
+            }
         }
 
     }
@@ -61,11 +100,52 @@ class Enemy extends ObjectClass {
         return Math.sqrt(dx * dx + dy * dy)
     }
 
+    setKick(sec) {
+        this.functionStack.push({
+            func: this.hitKick.bind(this),
+            sec: sec
+        })
+    }
+
+    setStun(sec) {
+        this.effects.stunned.time = sec
+        this.functionStack.push({
+            func: this.stun.bind(this),
+            sec: sec,
+            rec: this.afterStun.bind(this),
+            recData: this.pureSpeed
+        })
+    }
+
     hitKick(dt) {
-        this.x += this.needKick.power * Math.sin(this.needKick.dir) / 10
-        this.y -= this.needKick.power * Math.cos(this.needKick.dir) / 10
+        this.x += this.needKick.power * Math.sin(this.needKick.dir) * dt
+        this.y -= this.needKick.power * Math.cos(this.needKick.dir) * dt
         this.needKick.need = false
     }
+
+    stun(dt, sec) {
+        this.speed = 0
+        this.needStun = false
+        this.canSpell = false
+        this.canAttack = false
+        this.giveDamage = false
+        this.effects.stunned.yes = true
+        this.effects.stunned.time = sec
+    }
+
+    afterStun(speed) {
+        this.speed = speed
+        this.canSpell = true
+        this.canAttack = true
+        this.effects.stunned.yes = false
+        this.effects.stunned.time = 0
+    }
+
+    // hitKick(dt) {
+    //     this.x += this.needKick.power * Math.sin(this.needKick.dir) / 10
+    //     this.y -= this.needKick.power * Math.cos(this.needKick.dir) / 10
+    //     this.needKick.need = false
+    // }
 
     chosenTarget(players, biggerDis, smallerDis) {
         let moreAggressive = {}
@@ -132,7 +212,10 @@ class Enemy extends ObjectClass {
             hp: this.hp,
             maxHp: this.maxHp,
             hitAnimation: this.hitAnimation,
-            level: this.level
+            level: this.level,
+            effects: this.effects,
+            weaponX: this.weaponX,
+            weaponY: this.weaponY,
         }
     }
 }

@@ -1,9 +1,10 @@
 class Object {
-  constructor(id, x, y, speed) {
+  constructor(id, x, y, speed, radius) {
     this.id = id
     this.x = x
     this.y = y
     this.speed = speed
+    this.radius = radius
 
     this.needKick = {
       need:false,

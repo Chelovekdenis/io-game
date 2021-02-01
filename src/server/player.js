@@ -11,11 +11,11 @@ const Constants = require('../shared/constants')
 // За просмотр рекламы восрешение с 20% опыт от смерти
 
 
-// Корона за первое место и показывание на карте + какой-то баф
+// Баф для первого места
 
 class Player extends ObjectClass {
   constructor(id, username, x, y) {
-    super(id, x, y, Constants.PLAYER_SPEED)
+    super(id, x, y, Constants.PLAYER_SPEED, Constants.PLAYER_RADIUS)
     this.username = username
     this.direction = 0
     this.fireCooldown = 0

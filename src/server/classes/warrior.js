@@ -79,12 +79,12 @@ class Warrior {
     }
 
     weaponsTargets(dt) {
-        let a = dt * this.speed * Math.sin(this.direction + Constants.PI_25 + this.hitAnimation)
-        let b = dt * this.speed * Math.cos(this.direction + Constants.PI_25 + this.hitAnimation)
+        let a = dt * 400 * Math.sin(this.direction + Constants.PI_25 + this.hitAnimation)
+        let b = dt * 400 * Math.cos(this.direction + Constants.PI_25 + this.hitAnimation)
         this.weaponX = this.x + a * 16
         this.weaponY = this.y - b * 16
-        a = dt * this.speed * Math.sin(this.direction + Constants.PI_40 + this.hitAnimation)
-        b = dt * this.speed * Math.cos(this.direction + Constants.PI_40 + this.hitAnimation)
+        a = dt * 400 * Math.sin(this.direction + Constants.PI_40 + this.hitAnimation)
+        b = dt * 400 * Math.cos(this.direction + Constants.PI_40 + this.hitAnimation)
         this.weaponX2 = this.x + a * 9
         this.weaponY2 = this.y - b * 9
     }

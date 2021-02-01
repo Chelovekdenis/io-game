@@ -74,6 +74,19 @@ function render() {
   if (me2.move.right) {
     me.x = ((me2.x + leftRight) + me.x)/2
   }
+
+  let leader = null
+  if(me.id === leaderboard[0].id) {
+    me.leader = true
+  } else {
+  Object.keys(others).forEach(id => {
+    if (others[id].id === leaderboard[0].id) {
+      others[id].leader = true
+      leader = others[id]
+    }
+  })
+}
+
   // Draw background
   renderBackground(context, canvas, me.x, me.y)
   // Draw boundaries
@@ -95,7 +108,7 @@ function render() {
   if(boss.length !== 0)
     boss.forEach(renderBoss.bind(null, me))
   // Draw HUD
-  renderHUD(me, boss, leaderboard, currentWScale, currentHScale, getNewSkillPoint(), getNewClassPoint())
+  renderHUD(me, boss, leader, leaderboard, currentWScale, currentHScale, getNewSkillPoint(), getNewClassPoint())
 }
 
 

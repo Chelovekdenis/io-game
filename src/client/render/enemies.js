@@ -27,8 +27,6 @@ export function renderEnemies(me, enemy) {
     else
         lvl = 1
 
-
-
     context.drawImage(
         getAsset(`enemy_bandit${lvl}.svg`),
         -Constants.PLAYER_RADIUS * 4,
@@ -37,8 +35,26 @@ export function renderEnemies(me, enemy) {
         Constants.PLAYER_RADIUS * 8,
     )
     context.restore()
+
+
+    context.fillRect(
+        canvas.width / 2 + enemy.weaponX - me.x - 5,
+        canvas.height / 2 + enemy.weaponY - me.y - 5,
+        10,
+        10,
+    )
+    context.fillRect(
+        canvas.width / 2 + enemy.weaponX2 - me.x - 5,
+        canvas.height / 2 + enemy.weaponY2 - me.y - 5,
+        10,
+        10,
+    )
     // Draw level
     let lvlString = "lvl"
+    if(enemy.effects.stunned.yes === true) {
+        enemy.level = "STUN"
+        lvlString = enemy.effects.stunned.time.toFixed(1)
+    }
     context.font = "12px Verdana"
     context.fillStyle = 'white'
     context.textBaseline = "middle"

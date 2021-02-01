@@ -69,9 +69,18 @@ exports.circleToCircleLite = (object1, objects2, r1, r2) => {
     return false
 }
 
-exports.circleToCircleWithReturn = (object1, objects2, r1, r2) => {
+exports.circleToCircleLiteNew = (object1, objects2) => {
     for (let j = 0; j < objects2.length; j++) {
-        if (object1.distanceTo(objects2[j]) <= r1 + r2)
+        // console.log(object1.id, object1.radius, " <---> ", objects2[j].id, objects2[j].radius, " == ", object1.distanceTo(objects2[j]))
+        if (object1.distanceTo(objects2[j]) <= object1.radius + objects2[j].radius)
+            return true
+    }
+    return false
+}
+
+exports.circleToCircleWithReturn = (object1, objects2) => {
+    for (let j = 0; j < objects2.length; j++) {
+        if (object1.distanceTo(objects2[j]) <= object1.radius + objects2[j].radius)
             return objects2[j]
     }
     return false

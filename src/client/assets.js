@@ -44,6 +44,7 @@ const ASSET_NAMES = [
   'enemy_warrior3.svg',
   'enemy_warrior4.svg',
   'enemy_warrior5.svg',
+  'crown.svg',
 
 ]
 

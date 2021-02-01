@@ -5,7 +5,7 @@ const Constants = require('../../shared/constants')
 const canvas = document.getElementById('game-canvas')
 const context = canvas.getContext('2d')
 
-export function renderHUD(me, boss, leaderboard, currentWScale, currentHScale, newSkillPoint, newClassPoint) {
+export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentHScale, newSkillPoint, newClassPoint) {
     // Quick bar
     let qikBarW = canvas.width > 1600 ? canvas.width / 7 : canvas.width / 5
     let qikBarWHalf = qikBarW / 2
@@ -35,14 +35,32 @@ export function renderHUD(me, boss, leaderboard, currentWScale, currentHScale, n
     let mmScale = Constants.MAP_SIZE / 200
     let mmPlayerX = me.x / mmScale
     let mmPlayerY = me.y / mmScale
-    let mmPlayerSize = 5
+    let mmPlayerSize = 6
     let mmPlayerSizeHalf = mmPlayerSize/2
 
     context.fillStyle = "rgba(255, 222, 3, 1)"
 
-    context.fillRect( 20 + mmPlayerX - mmPlayerSizeHalf,
-        canvas.height - 220 + mmPlayerY - mmPlayerSizeHalf,
-        mmPlayerSize, mmPlayerSize)
+    if(me.leader)
+        context.drawImage(
+            getAsset(`crown.svg`),
+            20 + mmPlayerX - 8,
+            canvas.height - 220 + mmPlayerY - 8,
+            16,
+            16,
+        )
+    else
+        context.fillRect( 20 + mmPlayerX - mmPlayerSizeHalf,
+            canvas.height - 220 + mmPlayerY - mmPlayerSizeHalf,
+            mmPlayerSize, mmPlayerSize)
+
+    if(leader)
+        context.drawImage(
+            getAsset(`crown.svg`),
+            20 + leader.x / mmScale - 8,
+            canvas.height - 220 + leader.y / mmScale - 8,
+            16,
+            16,
+        )
 
     if(boss.length !== 0) {
         let mmBossX = boss[0].x / mmScale
@@ -128,20 +146,27 @@ export function renderHUD(me, boss, leaderboard, currentWScale, currentHScale, n
     context.fillText(`${me.speed}`, xImg+50, yImg - 40 + 20)
 
     // Leaderboard
+    let aa_x = canvas.width-200
     context.fillStyle = "rgba(51, 46, 61, 0.7)"
     // context.fillRect( canvas.width-170, 10, 160, 200)
-    fillRoundedRect(context, canvas.width-170, 10, 160, 200, Math.PI*1.5)
+    fillRoundedRect(context, aa_x, 10, 190, 200, Math.PI*1.5)
 
     context.fillStyle = 'white'
     context.textBaseline = "middle"
     context.textAlign = 'center'
     context.font = "16px Verdana"
-    context.fillText("Name", canvas.width-130, 30)
-    context.fillText("Score", canvas.width-50, 30)
+    context.fillText("Name", aa_x + 60, 30)
+    context.fillText("Score", aa_x + 140, 30)
+    context.drawImage(
+        getAsset('crown.svg'),
+        aa_x + 5, 45,
+        30,
+        30,
+    )
 
     for(let i = 0; i < leaderboard.length; i++) {
-        context.fillText(leaderboard[i].username.slice(0,7), canvas.width-130, 60+i*30)
-        context.fillText(leaderboard[i].score, canvas.width-50, 60+i*30)
+        context.fillText(leaderboard[i].username.slice(0,7), aa_x + 60, 60+i*30)
+        context.fillText(leaderboard[i].score, aa_x + 140, 60+i*30)
     }
     // Полоска ХП
     let expBarH = canvas.height - 64

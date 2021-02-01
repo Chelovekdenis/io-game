@@ -11,6 +11,7 @@ export function renderPlayer(me, player) {
     context.save()
     context.translate(canvasX, canvasY)
 
+
     // Animation hit
     context.rotate(direction + hitAnimation)
 
@@ -45,20 +46,21 @@ export function renderPlayer(me, player) {
     context.restore()
 
     context.fillStyle = "red"
-    // console.log(canvas.width / 2 + x - me.weaponX - PLAYER_RADIUS, canvas.height / 2 + y - me.weaponY - PLAYER_RADIUS)
+    // console.log(canvas.width / 2 + x - me.weaponX - Constants.PLAYER_RADIUS, canvas.height / 2 + y - me.weaponY - Constants.PLAYER_RADIUS)
+    // console.log(player.weaponX, player.weaponY)
 
-    // context.fillRect(
-    //     canvas.width / 2 + player.weaponX - me.x - 5,
-    //     canvas.height / 2 + player.weaponY - me.y - 5,
-    //     10,
-    //     10,
-    // )
-    // context.fillRect(
-    //     canvas.width / 2 + player.weaponX2 - me.x - 5,
-    //     canvas.height / 2 + player.weaponY2 - me.y - 5,
-    //     10,
-    //     10,
-    // )
+    context.fillRect(
+        canvas.width / 2 + player.weaponX - me.x - 5,
+        canvas.height / 2 + player.weaponY - me.y - 5,
+        10,
+        10,
+    )
+    context.fillRect(
+        canvas.width / 2 + player.weaponX2 - me.x - 5,
+        canvas.height / 2 + player.weaponY2 - me.y - 5,
+        10,
+        10,
+    )
 
     // Draw name
     let lvlString = "lvl"
@@ -72,6 +74,16 @@ export function renderPlayer(me, player) {
     context.textAlign = 'center'
     context.fillText(player.username, canvasX, canvasY - Constants.PLAYER_RADIUS - 12)
     context.save()
+
+    // Draw crown
+    if(player.leader)
+        context.drawImage(
+            getAsset(`crown.svg`),
+            canvasX - 12,
+            canvasY - Constants.PLAYER_RADIUS - 50,
+            24,
+            24,
+        )
     // Draw level
     context.font = "12px Verdana"
     context.fillText(`${player.level} ${lvlString}`, canvasX, canvasY - Constants.PLAYER_RADIUS - 24)
