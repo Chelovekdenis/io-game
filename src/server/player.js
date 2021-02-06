@@ -13,7 +13,6 @@ const Constants = require('../shared/constants')
 
 // Баф для первого места
 // Скеил страницы нормальный
-// В state чтобы по одному названию отсекались аргументы
 // Небольшое перемещение врагов по карте
 // Наверное сделать отображение эффектов вместо уровня и
 // чтобы размер шрифта имени не менялся просто так
@@ -382,7 +381,7 @@ class Player extends ObjectClass {
     this.speed += newSkills.speed
     this.pureSpeed += newSkills.speed
     this.attackSpeed -= newSkills.atkSpeed
-    this.defaultAttackSpeed = this.attackSpeed
+    this.defaultAttackSpeed -= newSkills.atkSpeed
 
     this.attributes.strength += newSkills.str
     this.attributes.agility += newSkills.agl

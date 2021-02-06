@@ -116,6 +116,12 @@ class Archer {
     }
 
     serializeForUpdate() {
+        // let {x, ...rest} = super.serializeForUpdate()
+        // x.num5 = 134
+        // return {
+        //     ...x,
+        //     ...rest
+        // }
         return {
             hitAnimation: 0,
             weaponX: 0,

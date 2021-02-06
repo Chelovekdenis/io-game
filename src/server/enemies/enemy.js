@@ -46,6 +46,12 @@ class Enemy extends ObjectClass {
         this.ifStun = false
         this.canSpell = true
         this.canAttack = true
+
+        this.directionPoint = 0
+        this.timeTravel = 0
+        this.dirPiece = 0
+        this.timeRorate = 0
+        this.timeStay = 0
     }
 
     update(dt, x, y) {
@@ -60,9 +66,12 @@ class Enemy extends ObjectClass {
         })
 
         // Уменьшение показателя агресивности со временем
-        this.lastHit.forEach(item => {
-            item.count -= item.count >= 0? dt * 0.1 : 0
-        })
+        this.lastHit.forEach(item =>
+            item.count -= dt * 0.03
+        )
+        this.lastHit = this.lastHit.filter(item =>
+            item.count > 0
+        )
 
         if (!this.effects.stunned.yes)
             this.direction = Math.atan2(x - this.x, this.y - y)
@@ -96,6 +105,36 @@ class Enemy extends ObjectClass {
             }
         }
 
+    }
+
+    promenade(dt) {
+        if(this.timeTravel <= 0) {
+            this.timeTravel = 180 + Math.random() * Constants.MAP_FPS * 20
+            this.directionPoint = - 3.1415 + Math.random() * 6.2830
+            this.dirPiece = this.direction > this.directionPoint ?
+                (this.directionPoint - this.direction) / Constants.MAP_FPS :
+                (this.direction - this.directionPoint) / Constants.MAP_FPS
+            this.timeRorate = Constants.MAP_FPS
+            this.timeStay = 180 + Math.random() * Constants.MAP_FPS * 20
+        }
+
+         if(this.timeStay > 0) {
+            this.timeStay--
+        } else if(this.timeRorate > 0) {
+            this.direction += this.dirPiece / 5
+            this.timeRorate--
+        } else {
+            this.timeTravel--
+            this.x = this.x + dt * this.speed * Math.sin(this.direction)
+            this.y = this.y - dt * this.speed * Math.cos(this.direction)
+
+            // Не дает зайти за барьер
+            if(this.x > Constants.MAP_SIZE || this.y > Constants.MAP_SIZE
+                || this.x < 0 || this.y < 0)
+                this.direction += 1.57
+            this.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.x))
+            this.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.y))
+        }
     }
 
     weaponsHit(object) {

@@ -131,9 +131,9 @@ class Game {
             const id = shortid()
             this.trees[id] = new Tree(id, x, y)
         }
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 10; i++) {
             this.spawnEnemy()
-            this.spawnEnemyWarrior()
+            // this.spawnEnemyWarrior()
         }
         // this.spawnBoss()
     }
@@ -440,6 +440,10 @@ class Game {
     enemyUpdate(object, players, agrDist, units, dt, othersUnits) {
         Object.keys(object).forEach(id => {
             const person = object[id]
+            const earlyX = person.x
+            const earlyY = person.y
+            let unitsWom = units.filter( e => e !== person)
+
             let targetId = person.chosenTarget(players, 1000, agrDist)
             if(!targetId) {
                 person.functionStack.forEach((item, i) => {
@@ -447,6 +451,11 @@ class Game {
                         item.rec(item.recData)
                     person.functionStack.splice(i, 1)
                 })
+                person.promenade(dt)
+                if (circleToCircleLiteNew(person, othersUnits.concat(unitsWom))){
+                    person.x = earlyX
+                    person.y = earlyY
+                }
             }
             // if(enemy.needStun)
             //     enemy.setStun(3)
@@ -454,9 +463,6 @@ class Game {
                 person.setKick(0.1)
 
             if (targetId) {
-                let unitsWom = units.filter( e => e !== person)
-                const earlyX = person.x
-                const earlyY = person.y
                 let player = this.players[targetId]
                 person.toAttack = player.distanceTo(person)<= 100
                 person.update(dt, player.x, player.y)
