@@ -4,6 +4,12 @@ const Constants = require('../../shared/constants')
 class Warlord extends Warrior {
     constructor(id, x, y, click, direction, speed, damage, atkSpeed) {
         super(id, x, y, click, direction, speed, damage, atkSpeed)
+        this.availableAbilities = {
+            first: true,
+            second: true,
+            third: false,
+            fourth: false,
+        }
     }
 
     update(dt) {
@@ -21,9 +27,20 @@ class Warlord extends Warrior {
         this.weaponY2 = this.y - b * 10
     }
 
+    spellTwo(dt) {
+        this.attackSpeed = this.defaultAttackSpeed / 2
+        this.speed = this.pureSpeed * 1.3
+    }
+
+    afterSpellTwo(data) {
+        this.attackSpeed = data.atkSpeed
+        this.speed = data.speed
+    }
+
     serializeForUpdate() {
         return {
-            ...(super.serializeForUpdate())
+            ...(super.serializeForUpdate()),
+            abilityName2: "Rage"
         }
     }
 }

@@ -20,12 +20,18 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
       context.textAlign = 'center'
       context.font = "16px Verdana"
       context.fillText(`${i+1}`, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter), canvas.height - 120)
-      if(i === 0) {
+      if(i === 0 && me.availableAbilities.first) {
           if(me.abilityCd.first > 0)
               context.fillText(`${me.abilityCd.first.toFixed(1)}`, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter) + 25, canvas.height - 95)
           else
               context.fillText(`${me.abilityName1}`, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter) + 25, canvas.height - 95)
       }
+      else if(i === 1  && me.availableAbilities.second) {
+            if(me.abilityCd.second > 0)
+                context.fillText(`${me.abilityCd.second.toFixed(1)}`, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter) + 25, canvas.height - 95)
+            else
+                context.fillText(`${me.abilityName2}`, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter) + 25, canvas.height - 95)
+        }
     }
     // Mini map
     context.fillStyle = "rgba(51, 46, 61,0.7)"

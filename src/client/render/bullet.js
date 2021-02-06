@@ -14,12 +14,21 @@ export function renderBullet(me, bullet) {
     // Animation hit
     context.rotate(bullet.direction)
 
-    context.drawImage(
-        getAsset('arrow.svg'),
-        - Constants.BULLET_RADIUS*10,
-        - Constants.BULLET_RADIUS*10,
-        Constants.BULLET_RADIUS * 20,
-        Constants.BULLET_RADIUS * 20,
-    )
+    if(bullet.isSlow)
+        context.drawImage(
+            getAsset('arrow_slow.svg'),
+            - Constants.BULLET_RADIUS*10,
+            - Constants.BULLET_RADIUS*10,
+            Constants.BULLET_RADIUS * 20,
+            Constants.BULLET_RADIUS * 20,
+        )
+    else
+        context.drawImage(
+            getAsset('arrow.svg'),
+            - Constants.BULLET_RADIUS*10,
+            - Constants.BULLET_RADIUS*10,
+            Constants.BULLET_RADIUS * 20,
+            Constants.BULLET_RADIUS * 20,
+        )
     context.restore()
 }

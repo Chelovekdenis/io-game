@@ -68,6 +68,10 @@ export function renderPlayer(me, player) {
         player.username = "STUN"
         player.level = player.effects.stunned.time.toFixed(1)
         lvlString = ""
+    } else if (player.effects.slowed.yes) {
+        player.username = "SLOWED"
+        player.level = player.effects.slowed.time.toFixed(1)
+        lvlString = ""
     }
     context.fillStyle = 'white'
     context.textBaseline = "middle"

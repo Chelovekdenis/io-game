@@ -16,6 +16,8 @@ exports.applyCollisions = (objects, bullets, r) => {
                 object.needKick.need = true
                 object.needKick.dir = bullet.direction
                 object.needKick.power = 75
+                if(bullet.isSlow)
+                    object.setSlow(5)
                 break
             }
         }

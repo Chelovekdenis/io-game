@@ -28,6 +28,10 @@ class Enemy extends ObjectClass {
             stunned: {
                 yes: false,
                 time: 0
+            },
+            slowed: {
+                yes: false,
+                time: 0
             }
         }
 
@@ -117,6 +121,16 @@ class Enemy extends ObjectClass {
         })
     }
 
+    setSlow(sec) {
+        this.effects.slowed.time = sec
+        this.functionStack.push({
+            func: this.slow.bind(this),
+            sec: sec,
+            rec: this.afterSlow.bind(this),
+            recData: this.pureSpeed
+        })
+    }
+
     hitKick(dt) {
         this.x += this.needKick.power * Math.sin(this.needKick.dir) * dt
         this.y -= this.needKick.power * Math.cos(this.needKick.dir) * dt
@@ -139,6 +153,18 @@ class Enemy extends ObjectClass {
         this.canAttack = true
         this.effects.stunned.yes = false
         this.effects.stunned.time = 0
+    }
+
+    slow(dt, sec) {
+        this.speed = this.pureSpeed * 0.8
+        this.effects.slowed.yes = true
+        this.effects.slowed.time = sec
+    }
+
+    afterSlow(speed) {
+        this.speed = speed
+        this.effects.slowed.yes = false
+        this.effects.slowed.time = 0
     }
 
     // hitKick(dt) {

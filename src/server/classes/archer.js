@@ -14,6 +14,13 @@ class Archer {
         this.ifSlowBullet = false
         this.lastMove = {}
         this.lastClick = false
+
+        this.availableAbilities = {
+            first: true,
+            second: false,
+            third: false,
+            fourth: false,
+        }
     }
     update(dt) {
         if (this.fireCooldown > 0)
@@ -24,13 +31,13 @@ class Archer {
                 // Двинуть передсобой, чтобы вылетали из дула
                 let sendX = this.x + dt * this.speed * Math.sin(this.direction) * 10
                 let sendY = this.y - dt * this.speed * Math.cos(this.direction) * 10
-                return new Bullet(this.id, sendX, sendY, this.direction, this.damage)
+                return new Bullet(this.id, sendX, sendY, this.direction, this.damage, false)
             }
         }
         if(this.ifSlowBullet) {
             let sendX = this.x + dt * this.speed * Math.sin(this.direction) * 10
             let sendY = this.y - dt * this.speed * Math.cos(this.direction) * 10
-            return new Bullet(this.id, sendX, sendY, this.direction, this.damage*100)
+            return new Bullet(this.id, sendX, sendY, this.direction, this.damage, true)
         }
 
         return null
@@ -117,7 +124,8 @@ class Archer {
             weaponY2: 0,
             damage: this.damage,
             atkSpeed: this.attackSpeed,
-            abilityName1: "Bounce"
+            abilityName1: "Bounce",
+            availableAbilities: this.availableAbilities
         }
     }
 }

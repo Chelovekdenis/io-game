@@ -12,6 +12,13 @@ const Constants = require('../shared/constants')
 
 
 // Баф для первого места
+// Скеил страницы нормальный
+// В state чтобы по одному названию отсекались аргументы
+// Небольшое перемещение врагов по карте
+// Наверное сделать отображение эффектов вместо уровня и
+// чтобы размер шрифта имени не менялся просто так
+// Увеличить карту
+// Спавн игроков по краям, и сила противников увеличивается ближе к центру
 
 class Player extends ObjectClass {
   constructor(id, username, x, y) {
@@ -52,17 +59,21 @@ class Player extends ObjectClass {
 
     this.reductionCd = 1
     this.abilityCd = {
-      first: 0
+      first: 0,
+      second: 0
     }
     this.abilityMaxCd = {
-      first: 2
+      first: 2,
+      second: 3
     }
     this.defualtAbilityMaxCd = {
-      first: 2
+      first: 2,
+      second: 3
     }
 
     this.listDamaged = []
     this.attackSpeed = 0.6
+    this.defaultAttackSpeed = this.attackSpeed
     this.weaponX = 0
     this.weaponY = 0
     this.weaponX2 = 0
@@ -94,6 +105,10 @@ class Player extends ObjectClass {
 
     this.effects = {
       stunned: {
+        yes: false,
+        time: 0
+      },
+      slowed: {
         yes: false,
         time: 0
       }
@@ -132,6 +147,7 @@ class Player extends ObjectClass {
       item.count > 0
     )
 
+    // Regeneration
     if(this.maxHp > this.hp) {
       this.hp += dt * this.skills.regeneration
       if(this.maxHp < this.hp) {
@@ -139,6 +155,7 @@ class Player extends ObjectClass {
       }
     }
 
+    // Lvl up
     if(this.score >= Constants.EXP_FOR_LEVEL_UP[this.level+1]) {
       this.level++
       this.skillPoints++
@@ -207,8 +224,22 @@ class Player extends ObjectClass {
     })
   }
 
+  setSlow(sec) {
+    this.effects.slowed.time = sec
+    this.functionStack.push({
+      func: this.slow.bind(this),
+      sec: sec,
+      rec: this.afterSlow.bind(this),
+      recData: this.pureSpeed
+    })
+  }
+
   setAbility(item, sec) {
-    if (this.abilityCd.first <= 0 && this.canSpell) {
+    // First
+    if (this.abilityCd.first <= 0
+        && this.canSpell
+        && item === 1
+        && this.class.availableAbilities.first) {
       this.item = item
       this.lastDir = this.direction
       this.lastMove = this.move
@@ -226,6 +257,34 @@ class Player extends ObjectClass {
           this.abilityCd.first -= dt
         }.bind(this),
         sec: this.abilityMaxCd.first
+      })
+    }
+
+    // Second
+    if (this.abilityCd.second <= 0
+        && this.canSpell
+        && item === 2
+        && this.class.availableAbilities.second) {
+      this.item = item
+      this.lastDir = this.direction
+      this.lastMove = this.move
+      this.lastClick = this.click
+      this.functionStack.push({
+        func: this.class.spellTwo.bind(this),
+        sec: sec * 10,
+        rec: this.class.afterSpellTwo.bind(this),
+        recData: {
+          atkSpeed: this.defaultAttackSpeed,
+          speed: this.pureSpeed
+        },
+      })
+      this.functionStack.push({
+        func: function(dt) {
+          if(this.abilityCd.second <= 0)
+            this.abilityCd.second = this.abilityMaxCd.second
+          this.abilityCd.second -= dt
+        }.bind(this),
+        sec: this.abilityMaxCd.second
       })
     }
   }
@@ -251,6 +310,18 @@ class Player extends ObjectClass {
     this.canAttack = true
     this.effects.stunned.yes = false
     this.effects.stunned.time = 0
+  }
+
+  slow(dt, sec) {
+    this.speed = this.pureSpeed * 0.8
+    this.effects.slowed.yes = true
+    this.effects.slowed.time = sec
+  }
+
+  afterSlow(speed) {
+    this.speed = speed
+    this.effects.slowed.yes = false
+    this.effects.slowed.time = 0
   }
 
   weaponsHit(object) {
@@ -311,6 +382,7 @@ class Player extends ObjectClass {
     this.speed += newSkills.speed
     this.pureSpeed += newSkills.speed
     this.attackSpeed -= newSkills.atkSpeed
+    this.defaultAttackSpeed = this.attackSpeed
 
     this.attributes.strength += newSkills.str
     this.attributes.agility += newSkills.agl

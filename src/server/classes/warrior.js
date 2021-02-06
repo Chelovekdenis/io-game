@@ -17,6 +17,13 @@ class Warrior {
         this.weaponX2 = 0
         this.weaponY2 = 0
         this.hitAnimation = 0
+
+        this.availableAbilities = {
+            first: true,
+            second: false,
+            third: false,
+            fourth: false,
+        }
     }
     update(dt) {
         // Анимация удара
@@ -138,7 +145,8 @@ class Warrior {
             weaponY2: this.weaponY2,
             damage: this.damage,
             atkSpeed: this.attackSpeed,
-            abilityName1: "Rush"
+            abilityName1: "Rush",
+            availableAbilities: this.availableAbilities
         }
     }
 }

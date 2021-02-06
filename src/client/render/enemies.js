@@ -54,6 +54,10 @@ export function renderEnemies(me, enemy) {
     if(enemy.effects.stunned.yes === true) {
         enemy.level = "STUN"
         lvlString = enemy.effects.stunned.time.toFixed(1)
+    } else if (enemy.effects.slowed.yes) {
+        enemy.level = "SLOWED"
+        lvlString = enemy.effects.slowed.time.toFixed(1)
+
     }
     context.font = "12px Verdana"
     context.fillStyle = 'white'
