@@ -149,7 +149,7 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
         20,
         20,
     )
-    context.fillText(`${me.speed}`, xImg+50, yImg - 40 + 20)
+    context.fillText(`${me.speed.toFixed(0)}`, xImg+50, yImg - 40 + 20)
 
     // Leaderboard
     let aa_x = canvas.width-200

@@ -15,7 +15,19 @@ export function renderPlayer(me, player) {
     // Animation hit
     context.rotate(direction + hitAnimation)
 
-    let atk = skills.attack
+    let atk = 0
+    if(className === "warrior") {
+        atk = player.attributes.strength
+    }
+    else if (className === "warlord") {
+        atk = player.attributes.strength / 3
+    }
+    else if (className === "archer") {
+        atk = player.attributes.agility
+    }
+    else if (className === "sniper") {
+        atk = player.attributes.agility / 3
+    }
     if(className === "fighter") {
         if(player.level >= 2) {
             atk = 2

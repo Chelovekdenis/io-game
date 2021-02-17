@@ -29,8 +29,8 @@ class Archer {
             if (this.fireCooldown <= 0) {
                 this.fireCooldown += this.attackSpeed
                 // Двинуть передсобой, чтобы вылетали из дула
-                let sendX = this.x + dt * this.speed * Math.sin(this.direction) * 10
-                let sendY = this.y - dt * this.speed * Math.cos(this.direction) * 10
+                let sendX = this.x + dt * 400 * Math.sin(this.direction) * 8
+                let sendY = this.y - dt * 400 * Math.cos(this.direction) * 8
                 return new Bullet(this.id, sendX, sendY, this.direction, this.damage, false)
             }
         }
@@ -104,8 +104,8 @@ class Archer {
             case "agility":
                 newChar.atk = 1
                 newChar.def = 1
-                newChar.atkSpeed = 0.01
-                newChar.speed = 5
+                newChar.atkSpeed = 0.005
+                newChar.speed = 0.2
                 newChar.agl = 1
                 break
             case "intelligence":

@@ -7,7 +7,7 @@ let obj = {
 
     PLAYER_RADIUS: 25,
     PLAYER_MAX_HP: 100,
-    PLAYER_SPEED: 400,
+    PLAYER_SPEED: 300,
     PLAYER_FIRE_COOLDOWN: 1,
 
     BULLET_RADIUS: 3,
@@ -21,7 +21,7 @@ let obj = {
     TREE_RADIUS: 50,
 
     SCORE_BULLET_HIT: 20,
-    SCORE_PER_SECOND: 1,
+    SCORE_PER_SECOND: 0.5,
     EXP_FOR_LEVEL_UP: expForLevelUp(),
 
     PI_15: Math.PI * 1.5,
@@ -29,12 +29,12 @@ let obj = {
     PI_30: Math.PI / 3,
     PI_40: Math.PI / 4,
 
-    MAP_SIZE: 16000,
-    HALF_MAP_SIZE: 8000,
-    COUNT_BACKS: 16,
-    COUNT_SWAMP_BACKS: 18,
+    MAP_SIZE: 8000,
+    HALF_MAP_SIZE: 4000,
+    COUNT_BACKS: 8,
+    COUNT_SWAMP_BACKS: 10,
 
-    MAP_FPS: 1000/90,
+    MAP_FPS: 1000/60,
     MSG_TYPES: {
       JOIN_GAME: 'join_game',
       GAME_UPDATE: 'update',

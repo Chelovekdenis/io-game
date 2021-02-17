@@ -1,4 +1,5 @@
 const ObjectClass = require('./object')
+const Fighter = require('./classes/fighter')
 const Warrior = require('./classes/warrior')
 const Warlord = require('./classes/warlord')
 const Archer = require('./classes/archer')
@@ -10,10 +11,13 @@ const Constants = require('../shared/constants')
 // Всплывающее окно перед закрытием
 // За просмотр рекламы восрешение с 20% опыт от смерти
 
-
 // Скеил страницы нормальный
-// Спавн игроков по краям, и сила противников увеличивается ближе к центру
-// Баланс параметров и уровня добавить
+// Начальный экран изменить
+// Босса потправить и начальные очки равные 0
+
+// Недочеты
+// Если несолько раз нажать на выбор атрибута
+// в следующий раз он выберется автоматически
 
 class Player extends ObjectClass {
   constructor(id, username, x, y) {
@@ -28,7 +32,7 @@ class Player extends ObjectClass {
     this.count = 0
 
     this.level = 0
-    this.score = 86270
+    this.score = 1000000
     this.leaderBuff = 1
     this.skillPoints = 0
     this.sendMsgSP = false
@@ -59,12 +63,12 @@ class Player extends ObjectClass {
       second: 0
     }
     this.abilityMaxCd = {
-      first: 2,
-      second: 3
+      first: 10,
+      second: 15
     }
     this.defualtAbilityMaxCd = {
-      first: 2,
-      second: 3
+      first: 10,
+      second: 15
     }
 
     this.listDamaged = []
@@ -121,7 +125,7 @@ class Player extends ObjectClass {
     this.lastHit = ''
 
     this.className = Constants.CLASSES.FIGHTER
-    this.class = new Warrior(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.class = new Fighter(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
     // this.class2 = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage)
 
     this.updateClass = (dt) => {
@@ -214,7 +218,9 @@ class Player extends ObjectClass {
   setKick(sec) {
     this.functionStack.push({
       func: this.hitKick.bind(this),
-      sec: sec
+      sec: sec,
+      rec: this.afterKick.bind(this),
+      recData: this.pureSpeed
     })
   }
 
@@ -294,9 +300,14 @@ class Player extends ObjectClass {
   }
 
   hitKick(dt) {
+    this.speed = this.pureSpeed * 0.8
     this.x += this.needKick.power * Math.sin(this.needKick.dir) * dt
     this.y -= this.needKick.power * Math.cos(this.needKick.dir) * dt
     this.needKick.need = false
+  }
+
+  afterKick(speed) {
+    this.speed = speed
   }
 
   stun(dt, sec) {
@@ -341,7 +352,7 @@ class Player extends ObjectClass {
   }
 
   setDamage() {
-    this.damage = 1 + 0.3 * this.skills.attack + 10
+    this.damage = 10 + 2 * this.skills.attack
   }
 
   setDefense() {
@@ -350,7 +361,7 @@ class Player extends ObjectClass {
 
   setHp() {
     let hpProportion = this.hp / this.maxHp
-    this.maxHp = Constants.PLAYER_MAX_HP + Constants.PLAYER_MAX_HP * 0.1 * this.skills.maxHp
+    this.maxHp = Constants.PLAYER_MAX_HP + Constants.PLAYER_MAX_HP * this.skills.maxHp
     this.hp = this.maxHp * hpProportion
   }
 
@@ -358,7 +369,7 @@ class Player extends ObjectClass {
       this.reductionCd = this.attributes.intelligence <= 20 ? 1 - this.attributes.intelligence * 0.02 : 0.6
       for (let key in this.abilityMaxCd) {
           this.abilityMaxCd[key] = this.defualtAbilityMaxCd[key] * this.reductionCd
-          console.log(this.abilityMaxCd[key])
+          // console.log(this.abilityMaxCd[key])
       }
 
   }
@@ -369,11 +380,14 @@ class Player extends ObjectClass {
   }
 
   onDealtDamage(dopScore) {
-    this.score += this.damage + dopScore  * this.leaderBuff
+    let temp = 1
+    if(this.level < 3)
+      temp = 10
+    this.score += this.damage / 5 + dopScore / 5  * this.leaderBuff + temp
   }
 
   onKill(level) {
-    this.score += Constants.EXP_FOR_LEVEL_UP[level]/4  * this.leaderBuff
+    this.score += Constants.EXP_FOR_LEVEL_UP[level] / 10  * this.leaderBuff
   }
 
   setAttributes(item) {
@@ -414,7 +428,7 @@ class Player extends ObjectClass {
         this.setHp()
 
         this.updateClass = (dt) => {
-          this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage)
+          this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.lastMove, this.lastClick)
           this.class.update(dt)
           this.giveDamage = this.class.getInfo()
         }

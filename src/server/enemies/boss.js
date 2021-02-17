@@ -5,12 +5,12 @@ const Constants = require('../../shared/constants')
 class Boss extends Enemy {
     constructor(id, x, y, speed) {
         super(id, x, y, speed)
-        this.hp = 2000
-        this.maxHp = 2000
-        this.level = 20
+        this.hp = 40000
+        this.maxHp = 40000
+        this.level = 40
         this.radius = Constants.BOSS_RADIUS
 
-        this.damage = 1
+        this.damage = 40
 
         this.weaponX2 = 0
         this.weaponY2 = 0
@@ -21,18 +21,26 @@ class Boss extends Enemy {
     update(dt, x, y) {
         super.update(dt, x, y)
 
-        let a = dt * 400 * Math.sin(this.direction + Constants.PI_40 + this.hitAnimation)
-        let b = dt * 400 * Math.cos(this.direction + Constants.PI_40 + this.hitAnimation)
-        this.weaponX = this.x + a * 24
-        this.weaponY = this.y - b * 24
-        a = dt * 400 * Math.sin(this.direction + Constants.PI_30 + this.hitAnimation)
-        b = dt * 400 * Math.cos(this.direction + Constants.PI_30 + this.hitAnimation)
-        this.weaponX2 = this.x + a * 48
-        this.weaponY2 = this.y - b * 48
-        a = dt * 400 * Math.sin(this.direction + Constants.PI_25 + this.hitAnimation)
-        b = dt * 400 * Math.cos(this.direction + Constants.PI_25 + this.hitAnimation)
-        this.weaponX3 = this.x + a * 32
-        this.weaponY3 = this.y - b * 32
+        // Regeneration
+        if(this.maxHp > this.hp) {
+            this.hp += dt * 10
+            if(this.maxHp < this.hp) {
+                this.hp = this.maxHp
+            }
+        }
+
+        let a = dt * 400 * Math.sin(this.direction + Constants.PI_30 + this.hitAnimation)
+        let b = dt * 400 * Math.cos(this.direction + Constants.PI_30 + this.hitAnimation)
+        this.weaponX = this.x + a * 26
+        this.weaponY = this.y - b * 26
+        a = dt * 400 * Math.sin(this.direction + Constants.PI_40 + this.hitAnimation)
+        b = dt * 400 * Math.cos(this.direction + Constants.PI_40 + this.hitAnimation)
+        this.weaponX2 = this.x + a * 12
+        this.weaponY2 = this.y - b * 12
+        a = dt * 400 * Math.sin(this.direction + Constants.PI_40 + this.hitAnimation)
+        b = dt * 400 * Math.cos(this.direction + Constants.PI_40 + this.hitAnimation)
+        this.weaponX3 = this.x + a * 19
+        this.weaponY3 = this.y - b * 19
     }
 
     hitKick(dir) {

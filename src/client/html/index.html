@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Our War .io game</title>
+    <title>Medieval War</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="/assets/favicon.ico">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.js" integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
@@ -9,15 +9,19 @@
 <body>
 <canvas id="game-canvas"></canvas>
 <div id="play-menu" class="hidden">
-    <h1>Our War .io game</h1>
+    <h1>Medieval War</h1>
     <p>
-        Stay alive and shoot other players.
+        Прокачивайтесь, сражайтесь,
         <br />
-        Use your mouse to rotating and shooting.
+        уничтожте главного босса.
+        <br />
+        Используйте W A S D
+        <br />
+        и мышку для управления.
     </p>
     <hr />
     <p>
-        Select server
+        Выбирете сервер
         <br />
     </p>
     <label>
@@ -29,13 +33,13 @@
     </label>
     <hr />
     <input type="text" id="username-input" placeholder="Username" />
-    <button id="play-button">PLAY</button>
+    <button id="play-button">ИГРАТЬ</button>
 </div>
 <div id="disconnect-modal" class="hidden">
     <div>
-        <h2>Disconnected from Server </h2>
+        <h2>Отключение от сервера</h2>
         <hr />
-        <button id="reconnect-button">RECONNECT</button>
+        <button id="reconnect-button">ПЕРЕПОДКЛЮЧИТЬСЯ</button>
     </div>
 </div>
 </body>

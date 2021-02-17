@@ -44,7 +44,7 @@ class Game {
         let p = Object.values(this.players)
         let ew = Object.values(this.enemies_warrior)
         // Может лучше радиус Босса?
-        let xy = spawn(e.concat(t, b, p, ew), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS)
+        let xy = spawn(e.concat(t, b, p, ew), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
         this.players[socket.id] = new Player(socket.id, username, xy.x, xy.y)
     }
 
@@ -126,14 +126,16 @@ class Game {
     }
 
     initGame() {
-        for (let i = 0; i < 100; i++) {
-            const x = Constants.MAP_SIZE * (0.1 + Math.random() * 0.8)
-            const y = Constants.MAP_SIZE * (0.1 + Math.random() * 0.8)
+        for (let i = 0; i < 150; i++) {
+            const x = Constants.MAP_SIZE * (0.05 + Math.random() * 0.95)
+            const y = Constants.MAP_SIZE * (0.05 + Math.random() * 0.95)
             const id = shortid()
             this.trees[id] = new Tree(id, x, y)
         }
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 40; i++) {
             this.spawnEnemy()
+        }
+        for (let i = 0; i < 30; i++) {
             this.spawnEnemyWarrior()
         }
         this.spawnBoss()
@@ -146,9 +148,18 @@ class Game {
         let e = Object.values(this.enemies)
         let ew = Object.values(this.enemies_warrior)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, b, e, ew), Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS)
+        let xy = spawn(p.concat(t, b, e, ew), Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS, 0.2, 0.8, 0.05, 0.9)
         const id = shortid()
-        this.enemies[id] = new Enemy(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.6 * 0.2, this.randomInteger(1, 10))
+
+        let sum = 0
+        p.forEach(item => {
+            sum += item.level
+        })
+        if(p.length) {
+            sum /= p.length
+            console.log(sum)
+        }
+        this.enemies[id] = new Enemy(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.8, this.randomInteger(1 , Math.min(2 + sum, 10)))
     }
 
     spawnEnemyWarrior() {
@@ -158,9 +169,9 @@ class Game {
         let e = Object.values(this.enemies)
         let ew = Object.values(this.enemies_warrior)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, b, e, ew), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS)
+        let xy = spawn(p.concat(t, b, e, ew), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS, 0.45, 0.55, 0.25, 0.7)
         const id = shortid()
-        this.enemies_warrior[id] = new EnemyWarrior(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.9 * 0.2, this.randomInteger(11, 20))
+        this.enemies_warrior[id] = new EnemyWarrior(id, xy.x, xy.y, Constants.PLAYER_SPEED, this.randomInteger(11, 20))
     }
 
     spawnBoss() {
@@ -169,9 +180,9 @@ class Game {
         let e = Object.values(this.enemies)
         let ew = Object.values(this.enemies_warrior)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, e, ew), Constants.TREE_RADIUS, Constants.BOSS_RADIUS)
+        let xy = spawn(p.concat(t, e, ew), Constants.TREE_RADIUS, Constants.BOSS_RADIUS, 0.5, 0.5, 0.5, 0.5)
         const id = shortid()
-        this.boss[id] = new Boss(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.3)
+        this.boss[id] = new Boss(id, xy.x, xy.y, Constants.PLAYER_SPEED * 1.2)
     }
 
     gameInfo() {
@@ -245,7 +256,7 @@ class Game {
                     beaten.takeDamage(player.damage, player.id)
                     beaten.needKick.need = true
                     beaten.needKick.dir = Math.atan2(beaten.x - player.x, player.y - beaten.y)
-                    beaten.needKick.power = player.className === Constants.CLASSES.WARLORD ? 200 : 150
+                    beaten.needKick.power = player.className === Constants.CLASSES.WARLORD ? 300 : 200
                     player.listDamaged.push({id: beaten.id, count: player.attackSpeed})
                     player.onDealtDamage(0)
                 }
@@ -257,7 +268,7 @@ class Game {
                     beatenEnemy.takeDamage(player.damage, player.id)
                     beatenEnemy.needKick.need = true
                     beatenEnemy.needKick.dir = Math.atan2(beatenEnemy.x - player.x, player.y - beatenEnemy.y)
-                    beatenEnemy.needKick.power = player.className === Constants.CLASSES.WARLORD ? 300 : 250
+                    beatenEnemy.needKick.power = player.className === Constants.CLASSES.WARLORD ? 400 : 300
                     player.listDamaged.push({id: beatenEnemy.id, count: player.attackSpeed})
                     player.onDealtDamage(0)
 
@@ -270,7 +281,7 @@ class Game {
                     beatenEnemyWarrior.takeDamage(player.damage, player.id)
                     beatenEnemyWarrior.needKick.need = true
                     beatenEnemyWarrior.needKick.dir = Math.atan2(beatenEnemyWarrior.x - player.x, player.y - beatenEnemyWarrior.y)
-                    beatenEnemyWarrior.needKick.power = player.className === Constants.CLASSES.WARLORD ? 200 : 150
+                    beatenEnemyWarrior.needKick.power = player.className === Constants.CLASSES.WARLORD ? 300 : 200
                     player.listDamaged.push({id: beatenEnemyWarrior.id, count: player.attackSpeed})
                     player.onDealtDamage(0)
 
@@ -325,7 +336,7 @@ class Game {
         enemies_warrior = Object.values(this.enemies_warrior)
 
         // Обновление противников
-        this.enemyUpdate(this.enemies, players, 300, enemies, dt,
+        this.enemyUpdate(this.enemies, players, 200, enemies, dt,
             [].concat(players, enemies_warrior, trees, boss))
 
         // Убиты ли противники
@@ -338,13 +349,12 @@ class Game {
             }
         })
 
-
         players = Object.values(this.players)
         enemies = Object.values(this.enemies)
         enemies_warrior = Object.values(this.enemies_warrior)
 
         // Обновление противников-войнов
-        this.enemyUpdate(this.enemies_warrior, players, 400, enemies_warrior, dt,
+        this.enemyUpdate(this.enemies_warrior, players, 300, enemies_warrior, dt,
             [].concat(players, enemies, trees, boss))
 
         Object.keys(this.enemies_warrior).forEach(enemyId => {
@@ -452,7 +462,6 @@ class Game {
 
         // Send a game update to each player every other time
         if (this.shouldSendUpdate) {
-            console.log("send")
             const leaderboard = this.getLeaderboard()
             Object.keys(this.sockets).forEach(playerID => {
                 const socket = this.sockets[playerID]
@@ -492,7 +501,7 @@ class Game {
 
             if (targetId) {
                 let player = this.players[targetId]
-                person.toAttack = player.distanceTo(person)<= 100
+                person.toAttack = player.distanceTo(person)<= 140
                 person.update(dt, player.x, player.y)
 
                 if (circleToCircleLiteNew(person, othersUnits.concat(unitsWom))){
@@ -502,8 +511,12 @@ class Game {
                 }
                 if (person.giveDamage === true) {
                     let beaten = hitPlayer(person, players, Constants.PLAYER_RADIUS)
-                    if (beaten)
+                    if (beaten) {
                         beaten.takeDamage(person.damage, person.id)
+                        beaten.needKick.need = true
+                        beaten.needKick.dir = Math.atan2(beaten.x - person.x, person.y - beaten.y)
+                        beaten.needKick.power = person.className === "ew" ? 200 : 100
+                    }
                 }
             }
         })

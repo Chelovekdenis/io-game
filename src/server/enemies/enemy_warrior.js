@@ -4,12 +4,13 @@ const Constants = require('../../shared/constants')
 class EnemyWarrior extends Enemy {
     constructor(id, x, y, speed, lvl) {
         super(id, x, y, speed)
-        this.maxHp = 70 + 30 * lvl
+        this.maxHp = 70 + 50 * lvl
         this.hp = this.maxHp
         this.level = lvl
         this.radius = Constants.PLAYER_RADIUS
-        // this.damage = 0.6 + 0.2 * lvl
-        this.damage = 0.2
+        this.damage = 0.6 + 0.5 * lvl
+        // this.damage = 0.2
+        this.className = "ew"
 
         this.weaponX = 0
         this.weaponY = 0
@@ -22,12 +23,12 @@ class EnemyWarrior extends Enemy {
 
         let a = dt * 400 * Math.sin(this.direction + Constants.PI_25 + this.hitAnimation)
         let b = dt * 400 * Math.cos(this.direction + Constants.PI_25 + this.hitAnimation)
-        this.weaponX = this.x + a * 16
-        this.weaponY = this.y - b * 16
+        this.weaponX = this.x + a * 12
+        this.weaponY = this.y - b * 12
         a = dt * 400 * Math.sin(this.direction + Constants.PI_40 + this.hitAnimation)
         b = dt * 400 * Math.cos(this.direction + Constants.PI_40 + this.hitAnimation)
-        this.weaponX2 = this.x + a * 9
-        this.weaponY2 = this.y - b * 9
+        this.weaponX2 = this.x + a * 7
+        this.weaponY2 = this.y - b * 7
     }
 
     weaponsHit(object) {

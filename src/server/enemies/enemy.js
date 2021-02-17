@@ -5,9 +5,10 @@ class Enemy extends ObjectClass {
     constructor(id, x, y, speed, lvl) {
         super(id, x, y, speed, Constants.ENEMY_RADIUS)
         this.direction = 0
-        this.maxHp = 35 + 15 * lvl
+        this.maxHp = 35 + 30 * lvl
         this.hp = this.maxHp
         this.level = lvl
+        this.className = "e"
 
         this.toAttack = false
         this.count = 0
@@ -17,8 +18,8 @@ class Enemy extends ObjectClass {
         this.weaponX = 0
         this.weaponY = 0
 
-        // this.damage = 0.3 + 0.1 * lvl
-        this.damage = 0.1
+        this.damage = 0.3 + 0.3 * lvl
+        // this.damage = 0.1
         this.lastHit = []
         this.lh = ''
 
@@ -125,8 +126,8 @@ class Enemy extends ObjectClass {
             this.timeRorate--
         } else {
             this.timeTravel--
-            this.x = this.x + dt * this.speed * Math.sin(this.direction)
-            this.y = this.y - dt * this.speed * Math.cos(this.direction)
+            this.x = this.x + dt * this.speed * Math.sin(this.direction) / 5
+            this.y = this.y - dt * this.speed * Math.cos(this.direction) / 5
 
             // Не дает зайти за барьер
             if(this.x > Constants.MAP_SIZE || this.y > Constants.MAP_SIZE
@@ -146,7 +147,9 @@ class Enemy extends ObjectClass {
     setKick(sec) {
         this.functionStack.push({
             func: this.hitKick.bind(this),
-            sec: sec
+            sec: sec,
+            rec: this.afterKick.bind(this),
+            recData: this.pureSpeed
         })
     }
 
@@ -171,9 +174,14 @@ class Enemy extends ObjectClass {
     }
 
     hitKick(dt) {
+        this.speed = this.pureSpeed * 0.8
         this.x += this.needKick.power * Math.sin(this.needKick.dir) * dt
         this.y -= this.needKick.power * Math.cos(this.needKick.dir) * dt
         this.needKick.need = false
+    }
+
+    afterKick(speed) {
+        this.speed = speed
     }
 
     stun(dt, sec) {
