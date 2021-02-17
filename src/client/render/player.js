@@ -49,30 +49,21 @@ export function renderPlayer(me, player) {
     // console.log(canvas.width / 2 + x - me.weaponX - Constants.PLAYER_RADIUS, canvas.height / 2 + y - me.weaponY - Constants.PLAYER_RADIUS)
     // console.log(player.weaponX, player.weaponY)
 
-    context.fillRect(
-        canvas.width / 2 + player.weaponX - me.x - 5,
-        canvas.height / 2 + player.weaponY - me.y - 5,
-        10,
-        10,
-    )
-    context.fillRect(
-        canvas.width / 2 + player.weaponX2 - me.x - 5,
-        canvas.height / 2 + player.weaponY2 - me.y - 5,
-        10,
-        10,
-    )
+    // context.fillRect(
+    //     canvas.width / 2 + player.weaponX - me.x - 5,
+    //     canvas.height / 2 + player.weaponY - me.y - 5,
+    //     10,
+    //     10,
+    // )
+    // context.fillRect(
+    //     canvas.width / 2 + player.weaponX2 - me.x - 5,
+    //     canvas.height / 2 + player.weaponY2 - me.y - 5,
+    //     10,
+    //     10,
+    // )
 
     // Draw name
-    let lvlString = "lvl"
-    if(player.effects.stunned.yes === true) {
-        player.username = "STUN"
-        player.level = player.effects.stunned.time.toFixed(1)
-        lvlString = ""
-    } else if (player.effects.slowed.yes) {
-        player.username = "SLOWED"
-        player.level = player.effects.slowed.time.toFixed(1)
-        lvlString = ""
-    }
+
     context.fillStyle = 'white'
     context.textBaseline = "middle"
     context.textAlign = 'center'
@@ -89,8 +80,27 @@ export function renderPlayer(me, player) {
             24,
         )
     // Draw level
+    let lvlString = "lvl"
+    let tempLevel = player.level
+    if(player.effects.stunned.yes) {
+        player.level = "STUN"
+        lvlString = player.effects.stunned.time.toFixed(1)
+    } else if (player.effects.slowed.yes) {
+        player.level = "SLOWED"
+        lvlString = player.effects.slowed.time.toFixed(1)
+
+    } else if (player.effects.rage.yes) {
+        player.level = "RAGE"
+        lvlString = player.effects.rage.time.toFixed(1)
+
+    } else if (player.effects.storm.yes) {
+        player.level = "STORM"
+        lvlString = player.effects.storm.time.toFixed(1)
+
+    }
     context.font = "12px Verdana"
     context.fillText(`${player.level} ${lvlString}`, canvasX, canvasY - Constants.PLAYER_RADIUS - 24)
+    player.level = tempLevel
     context.restore()
     // Draw health bar
     context.fillRect(

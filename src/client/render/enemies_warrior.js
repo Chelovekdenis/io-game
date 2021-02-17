@@ -37,24 +37,28 @@ export function renderEnemiesWarrior(me, enemy) {
     )
     context.restore()
 
-    context.fillRect(
-        canvas.width / 2 + enemy.weaponX - me.x - 5,
-        canvas.height / 2 + enemy.weaponY - me.y - 5,
-        10,
-        10,
-    )
-    context.fillRect(
-        canvas.width / 2 + enemy.weaponX2 - me.x - 5,
-        canvas.height / 2 + enemy.weaponY2 - me.y - 5,
-        10,
-        10,
-    )
+    // context.fillRect(
+    //     canvas.width / 2 + enemy.weaponX - me.x - 5,
+    //     canvas.height / 2 + enemy.weaponY - me.y - 5,
+    //     10,
+    //     10,
+    // )
+    // context.fillRect(
+    //     canvas.width / 2 + enemy.weaponX2 - me.x - 5,
+    //     canvas.height / 2 + enemy.weaponY2 - me.y - 5,
+    //     10,
+    //     10,
+    // )
 
     // Draw level
     let lvlString = "lvl"
     if(enemy.effects.stunned.yes === true) {
         enemy.level = "STUN"
         lvlString = enemy.effects.stunned.time.toFixed(1)
+    } else if (enemy.effects.slowed.yes) {
+        enemy.level = "SLOWED"
+        lvlString = enemy.effects.slowed.time.toFixed(1)
+
     }
     context.font = "12px Verdana"
     context.fillStyle = 'white'

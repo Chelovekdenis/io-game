@@ -30,6 +30,12 @@ export function renderBoss(me, boss) {
     //     10,
     //     10,
     // )
+    // context.fillRect(
+    //     canvas.width / 2 + boss.weaponX2 - me.x - 5,
+    //     canvas.height / 2 + boss.weaponY2 - me.y - 5,
+    //     10,
+    //     10,
+    // )
 
     context.fillStyle = 'white'
     context.fillRect(

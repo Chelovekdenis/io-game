@@ -17,20 +17,24 @@ class Sniper extends Archer {
         return super.update(dt)
     }
 
-    spellTwo(dt) {
+    spellTwo(dt, sec) {
         this.attackSpeed = this.defaultAttackSpeed / 2
         this.speed = this.pureSpeed * 0.7
+        this.effects.storm.yes = true
+        this.effects.storm.time = sec
     }
 
     afterSpellTwo(data) {
         this.attackSpeed = data.atkSpeed
         this.speed = data.speed
+        this.effects.storm.yes = false
+        this.effects.storm.time = 0
     }
 
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
-            abilityName2: "Storm of arrows"
+            abilityName2: "Storm"
         }
     }
 }

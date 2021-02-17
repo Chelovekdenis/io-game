@@ -1,3 +1,7 @@
+//
+//     COUNT_BACKS: MAP_SIZE / 1000
+//     COUNT_SWAMP_BACKS: COUNT_BACKS + 2
+
 let obj = {
     GAME_MAX_PLAYER: 40,
 
@@ -25,7 +29,11 @@ let obj = {
     PI_30: Math.PI / 3,
     PI_40: Math.PI / 4,
 
-    MAP_SIZE: 2000,
+    MAP_SIZE: 16000,
+    HALF_MAP_SIZE: 8000,
+    COUNT_BACKS: 16,
+    COUNT_SWAMP_BACKS: 18,
+
     MAP_FPS: 1000/90,
     MSG_TYPES: {
       JOIN_GAME: 'join_game',

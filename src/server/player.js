@@ -11,13 +11,9 @@ const Constants = require('../shared/constants')
 // За просмотр рекламы восрешение с 20% опыт от смерти
 
 
-// Баф для первого места
 // Скеил страницы нормальный
-// Небольшое перемещение врагов по карте
-// Наверное сделать отображение эффектов вместо уровня и
-// чтобы размер шрифта имени не менялся просто так
-// Увеличить карту
 // Спавн игроков по краям, и сила противников увеличивается ближе к центру
+// Баланс параметров и уровня добавить
 
 class Player extends ObjectClass {
   constructor(id, username, x, y) {
@@ -33,6 +29,7 @@ class Player extends ObjectClass {
 
     this.level = 0
     this.score = 86270
+    this.leaderBuff = 1
     this.skillPoints = 0
     this.sendMsgSP = false
 
@@ -110,6 +107,14 @@ class Player extends ObjectClass {
       slowed: {
         yes: false,
         time: 0
+      },
+      rage: {
+        yes: false,
+        time: 0
+      },
+      storm: {
+        yes: false,
+        time: 0
       }
     }
 
@@ -137,7 +142,7 @@ class Player extends ObjectClass {
         this.functionStack.splice(i, 1)
       }
     })
-    this.score += dt * Constants.SCORE_PER_SECOND * (this.level + 1)
+    this.score += dt * Constants.SCORE_PER_SECOND * (this.level + 1) * this.leaderBuff
 
     this.listDamaged.forEach(item => {
       item.count -=  dt
@@ -364,11 +369,11 @@ class Player extends ObjectClass {
   }
 
   onDealtDamage(dopScore) {
-    this.score += this.damage + dopScore
+    this.score += this.damage + dopScore  * this.leaderBuff
   }
 
   onKill(level) {
-    this.score += Constants.EXP_FOR_LEVEL_UP[level]/4
+    this.score += Constants.EXP_FOR_LEVEL_UP[level]/4  * this.leaderBuff
   }
 
   setAttributes(item) {

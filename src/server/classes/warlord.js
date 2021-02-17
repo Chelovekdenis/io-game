@@ -27,14 +27,18 @@ class Warlord extends Warrior {
         this.weaponY2 = this.y - b * 10
     }
 
-    spellTwo(dt) {
+    spellTwo(dt, sec) {
         this.attackSpeed = this.defaultAttackSpeed / 2
         this.speed = this.pureSpeed * 1.3
+        this.effects.rage.yes = true
+        this.effects.rage.time = sec
     }
 
     afterSpellTwo(data) {
         this.attackSpeed = data.atkSpeed
         this.speed = data.speed
+        this.effects.rage.yes = false
+        this.effects.rage.time = 0
     }
 
     serializeForUpdate() {
