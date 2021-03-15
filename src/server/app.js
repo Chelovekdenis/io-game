@@ -1,6 +1,7 @@
 const express = require('express')
 const socket = require('socket.io')
 const https = require('https')
+const path = require('path')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpack = require('webpack')
 
@@ -8,9 +9,10 @@ const Constants = require('../shared/constants')
 const Game = require('./game')
 const webpackConfig = require('../../webpack.dev.js')
 const fs = require("fs")
+
 let options = {
-    key: fs.readFileSync(__dirname.substring(0, __dirname.length - 7) + '/https/key.pem'),
-    cert: fs.readFileSync(__dirname.substring(0, __dirname.length - 7) + '/https/cert.pem')
+    key: fs.readFileSync(path.join(__dirname.substring(0, __dirname.length - 7), "https", "key.pem")),
+    cert: fs.readFileSync(path.join(__dirname.substring(0, __dirname.length - 7), "https", "cert.pem"))
 }
 
 const app = express()
