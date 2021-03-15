@@ -61,7 +61,7 @@ function downloadAsset(assetName) {
       assets[assetName] = asset
       resolve()
     }
-    asset.src = `/assets/${assetName}`
+    asset.src = `https://84.201.139.216:3001/assets/${assetName}`
   })
 }
 

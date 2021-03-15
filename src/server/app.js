@@ -1,11 +1,17 @@
 const express = require('express')
 const socket = require('socket.io')
+const https = require('https')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpack = require('webpack')
 
 const Constants = require('../shared/constants')
 const Game = require('./game')
 const webpackConfig = require('../../webpack.dev.js')
+const fs = require("fs")
+let options = {
+    key: fs.readFileSync(__dirname.substring(0, __dirname.length - 7) + '/https/key.pem'),
+    cert: fs.readFileSync(__dirname.substring(0, __dirname.length - 7) + '/https/cert.pem')
+}
 
 const app = express()
 
@@ -18,8 +24,11 @@ if (process.env.NODE_ENV === 'development') {
     app.use(express.static('dist'))
 }
 
-const port = process.env.PORT || 3000
-const server = app.listen(port)
+// 443 порт возможно, потому что https
+const port = process.env.PORT || 3001
+// const server = app.listen(port)
+const server = https.createServer(options, app)
+server.listen(port)
 console.log(`Server listening on port ${port}`)
 
 const io = socket(server)
