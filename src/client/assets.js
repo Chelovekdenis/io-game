@@ -61,8 +61,9 @@ function downloadAsset(assetName) {
       assets[assetName] = asset
       resolve()
     }
-    asset.src = `https://84.201.139.216:3001/assets/${assetName}`
+    asset.src = `https://medievalwar.ru/assets/${assetName}`
   })
+  // https://medievalwar.ru/assets/${assetName}
 }
 
 export const downloadAssets = () => downloadPromise

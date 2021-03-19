@@ -14,6 +14,10 @@ let options = {
     key: fs.readFileSync(path.join(__dirname.substring(0, __dirname.length - 7), "https", "key.pem")),
     cert: fs.readFileSync(path.join(__dirname.substring(0, __dirname.length - 7), "https", "cert.pem"))
 }
+// https.request({
+//     ca: [fs.readFileSync(path.join(__dirname.substring(0, __dirname.length - 7), "https", "cert.pem"))],
+//     rejectUnauthorized: true,
+// })
 
 const app = express()
 
