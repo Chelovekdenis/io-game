@@ -157,7 +157,6 @@ class Game {
         })
         if(p.length) {
             sum /= p.length
-            console.log(sum)
         }
         this.enemies[id] = new Enemy(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.8, this.randomInteger(1 , Math.min(2 + sum, 10)))
     }

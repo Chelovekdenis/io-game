@@ -4,9 +4,7 @@ import { processGameUpdate, setNewSkillPoint, setNewClassPoint } from './state'
 
 const Constants = require('../shared/constants')
 
-console.log("net")
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws'
-console.log(socketProtocol)
 // const socket = io(`${socketProtocol}://84.201.139.216:3001`, { reconnection: false })
 const socket = io(`wss://medievalwar.ru`, { reconnection: false })
 // const socket = io(`${socketProtocol}:medievalwar.ru`, { reconnection: false })
