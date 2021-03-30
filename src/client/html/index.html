@@ -3,11 +3,52 @@
 <head>
     <meta charset="utf-8">
     <title>Medieval War</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="/assets/favicon.ico">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.js" integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
 </head>
 <body>
+<script src="https://yandex.ru/games/sdk/v2"></script>
+<script>
+    YaGames.init({
+        adv: {
+            onAdvClose: wasShown => {
+                console.info('adv closed!');
+            }
+        }
+    })
+        .then(ysdk => {
+            ysdk.adv.showFullscreenAdv();
+
+            const buttonElem = document.querySelector('#button');
+
+            let commonCounter = 0;
+            buttonElem.addEventListener('click', () => {
+                let counter = 0;
+
+                function getCallback(callbackName) {
+                    return () => {
+                        counter += 1;
+                        commonCounter += 1;
+
+                        console.log(`showFullscreenAdv; callback ${callbackName}; ${counter} call`);
+                    }
+                }
+
+                ysdk.adv.showFullscreenAdv({
+                    callbacks: {
+                        onClose: getCallback('onClose'),
+                        onOpen: getCallback('onOpen'),
+                        onError: getCallback('onError'),
+                        onOffline: getCallback('onOffline')
+                    }
+                });
+            });
+        });
+</script>
+
+<!--<button id="button">Показать рекламу</button>-->
+
 <canvas id="game-canvas"></canvas>
 <div id="play-menu" class="hidden">
     <h1>Medieval War</h1>
@@ -20,11 +61,23 @@
         <br />
         и мышку для управления.
     </p>
-    <hr />
+<!--    <p>-->
+<!--        Progress, fight,-->
+<!--        <br />-->
+<!--        destroy the main boss.-->
+<!--        <br />-->
+<!--        Use W A S D-->
+<!--        <br />-->
+<!--        and a mouse to control.-->
+<!--    </p>-->
     <p>
         Выбирете сервер
         <br />
     </p>
+<!--    <p>-->
+<!--        Select server-->
+<!--        <br />-->
+<!--    </p>-->
     <label>
         <select id="server_list">
 <!--            <option value = "0">Server 1</option>-->
@@ -39,8 +92,10 @@
 <div id="disconnect-modal" class="hidden">
     <div>
         <h2>Отключение от сервера</h2>
+<!--        <h2>Disconnect from the server </h2>-->
         <hr />
         <button id="reconnect-button">ПЕРЕПОДКЛЮЧИТЬСЯ</button>
+<!--        <button id="reconnect-button">RECONNECT </button>-->
     </div>
 </div>
 </body>

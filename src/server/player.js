@@ -35,7 +35,7 @@ class Player extends ObjectClass {
     this.count = 0
 
     this.level = 0
-    this.score = 1000000
+    this.score = 0
     this.leaderBuff = 1
     this.skillPoints = 0
     this.sendMsgSP = false
