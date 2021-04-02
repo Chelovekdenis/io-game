@@ -53,6 +53,8 @@ class Enemy extends ObjectClass {
         this.dirPiece = 0
         this.timeRorate = 0
         this.timeStay = 0
+        this.xForProminade = x
+        this.yForProminade = y
     }
 
     update(dt, x, y) {
@@ -78,6 +80,9 @@ class Enemy extends ObjectClass {
             this.direction = Math.atan2(x - this.x, this.y - y)
         this.x = this.x + dt * this.speed * Math.sin(this.direction)
         this.y = this.y - dt * this.speed * Math.cos(this.direction)
+
+        this.xForProminade = this.x
+        this.yForProminade = this.y
 
         if(this.canAttack) {
             let animationTime = 60
@@ -125,10 +130,18 @@ class Enemy extends ObjectClass {
             this.direction += this.dirPiece / 5
             this.timeRorate--
         } else {
+            let tempX = this.x
+            let tempY = this.y
             this.timeTravel--
             this.x = this.x + dt * this.speed * Math.sin(this.direction) / 5
             this.y = this.y - dt * this.speed * Math.cos(this.direction) / 5
 
+            if(this.x > this.xForProminade + 200 || this.x < this.xForProminade - 200 ||
+                this.y > this.yForProminade + 200 || this.y < this.yForProminade - 200) {
+                this.x = tempX
+                this.y = tempY
+                this.direction += 1.57
+            }
             // Не дает зайти за барьер
             if(this.x > Constants.MAP_SIZE || this.y > Constants.MAP_SIZE
                 || this.x < 0 || this.y < 0)
