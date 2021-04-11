@@ -11,6 +11,7 @@ class Game {
     constructor() {
         this.sockets = {}
         this.players = {}
+        this.resPlayers = {}
         this.trees = {}
         this.enemies = {}
         this.enemies_warrior = {}
@@ -31,6 +32,7 @@ class Game {
 
     addPlayer(socket, username) {
         // Проверка на максимальное кол-во игроков
+        console.log(Object.keys(this.players))
         if (Object.keys(this.players).length + 1 > Constants.GAME_MAX_PLAYER) {
             socket.emit(Constants.MSG_TYPES.GAME_OVER)
             return null
@@ -45,12 +47,40 @@ class Game {
         let ew = Object.values(this.enemies_warrior)
         // Может лучше радиус Босса?
         let xy = spawn(e.concat(t, b, p, ew), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
-        this.players[socket.id] = new Player(socket.id, username, xy.x, xy.y)
+        this.players[socket.id] = new Player(socket.id, username, xy.x, xy.y, 0)
     }
 
-    removePlayer(socket) {
-        delete this.sockets[socket.id]
-        delete this.players[socket.id]
+    resurrectPlayer(socket) {
+        this.sockets[socket.id] = socket
+        console.log(Object.keys(this.players))
+        // Generate a position to start this player at.
+        let t = Object.values(this.trees)
+        let e = Object.values(this.enemies)
+        let b = Object.values(this.boss)
+        let p = Object.values(this.players)
+        let ew = Object.values(this.enemies_warrior)
+        // Может лучше радиус Босса?
+        let xy = spawn(e.concat(t, b, p, ew), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
+        console.log("game.js socket.id " + socket.id)
+        this.players[socket.id] = new Player(socket.id, this.resPlayers[socket.id].username,
+            xy.x, xy.y, this.resPlayers[socket.id].rewardedLevel)
+        console.log("game.js", this.players[socket.id].level, this.players[socket.id].score)
+        socket.emit("player_ready")
+    }
+
+    removePlayer(socket, canResurrection) {
+        if(!canResurrection) {
+            console.log("nooooo res")
+            delete this.sockets[socket.id]
+            delete this.players[socket.id]
+        } else {
+            console.log("yes res")
+            this.resPlayers[socket.id] = socket
+            this.resPlayers[socket.id].username = this.players[socket.id].username
+            this.resPlayers[socket.id].rewardedLevel = Math.ceil(this.players[socket.id].level * 0.4)
+            delete this.players[socket.id]
+            socket.emit("resurrect", this.resPlayers[socket.id].rewardedLevel)
+        }
     }
 
     handleInput(socket, dir) {
@@ -212,7 +242,7 @@ class Game {
         this.bullets = this.bullets.filter(bullet => !bulletsToRemove.includes(bullet))
 
         // Update each player
-        Object.keys(this.sockets).forEach(playerID => {
+        Object.keys(this.players).forEach(playerID => {
             const player = this.players[playerID]
             const earlyX = player.x
             const earlyY = player.y
@@ -439,14 +469,14 @@ class Game {
         })
 
         // Check if any players are dead and if any players have skillPoints
-        Object.keys(this.sockets).forEach(playerID => {
+        Object.keys(this.players).forEach(playerID => {
             const socket = this.sockets[playerID]
             const player = this.players[playerID]
             if (player.hp <= 0) {
                 socket.emit(Constants.MSG_TYPES.GAME_OVER)
                 if(this.players[player.lastHit])
                     this.players[player.lastHit].onKill(player.level)
-                this.removePlayer(socket)
+                this.removePlayer(socket, true)
             }
             if (player.sendMsgSP) {
                 socket.emit(Constants.MSG_TYPES.SKILL_POINTS, player.skillPoints)
@@ -462,7 +492,7 @@ class Game {
         // Send a game update to each player every other time
         if (this.shouldSendUpdate) {
             const leaderboard = this.getLeaderboard()
-            Object.keys(this.sockets).forEach(playerID => {
+            Object.keys(this.players).forEach(playerID => {
                 const socket = this.sockets[playerID]
                 const player = this.players[playerID]
                 socket.emit(Constants.MSG_TYPES.GAME_UPDATE, this.createUpdate(player, leaderboard))

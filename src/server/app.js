@@ -55,6 +55,7 @@ io.on('connection', socket => {
     socket.on("chosen_class", chosenClass)
     socket.on("quick_bar_item", quickBarItem)
     socket.on('disconnect', onDisconnect)
+    socket.on('resurrect', onResurrect)
 })
 
 // Setup the Game
@@ -68,12 +69,16 @@ function joinGame(username) {
     games[this.gameNum].addPlayer(this, username.slice(0,13) || "user123")
 }
 
+function onResurrect() {
+    games[this.gameNum].resurrectPlayer(this)
+}
+
 function handleInput(dir) {
     games[this.gameNum].handleInput(this, dir)
 }
 
 function onDisconnect() {
-    if (this.gameNum) games[this.gameNum].removePlayer(this)
+    if (this.gameNum) games[this.gameNum].removePlayer(this, false)
 }
 
 function movement(move) {

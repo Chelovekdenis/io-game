@@ -36,6 +36,7 @@ Promise.all([
 }).catch(console.error)
 
 function onGameOver() {
+  console.log("OnGameOver")
   $('#server_list').find('option').remove(); //удаление старых данных
   informationAboutServers()
   stopCapturingInput()

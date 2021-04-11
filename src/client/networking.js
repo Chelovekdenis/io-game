@@ -1,13 +1,15 @@
 import io from 'socket.io-client'
 import { throttle } from 'throttle-debounce'
-import { processGameUpdate, setNewSkillPoint, setNewClassPoint } from './state'
+import {processGameUpdate, setNewSkillPoint, setNewClassPoint, initState} from './state'
+import {startCapturingInput} from "./input";
+import {startRendering} from "./render";
 
 const Constants = require('../shared/constants')
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws'
 // const socket = io(`${socketProtocol}://84.201.139.216:3001`, { reconnection: false })
-const socket = io(`wss://medievalwar.ru`, { reconnection: false })
-// const socket = io(`${socketProtocol}://localhost:3001`, { reconnection: false })
+// const socket = io(`wss://medievalwar.ru`, { reconnection: false })
+const socket = io(`${socketProtocol}://localhost:3001`, { reconnection: false })
 // const socket = io(`${socketProtocol}:medievalwar.ru`, { reconnection: false })
 const connectedPromise = new Promise(resolve => {
   socket.on('connect', () => {
@@ -37,11 +39,38 @@ export const connect = onGameOver => (
         window.location.reload()
       }
     })
+    socket.on("resurrect", serversInfo => {
+        console.log('Resurrect. ' + serversInfo)
+        // добавить с каким уровнем вернешься
+        document.getElementById('disconnect-modal').classList.remove('hidden')
+        // document.getElementById('disconnect-modal').appendChild(`<button id="button2">ПЕРЕПОДКЛЮЧИТЬСЯ С наградой ${serversInfo}</button>`)
+        // disconnect-modal.before('<p>Привет</p>', document.createElement('hr'));
+        document.getElementById("button").innerHTML=`ВЕРНУТСЯ С ${serversInfo} УРОВНЕМ`;
+        document.getElementById('reconnect-button').onclick = () => {
+            window.location.reload()
+        }
+
+        document.getElementById('button').onclick = () => {
+            socket.emit('resurrect')
+        }
+    })
+    socket.on("player_ready", () => {
+        // play(document.getElementById('username-input').value)
+        document.getElementById('disconnect-modal').classList.add('hidden')
+        document.getElementById('play-menu').classList.add('hidden')
+        initState()
+        startCapturingInput()
+        startRendering()
+    })
   })
 )
 
 export const play = username => {
   socket.emit(Constants.MSG_TYPES.JOIN_GAME, username)
+}
+
+export const resurrect = () => {
+    socket.emit('resurrect')
 }
 
 export const updateDirection = throttle(5, dir => {

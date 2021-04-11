@@ -23,7 +23,7 @@ const Constants = require('../shared/constants')
 // мобов не было
 
 class Player extends ObjectClass {
-  constructor(id, username, x, y) {
+  constructor(id, username, x, y, level) {
     super(id, x, y, Constants.PLAYER_SPEED, Constants.PLAYER_RADIUS)
     this.username = username
     this.direction = 0
@@ -33,9 +33,11 @@ class Player extends ObjectClass {
     this.item = 1
     this.hitAnimation = 0
     this.count = 0
-
-    this.level = 0
-    this.score = 0
+    console.log("player.js id " + this.id)
+    console.log("player.js level " + level)
+    this.level = level
+    this.score = Constants.EXP_FOR_LEVEL_UP[level]
+    console.log("player.js this.level and score " + this.level, this.score)
     this.leaderBuff = 1
     this.skillPoints = 0
     this.sendMsgSP = false
@@ -149,7 +151,7 @@ class Player extends ObjectClass {
         this.functionStack.splice(i, 1)
       }
     })
-    this.score += dt * Constants.SCORE_PER_SECOND * (this.level + 1) * this.leaderBuff
+    this.score += dt * Constants.SCORE_PER_SECOND * 30 * (this.level + 1) * this.leaderBuff
 
     this.listDamaged.forEach(item => {
       item.count -=  dt
