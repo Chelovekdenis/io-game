@@ -18,10 +18,10 @@ const { MAP_SIZE, MAP_FPS } = Constants
 const canvas = document.getElementById('game-canvas')
 const context = canvas.getContext('2d')
 setCanvasDimensions()
-const initialCanvasWidth = canvas.width
-const initialCanvasHeight = canvas.height
-let currentWScale = 1
-let currentHScale = 1
+// const initialCanvasWidth = canvas.width
+// const initialCanvasHeight = canvas.height
+// let currentWScale = 1
+// let currentHScale = 1
 
 
 function setCanvasDimensions() {
@@ -41,15 +41,15 @@ function render() {
     return
   }
 
-  let wScale = canvas.width / initialCanvasWidth
-  let hScale = canvas.height / initialCanvasHeight
-
-  if (wScale !== currentWScale || hScale !== currentHScale) {
-    currentWScale = canvas.width / initialCanvasWidth
-    currentHScale = canvas.height / initialCanvasHeight
-    // console.log(currentWScale, currentHScale)
-    context.scale(currentWScale, currentHScale)
-  }
+  // let wScale = canvas.width / initialCanvasWidth
+  // let hScale = canvas.height / initialCanvasHeight
+  //
+  // if (wScale !== currentWScale || hScale !== currentHScale) {
+  //   currentWScale = canvas.width / initialCanvasWidth
+  //   currentHScale = canvas.height / initialCanvasHeight
+  //   // console.log(currentWScale, currentHScale)
+  //   context.scale(currentWScale, currentHScale)
+  // }
 
   let me2 = me
   me2.direction = myDir()
@@ -108,7 +108,7 @@ function render() {
   if(boss.length !== 0)
     boss.forEach(renderBoss.bind(null, me))
   // Draw HUD
-  renderHUD(me, boss, leader, leaderboard, currentWScale, currentHScale, getNewSkillPoint(), getNewClassPoint())
+  renderHUD(me, boss, leader, leaderboard, 1, 1, getNewSkillPoint(), getNewClassPoint())
 }
 
 

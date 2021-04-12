@@ -22,7 +22,7 @@ export const connect = onGameOver => (
   connectedPromise.then(() => {
     // Register callbacks
     socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate)
-    socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver)
+    socket.on(Constants.MSG_TYPES.GAME_OVER, (data) => onGameOver(data))
     socket.on(Constants.MSG_TYPES.SKILL_POINTS, (data) => setNewSkillPoint(data))
     socket.on("class_point", (data) => setNewClassPoint(data))
     socket.on("number_of_players", serversInfo => {

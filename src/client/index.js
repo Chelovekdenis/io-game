@@ -35,7 +35,8 @@ Promise.all([
   }
 }).catch(console.error)
 
-function onGameOver() {
+function onGameOver(info) {
+  console.log("Prishlo ot --> ", info)
   $('#server_list').find('option').remove(); //удаление старых данных
   informationAboutServers()
   stopCapturingInput()

@@ -34,7 +34,8 @@ class Game {
         // Проверка на максимальное кол-во игроков
         console.log(Object.keys(this.players))
         if (Object.keys(this.players).length + 1 > Constants.GAME_MAX_PLAYER) {
-            socket.emit(Constants.MSG_TYPES.GAME_OVER)
+            console.log("addPlayer ", Object.keys(this.players).length + 1, Constants.GAME_MAX_PLAYER)
+            socket.emit(Constants.MSG_TYPES.GAME_OVER, "Limit players")
             return null
         }
 
@@ -473,7 +474,7 @@ class Game {
             const socket = this.sockets[playerID]
             const player = this.players[playerID]
             if (player.hp <= 0) {
-                socket.emit(Constants.MSG_TYPES.GAME_OVER)
+                socket.emit(Constants.MSG_TYPES.GAME_OVER, "player.hp <= 0")
                 if(this.players[player.lastHit])
                     this.players[player.lastHit].onKill(player.level)
                 this.removePlayer(socket, true)
