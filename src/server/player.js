@@ -33,11 +33,8 @@ class Player extends ObjectClass {
     this.item = 1
     this.hitAnimation = 0
     this.count = 0
-    console.log("player.js id " + this.id)
-    console.log("player.js level " + level)
     this.level = 0
     this.score = Constants.EXP_FOR_LEVEL_UP[level]
-    console.log("player.js this.level and score " + this.level, this.score)
     this.leaderBuff = 1
     this.skillPoints = 0
     this.sendMsgSP = false

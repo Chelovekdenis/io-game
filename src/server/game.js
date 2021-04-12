@@ -71,11 +71,9 @@ class Game {
 
     removePlayer(socket, canResurrection) {
         if(!canResurrection) {
-            console.log("nooooo res")
             delete this.sockets[socket.id]
             delete this.players[socket.id]
         } else {
-            console.log("yes res")
             this.resPlayers[socket.id] = socket
             this.resPlayers[socket.id].username = this.players[socket.id].username
             this.resPlayers[socket.id].rewardedLevel = Math.ceil(this.players[socket.id].level * 0.4)

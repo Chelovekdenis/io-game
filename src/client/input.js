@@ -13,16 +13,16 @@ window.focus();
 //   console.log("focus!");
 // });
 
-$(window).bind('blur', function() {
-  console.log(movement)
-  movement = {
-    up: false,
-    down: false,
-    left: false,
-    right: false
-  }
-  handleInputKey()
-});
+// $(window).bind('blur', function() {
+//   console.log(movement)
+//   movement = {
+//     up: false,
+//     down: false,
+//     left: false,
+//     right: false
+//   }
+//   handleInputKey()
+// });
 let quickBarItem = 1
 
 function onMouseInput(e) {
