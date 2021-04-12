@@ -151,7 +151,7 @@ class Player extends ObjectClass {
         this.functionStack.splice(i, 1)
       }
     })
-    this.score += dt * Constants.SCORE_PER_SECOND * 30 * (this.level + 1) * this.leaderBuff
+    this.score += dt * Constants.SCORE_PER_SECOND * (this.level + 1) * this.leaderBuff
 
     this.listDamaged.forEach(item => {
       item.count -=  dt

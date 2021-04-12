@@ -40,7 +40,6 @@ export const connect = onGameOver => (
       }
     })
     socket.on("resurrect", serversInfo => {
-        console.log('Resurrect. ' + serversInfo)
         // добавить с каким уровнем вернешься
         document.getElementById('disconnect-modal').classList.remove('hidden')
         // document.getElementById('disconnect-modal').appendChild(`<button id="button2">ПЕРЕПОДКЛЮЧИТЬСЯ С наградой ${serversInfo}</button>`)
@@ -51,7 +50,7 @@ export const connect = onGameOver => (
         }
 
         document.getElementById('button').onclick = () => {
-            socket.emit('resurrect')
+            resurrect()
         }
     })
     socket.on("player_ready", () => {
@@ -69,8 +68,14 @@ export const play = username => {
   socket.emit(Constants.MSG_TYPES.JOIN_GAME, username)
 }
 
-export const resurrect = () => {
-    socket.emit('resurrect')
+const resurrect = () => {
+    let renderInterval = setInterval(()=> {
+        if(localStorage.getItem('reklama') === '1') {
+            localStorage.setItem('reklama', '0');
+            socket.emit('resurrect')
+            clearInterval(renderInterval)
+        }
+    }, 1000)
 }
 
 export const updateDirection = throttle(5, dir => {

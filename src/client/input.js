@@ -7,6 +7,22 @@ let movement = {
   right: false
 }
 
+window.focus();
+
+// $(window).bind('focus', function() {
+//   console.log("focus!");
+// });
+
+$(window).bind('blur', function() {
+  console.log(movement)
+  movement = {
+    up: false,
+    down: false,
+    left: false,
+    right: false
+  }
+  handleInputKey()
+});
 let quickBarItem = 1
 
 function onMouseInput(e) {
