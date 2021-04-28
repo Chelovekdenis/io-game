@@ -8,8 +8,8 @@ const Constants = require('../shared/constants')
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws'
 // const socket = io(`${socketProtocol}://84.201.139.216:3001`, { reconnection: false })
-// const socket = io(`wss://medievalwar.ru`, { reconnection: false })
-const socket = io(`${socketProtocol}://localhost:3001`, { reconnection: false })
+const socket = io(`wss://medievalwar.ru`, { reconnection: false })
+// const socket = io(`${socketProtocol}://localhost:3001`, { reconnection: false })
 // const socket = io(`${socketProtocol}:medievalwar.ru`, { reconnection: false })
 const connectedPromise = new Promise(resolve => {
   socket.on('connect', () => {
@@ -28,7 +28,7 @@ export const connect = onGameOver => (
     socket.on("number_of_players", serversInfo => {
         const serverList = document.getElementById('server_list')
         for (let i = 0; i < serversInfo.length; i++) {
-            let newOption = new Option(`Server ${i+1} - ${serversInfo[i]}/${Constants.GAME_MAX_PLAYER}`, `${i}`)
+            let newOption = new Option(`Сервер #${i+1} - ${serversInfo[i]}/${Constants.GAME_MAX_PLAYER}`, `${i}`)
             serverList.append(newOption)
         }
     })
@@ -44,7 +44,7 @@ export const connect = onGameOver => (
         document.getElementById('disconnect-modal').classList.remove('hidden')
         // document.getElementById('disconnect-modal').appendChild(`<button id="button2">ПЕРЕПОДКЛЮЧИТЬСЯ С наградой ${serversInfo}</button>`)
         // disconnect-modal.before('<p>Привет</p>', document.createElement('hr'));
-        document.getElementById("button").innerHTML=`ВЕРНУТСЯ С ${serversInfo} УРОВНЕМ`;
+        document.getElementById("button").innerHTML=`ВЕРНУТЬСЯ С ${serversInfo} УРОВНЕМ`;
         document.getElementById('reconnect-button').onclick = () => {
             window.location.reload()
         }
@@ -79,8 +79,7 @@ const resurrect = () => {
 }
 
 export const updateDirection = throttle(5, dir => {
-  socket.emit(Constants.MSG_TYPES.INPUT, dir)
-})
+  socket.emit(Constants.MSG_TYPES.INPUT, dir)})
 
 export const moveEmit = movement => {
   socket.emit(Constants.MSG_TYPES.MOVEMENT, movement)

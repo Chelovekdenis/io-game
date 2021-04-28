@@ -1,5 +1,6 @@
 const Constants = require('../shared/constants')
 const Player = require('./player')
+const PlayerBot = require('./enemies/player_bot')
 const Tree = require('./tree')
 const Enemy = require('./enemies/enemy')
 const EnemyWarrior = require('./enemies/enemy_warrior')
@@ -12,6 +13,7 @@ class Game {
         this.sockets = {}
         this.players = {}
         this.resPlayers = {}
+        this.bots_players = {}
         this.trees = {}
         this.enemies = {}
         this.enemies_warrior = {}
@@ -38,6 +40,8 @@ class Game {
             socket.emit(Constants.MSG_TYPES.GAME_OVER, "Limit players")
             return null
         }
+        if (username === "user123")
+            username = shortid().slice(0,4)
 
         this.sockets[socket.id] = socket
         // Generate a position to start this player at.
@@ -46,9 +50,10 @@ class Game {
         let b = Object.values(this.boss)
         let p = Object.values(this.players)
         let ew = Object.values(this.enemies_warrior)
+        let pb = Object.values(this.bots_players)
         // Может лучше радиус Босса?
-        let xy = spawn(e.concat(t, b, p, ew), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
-        this.players[socket.id] = new Player(socket.id, username, xy.x, xy.y, 0)
+        let xy = spawn(e.concat(t, b, p, ew, pb), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
+        this.players[socket.id] = new Player(socket.id, username, xy.x, xy.y, 0, true)
     }
 
     resurrectPlayer(socket) {
@@ -60,11 +65,12 @@ class Game {
         let b = Object.values(this.boss)
         let p = Object.values(this.players)
         let ew = Object.values(this.enemies_warrior)
+        let pb = Object.values(this.bots_players)
         // Может лучше радиус Босса?
-        let xy = spawn(e.concat(t, b, p, ew), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
+        let xy = spawn(e.concat(t, b, p, ew, pb), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
         console.log("game.js socket.id " + socket.id)
         this.players[socket.id] = new Player(socket.id, this.resPlayers[socket.id].username,
-            xy.x, xy.y, this.resPlayers[socket.id].rewardedLevel)
+            xy.x, xy.y, this.resPlayers[socket.id].rewardedLevel, true)
         console.log("game.js", this.players[socket.id].level, this.players[socket.id].score)
         socket.emit("player_ready")
     }
@@ -168,6 +174,13 @@ class Game {
             this.spawnEnemyWarrior()
         }
         this.spawnBoss()
+        for (let i = 0; i < 3; i++) {
+            this.addPlayerBot()
+        }
+        let firstObsidian = {
+            ifObsidian: true
+        }
+        this.spawnEnemyWarrior(firstObsidian)
     }
 
     spawnEnemy() {
@@ -176,8 +189,9 @@ class Game {
         let b = Object.values(this.boss)
         let e = Object.values(this.enemies)
         let ew = Object.values(this.enemies_warrior)
+        let pb = Object.values(this.bots_players)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, b, e, ew), Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS, 0.2, 0.8, 0.05, 0.9)
+        let xy = spawn(p.concat(t, b, e, ew, pb), Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS, 0.2, 0.8, 0.05, 0.9)
         const id = shortid()
 
         let sum = 0
@@ -190,16 +204,44 @@ class Game {
         this.enemies[id] = new Enemy(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.8, this.randomInteger(1 , Math.min(2 + sum, 10)))
     }
 
-    spawnEnemyWarrior() {
+    spawnEnemyWarrior(topPlayer) {
         let t = Object.values(this.trees)
         let p = Object.values(this.players)
         let b = Object.values(this.boss)
         let e = Object.values(this.enemies)
         let ew = Object.values(this.enemies_warrior)
+        let pb = Object.values(this.bots_players)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, b, e, ew), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS, 0.45, 0.55, 0.25, 0.7)
+        let xy = spawn(p.concat(t, b, e, ew, pb), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS, 0.45, 0.55, 0.25, 0.7)
         const id = shortid()
-        this.enemies_warrior[id] = new EnemyWarrior(id, xy.x, xy.y, Constants.PLAYER_SPEED, this.randomInteger(11, 20))
+        console.log(topPlayer)
+        if(topPlayer) {
+            topPlayer.ifObsidian = true
+            this.enemies_warrior[id] = new EnemyWarrior(id, xy.x, xy.y, Constants.PLAYER_SPEED, topPlayer.level, topPlayer)
+            return null
+        }
+        this.enemies_warrior[id] = new EnemyWarrior(id, xy.x, xy.y, Constants.PLAYER_SPEED, this.randomInteger(11, 20), {ifObsidian: false})
+    }
+
+    addPlayerBot() {
+        // Проверка на максимальное кол-во игроков
+        console.log(Object.keys(this.players))
+        if (Object.keys(this.players).length + 1 > Constants.GAME_MAX_PLAYER) {
+            return null
+        }
+
+        // Generate a position to start this player at.
+        let t = Object.values(this.trees)
+        let e = Object.values(this.enemies)
+        let b = Object.values(this.boss)
+        let p = Object.values(this.players)
+        let ew = Object.values(this.enemies_warrior)
+        let pb = Object.values(this.bots_players)
+        // Может лучше радиус Босса?
+        let xy = spawn(e.concat(t, b, p, ew, pb), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
+        const id = shortid()
+        const username = Constants.GAME_PLAYERS_NICKS[Math.round(0.05 + Math.random() * (Constants.GAME_PLAYERS_NICKS.length-1))]
+        this.bots_players[id] = new PlayerBot(id, xy.x, xy.y, 0, Math.round(3 + Math.random() * 7), username)
     }
 
     spawnBoss() {
@@ -207,30 +249,34 @@ class Game {
         let p = Object.values(this.players)
         let e = Object.values(this.enemies)
         let ew = Object.values(this.enemies_warrior)
+        let pb = Object.values(this.bots_players)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, e, ew), Constants.TREE_RADIUS, Constants.BOSS_RADIUS, 0.5, 0.5, 0.5, 0.5)
+        let xy = spawn(p.concat(t, e, ew, pb), Constants.TREE_RADIUS, Constants.BOSS_RADIUS, 0.5, 0.5, 0.5, 0.5)
         const id = shortid()
         this.boss[id] = new Boss(id, xy.x, xy.y, Constants.PLAYER_SPEED * 1.2)
     }
 
     gameInfo() {
-        return Object.keys(this.players).length
+        let numberOfPlayers = Object.keys(this.players).length + Object.keys(this.bots_players).length
+        return numberOfPlayers <= 40 ? numberOfPlayers : 40
     }
 
     update() {
+        // Объявление переменных
         let trees = Object.values(this.trees)
         let enemies = Object.values(this.enemies)
         let enemies_warrior = Object.values(this.enemies_warrior)
         let boss = Object.values(this.boss)
+        let players_bots = Object.values(this.bots_players)
         let players = []
 
 
-        // Calculate time elapsed
+        // Расчет прошедшего времени
         const now = Date.now()
         const dt = (now - this.lastUpdateTime) / 1000
         this.lastUpdateTime = now
 
-        // Update each bullet
+        // Обновление пуль
         const bulletsToRemove = []
         this.bullets.forEach(bullet => {
             if (bullet.update(dt)) {
@@ -240,7 +286,8 @@ class Game {
         })
         this.bullets = this.bullets.filter(bullet => !bulletsToRemove.includes(bullet))
 
-        // Update each player
+
+        // Обновление людей
         Object.keys(this.players).forEach(playerID => {
             const player = this.players[playerID]
             const earlyX = player.x
@@ -253,7 +300,7 @@ class Game {
                 player.setKick(0.1)
             // Player to Player collision
             players = Object.values(this.players).filter( p => p !== player)
-            let collided = circleToCircleWithReturn(player, [].concat(enemies, enemies_warrior, players))
+            let collided = circleToCircleWithReturn(player, [].concat(enemies, enemies_warrior, players, players_bots))
             if (collided) {
                 if(player.ifStun) {
                     collided.setStun(3)
@@ -272,7 +319,7 @@ class Game {
             if((player.className === Constants.CLASSES.WARRIOR || player.className === Constants.CLASSES.FIGHTER
                 || player.className === "warlord")
                 && player.giveDamage === true) {
-                let beaten = hitPlayer(player, players, Constants.PLAYER_RADIUS)
+                let beaten = hitPlayer(player, [].concat(players, players_bots), Constants.PLAYER_RADIUS)
                 let beatenEnemy = hitPlayer(player, enemies, Constants.ENEMY_RADIUS)
                 let beatenEnemyWarrior = hitPlayer(player, enemies_warrior, Constants.PLAYER_RADIUS)
                 let beatenBoss = hitPlayer(player, boss, Constants.BOSS_RADIUS)
@@ -344,13 +391,14 @@ class Game {
                 this.bullets.push(newBullet)
         })
 
-        // Apply collisions, give players score for hitting bullets
+        // Столкновение с пулей
         players = Object.values(this.players)
 
         let destroyedBullets = applyCollisions(players, this.bullets, Constants.PLAYER_RADIUS)
             .concat(
                 applyCollisions(enemies, this.bullets, Constants.ENEMY_RADIUS),
                 applyCollisions(enemies_warrior, this.bullets, Constants.PLAYER_RADIUS),
+                applyCollisions(players_bots, this.bullets, Constants.PLAYER_RADIUS),
                 applyCollisions(boss, this.bullets, Constants.BOSS_RADIUS)
             )
         destroyedBullets.forEach(b => {
@@ -364,14 +412,15 @@ class Game {
         enemies_warrior = Object.values(this.enemies_warrior)
 
         // Обновление противников
-        this.enemyUpdate(this.enemies, players, 200, enemies, dt,
-            [].concat(players, enemies_warrior, trees, boss))
+        this.enemyUpdate(this.enemies, Object.assign({}, this.players, this.bots_players), 200, enemies, dt,
+            [].concat(players, enemies_warrior, trees, boss, players_bots))
 
         // Убиты ли противники
         Object.keys(this.enemies).forEach(enemyId => {
             const enemy = this.enemies[enemyId]
             if (enemy.hp <= 0) {
-                this.players[enemy.lh].onKill(enemy.level)
+                if(this.players[enemy.lh])
+                    this.players[enemy.lh].onKill(enemy.level)
                 delete this.enemies[enemyId]
                 this.spawnEnemy()
             }
@@ -382,15 +431,38 @@ class Game {
         enemies_warrior = Object.values(this.enemies_warrior)
 
         // Обновление противников-войнов
-        this.enemyUpdate(this.enemies_warrior, players, 300, enemies_warrior, dt,
-            [].concat(players, enemies, trees, boss))
+        this.enemyUpdate(this.enemies_warrior, Object.assign({}, this.players, this.bots_players), 300, enemies_warrior, dt,
+            [].concat(players, enemies, trees, boss, players_bots))
 
         Object.keys(this.enemies_warrior).forEach(enemyId => {
             const enemy_warrior = this.enemies_warrior[enemyId]
             if (enemy_warrior.hp <= 0) {
-                this.players[enemy_warrior.lh].onKill(enemy_warrior.level)
+                if(this.players[enemy_warrior.lh])
+                    this.players[enemy_warrior.lh].onKill(enemy_warrior.level)
+                let tempTopPlayer = null
+                if(enemy_warrior.ifObsidian) {
+                    tempTopPlayer = Object.values(Object.assign({}, this.players, this.bots_players))
+                        .sort((p1, p2) => p2.score - p1.score)
+                        .slice(0, 5)
+                        .map(p => ({level: p.level}))
+
+                }
                 delete this.enemies_warrior[enemyId]
-                this.spawnEnemyWarrior()
+                this.spawnEnemyWarrior(tempTopPlayer)
+            }
+        })
+
+        // Обновление ЛЮДЕЙ-БОТОВ
+        this.enemyUpdate(this.bots_players, Object.assign({}, this.players, this.enemies_warrior, this.enemies, this.boss), 800, players_bots, dt,
+            [].concat(players, enemies, trees, boss, enemies_warrior))
+
+        Object.keys(this.bots_players).forEach(botID => {
+            const player_bot = this.bots_players[botID]
+            if (player_bot.hp <= 0) {
+                if(this.players[player_bot.lh])
+                    this.players[player_bot.lh].onKill(player_bot.level)
+                delete this.bots_players[botID]
+                setTimeout(this.addPlayerBot.bind(this), 20000)
             }
         })
 
@@ -398,11 +470,14 @@ class Game {
         enemies = Object.values(this.enemies)
         enemies_warrior = Object.values(this.enemies_warrior)
 
+        // Обновление БОССА
         Object.keys(this.boss).forEach((enemyId) => {
             boss = this.boss[enemyId]
+            let assPlayers = Object.assign({}, this.players, this.bots_players)
+            let objPlayers = Object.values(assPlayers)
             const earlyX = boss.x
             const earlyY = boss.y
-            let targetId = boss.chosenTarget(players, 1000, 500)
+            let targetId = boss.chosenTarget(objPlayers, 1000, 500)
             if(!targetId) {
                 boss.functionStack.forEach((item, i) => {
                     if(item.rec)
@@ -410,17 +485,17 @@ class Game {
                     boss.functionStack.splice(i, 1)
                 })
                 boss.promenade(dt)
-                if (circleToCircleLiteNew(boss, [].concat(players, enemies, trees, enemies_warrior))){
+                if (circleToCircleLiteNew(boss, [].concat(players, enemies, trees, enemies_warrior, players_bots))){
                     boss.x = earlyX
                     boss.y = earlyY
                 }
             }
             if (targetId) {
-                let player = this.players[targetId]
+                let player = assPlayers[targetId]
                 boss.toAttack = player.distanceTo(boss)<= 240
                 boss.update(dt, player.x, player.y)
 
-                let returnedPlayer = circleToCircleWithReturn(boss, players, Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS)
+                let returnedPlayer = circleToCircleWithReturn(boss, objPlayers, Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS)
                 if (returnedPlayer) {
                     boss.x = earlyX
                     boss.y = earlyY
@@ -462,15 +537,17 @@ class Game {
         Object.keys(this.boss).forEach((enemyId) => {
             const boss = this.boss[enemyId]
             if (boss.hp <= 0) {
-                this.players[boss.lh].onKill(boss.level)
+                if(this.players[boss.lh])
+                    this.players[boss.lh].onKill(boss.level)
                 delete this.boss[enemyId]
+                setTimeout(this.spawnBoss.bind(this), 300000)
             }
         })
 
-        // Check if any players are dead and if any players have skillPoints
+        // Проверка убит игрок и есть ли у него новое очко умений
         Object.keys(this.players).forEach(playerID => {
-            const socket = this.sockets[playerID]
             const player = this.players[playerID]
+            const socket = this.sockets[playerID]
             if (player.hp <= 0) {
                 socket.emit(Constants.MSG_TYPES.GAME_OVER, "player.hp <= 0")
                 if(this.players[player.lastHit])
@@ -488,13 +565,15 @@ class Game {
         })
 
 
-        // Send a game update to each player every other time
+        // Отправление обновления один раз в два тика
         if (this.shouldSendUpdate) {
             const leaderboard = this.getLeaderboard()
-            Object.keys(this.players).forEach(playerID => {
-                const socket = this.sockets[playerID]
-                const player = this.players[playerID]
-                socket.emit(Constants.MSG_TYPES.GAME_UPDATE, this.createUpdate(player, leaderboard))
+            Object.keys(this.players).forEach(socketID => {
+                const player = this.players[socketID]
+                if(player.ifNotAI) {
+                    const socket = this.sockets[socketID]
+                    socket.emit(Constants.MSG_TYPES.GAME_UPDATE, this.createUpdate(player, leaderboard))
+                }
             })
             this.shouldSendUpdate = false
         } else {
@@ -509,7 +588,10 @@ class Game {
             const earlyY = person.y
             let unitsWom = units.filter( e => e !== person)
 
-            let targetId = person.chosenTarget(players, 1000, agrDist)
+            let objPlayers = Object.values(players)
+
+
+            let targetId = person.chosenTarget(objPlayers, 1000, agrDist)
             if(!targetId) {
                 person.functionStack.forEach((item, i) => {
                     if(item.rec)
@@ -528,7 +610,9 @@ class Game {
                 person.setKick(0.1)
 
             if (targetId) {
-                let player = this.players[targetId]
+                // console.log("++++++++", players)
+                // console.log("________", this.players[targetId])
+                let player = players[targetId]
                 person.toAttack = player.distanceTo(person)<= 140
                 person.update(dt, player.x, player.y)
 
@@ -538,7 +622,7 @@ class Game {
                     person.y = earlyY
                 }
                 if (person.giveDamage === true) {
-                    let beaten = hitPlayer(person, players, Constants.PLAYER_RADIUS)
+                    let beaten = hitPlayer(person, objPlayers, Constants.PLAYER_RADIUS)
                     if (beaten) {
                         beaten.takeDamage(person.damage, person.id)
                         beaten.needKick.need = true
@@ -551,11 +635,11 @@ class Game {
     }
 
     getLeaderboard() {
-        let leaderBoard = Object.values(this.players)
+        let leaderBoard = Object.values(Object.assign({}, this.players, this.bots_players))
             .sort((p1, p2) => p2.score - p1.score)
             .slice(0, 5)
             .map(p => ({username: p.username, score: Math.round(p.score), id: p.id}))
-        if(leaderBoard[0]) {
+        if(leaderBoard[0] && leaderBoard[0].ifNotAI) {
             if (this.leader === null) {
                 this.leader = this.players[leaderBoard[0].id]
                 this.leader.leaderBuff = 1.5
@@ -570,7 +654,7 @@ class Game {
     }
 
     createUpdate(player, leaderboard) {
-        const nearbyPlayers = Object.values(this.players).filter(
+        const nearbyPlayers = Object.values(Object.assign({}, this.players, this.bots_players)).filter(
             p => p !== player && (p.distanceTo(player) <= 2000 || p.id === leaderboard[0].id),
         )
         const nearbyEnemies = Object.values(this.enemies).filter(

@@ -107,9 +107,9 @@ class Fighter {
         }
         switch (item) {
             case "strength":
-                newChar.atk = 1
+                newChar.atk = 1.4
                 newChar.hp = 1
-                newChar.reg = 0.5
+                newChar.reg = 0.6
                 newChar.str = 1
                 break
             case "agility":

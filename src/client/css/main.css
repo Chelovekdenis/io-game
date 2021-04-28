@@ -6,6 +6,10 @@ html, body {
   background-color: black;
 }
 
+img {
+  width: 500px;
+}
+
 hr {
   border: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
@@ -13,24 +17,24 @@ hr {
   width: 100%;
 }
 
-button {
-  font-size: 18px;
-  outline: none;
-  border: none;
-  color: black;
-  background-color: transparent;
-  padding: 5px 20px;
-  border-radius: 3px;
-  transition: background-color 0.2s ease;
-}
+/*button {*/
+/*  font-size: 18px;*/
+/*  outline: none;*/
+/*  border: none;*/
+/*  color: black;*/
+/*  background-color: transparent;*/
+/*  padding: 5px 20px;*/
+/*  border-radius: 3px;*/
+/*  transition: background-color 0.2s ease;*/
+/*}*/
 
-button:hover {
-  background-color: rgb(230, 230, 230);
-}
+/*button:hover {*/
+/*  background-color: rgb(230, 230, 230);*/
+/*}*/
 
-button:focus {
-  outline: none;
-}
+/*button:focus {*/
+/*  outline: none;*/
+/*}*/
 
 
 .hidden {
@@ -49,49 +53,148 @@ button:focus {
   transform: translateY(-50%) translateX(-50%);
   padding: 20px 30px;
   background-color: white;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   border-radius: 5px;
   text-align: center;
+  min-width:560px;
+
+}
+#play-menu {
+  background: #424242;
+}
+#play-button {
+  position: relative;
+  border: 0;
+  border-bottom: 6px solid;
+  font-size: 35px;
+  letter-spacing: 1px;
+  padding: 0 15px;
+  margin: 5px;
+  cursor: pointer;
+  background: #eaec4b;
+  border-color: #a1a130;
+  color: #888a34;
+  lighting-color: skyblue;
+  min-width: 180px;
+}
+/*
+b2b2b2
+666666
+424242
+212121
+b00020
+5e1622
+*/
+#username-input {
+  position: relative;
+  background: #ededd1;
+  border: 0;
+  border-bottom: 6px solid #a1a18d;
+  padding: 5px;
+  margin: 5px;
+  font-size: 25px;
+  text-indent: 10px;
+  color: #666;
+  outline: 0;
+  width: 100%;
 }
 
-#play-menu p {
-  margin-bottom: 0;
+#server_list {
+  position: relative;
+  border: 0;
+  border-bottom: 6px solid;
+  width: 180px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 8px 15px;
+  margin: 5px;
+  margin-top: 15px;
+  cursor: pointer;
+  background: #eaec4b;
+  border-color: #a1a130;
+  color: #888a34;
 }
-
-#play-menu input {
+#button {
+  background: #FFDE03;
   font-size: 18px;
-  outline: none;
-  border: none;
-  border-bottom: 1px solid black;
-  margin-bottom: 5px;
-  padding: 3px;
-  text-align: center;
+  outline: 0;
+  border: 0;
+  color: #000;
+  padding: 5px 20px;
+  border-radius: 3px;
+  transition: background-color .2s ease;
+}
+#reconnect-button {
+  font-size: 18px;
+  outline: 0;
+  border: 0;
+  background-color: transparent;
+  padding: 5px 20px;
+  border-radius: 3px;
+  transition: background-color .2s ease;
+  color: black;
+}
+.form {
+  display: flex;
+  justify-content: center;
+}
+.select {
+  display: flex;
+  justify-content: center;
+}
+.air_space {
+  color: white;
+  font-size: 20px;
+  padding: 5px;
+  margin: 5px;
+  width: 100%;
+  text-align: left;
+}
+label {
 }
 
-#play-menu input:hover {
-  outline: none;
+h1 {
+  color: #fad76f;
+  font: 5em PT Sans Caption, sans-serif;
+  text-shadow: #d69e2a 3px 3px 0;
 }
 
-#leaderboard {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  background-color: rgba(255, 255, 255, 0.5);
-  padding: 10px;
-  border-radius: 5px;
-}
+/*#play-menu p {*/
+/*  margin-bottom: 0;*/
+/*}*/
 
-#leaderboard th {
-  text-align: center;
-  padding: 2px 5px;
-}
+/*#play-menu input {*/
+/*  font-size: 18px;*/
+/*  outline: none;*/
+/*  border: none;*/
+/*  border-bottom: 1px solid black;*/
+/*  margin-bottom: 5px;*/
+/*  padding: 3px;*/
+/*  text-align: center;*/
+/*}*/
 
-#leaderboard td {
-  text-align: center;
-  padding: 2px 5px;
-}
+/*#play-menu input:hover {*/
+/*  outline: none;*/
+/*}*/
+
+/*#leaderboard {*/
+/*  position: fixed;*/
+/*  top: 10px;*/
+/*  right: 10px;*/
+/*  background-color: rgba(255, 255, 255, 0.5);*/
+/*  padding: 10px;*/
+/*  border-radius: 5px;*/
+/*}*/
+
+/*#leaderboard th {*/
+/*  text-align: center;*/
+/*  padding: 2px 5px;*/
+/*}*/
+
+/*#leaderboard td {*/
+/*  text-align: center;*/
+/*  padding: 2px 5px;*/
+/*}*/
 
 #disconnect-modal {
   position: fixed;
@@ -108,39 +211,10 @@ button:focus {
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
   padding: 15px 20px;
-  background-color: white;
+  background: #b00020;
   border-radius: 5px;
   text-align: center;
+
 }
 
-@media screen and (max-width: 640px) {
-  h1 {
-    font-size: 2rem;
-  }
 
-  h2 {
-    font-size: 1.75rem;
-  }
-
-  #play-menu {
-    padding: 10px 15px;
-    min-width: 280px;
-  }
-
-  #disconnect-modal > div {
-    padding: 10px;
-    min-width: 280px;
-  }
-
-  #leaderboard th {
-    padding: 0 3px;
-  }
-
-  #leaderboard td {
-    padding: 0 3px;
-  }
-
-  #leaderboard table {
-    font-size: 14px;
-  }
-}

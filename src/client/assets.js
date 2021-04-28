@@ -46,7 +46,7 @@ const ASSET_NAMES = [
   'enemy_warrior4.svg',
   'enemy_warrior5.svg',
   'crown.svg',
-
+  'obsidian.svg',
 ]
 
 const assets = {}
@@ -61,8 +61,8 @@ function downloadAsset(assetName) {
       assets[assetName] = asset
       resolve()
     }
-    // asset.src = `https://medievalwar.ru/assets/${assetName}`
-    asset.src = `http://localhost:3001/assets/${assetName}`
+    asset.src = `https://medievalwar.ru/assets/${assetName}`
+    // asset.src = `http://localhost:3001/assets/${assetName}`
   })
   // https://medievalwar.ru/assets/${assetName}
 }

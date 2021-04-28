@@ -17,16 +17,16 @@ export function renderPlayer(me, player) {
 
     let atk = 0
     if(className === "warrior") {
-        atk = player.attributes.strength
+        atk = (player.skills.attack - 5) < 0 ? 0 : (player.skills.attack - 5)
     }
     else if (className === "warlord") {
-        atk = player.attributes.strength / 3
+        atk = (player.skills.attack / 5)
     }
     else if (className === "archer") {
-        atk = player.attributes.agility
+        atk = (player.skills.attack + 2)
     }
     else if (className === "sniper") {
-        atk = player.attributes.agility / 3
+        atk = (player.skills.attack / 3)
     }
     if(className === "fighter") {
         if(player.level >= 2) {
@@ -47,9 +47,8 @@ export function renderPlayer(me, player) {
     }
 
 
-
     context.drawImage(
-        getAsset(`${className}${atk}.svg`),
+        getAsset(`${className}${atk.toFixed(0)}.svg`),
         -Constants.PLAYER_RADIUS * 5,
         -Constants.PLAYER_RADIUS * 5,
         Constants.PLAYER_RADIUS * 10,
@@ -75,7 +74,7 @@ export function renderPlayer(me, player) {
     // )
 
     // Draw name
-
+    context.font = "14px Verdana"
     context.fillStyle = 'white'
     context.textBaseline = "middle"
     context.textAlign = 'center'
@@ -94,22 +93,29 @@ export function renderPlayer(me, player) {
     // Draw level
     let lvlString = "lvl"
     let tempLevel = player.level
+    let tempColor = ""
     if(player.effects.stunned.yes) {
         player.level = "STUN"
+        tempColor = "gold"
         lvlString = player.effects.stunned.time.toFixed(1)
     } else if (player.effects.slowed.yes) {
         player.level = "SLOWED"
+        tempColor = "skyblue"
         lvlString = player.effects.slowed.time.toFixed(1)
 
     } else if (player.effects.rage.yes) {
         player.level = "RAGE"
+        tempColor = "mediumvioletred"
         lvlString = player.effects.rage.time.toFixed(1)
 
     } else if (player.effects.storm.yes) {
+        tempColor = "blueviolet"
         player.level = "STORM"
         lvlString = player.effects.storm.time.toFixed(1)
 
     }
+    if (tempColor)
+        context.fillStyle = tempColor
     context.font = "12px Verdana"
     context.fillText(`${player.level} ${lvlString}`, canvasX, canvasY - Constants.PLAYER_RADIUS - 24)
     player.level = tempLevel

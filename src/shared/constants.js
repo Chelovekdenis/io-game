@@ -4,6 +4,13 @@
 
 let obj = {
     GAME_MAX_PLAYER: 40,
+    GAME_PLAYERS_NICKS: ["Носок судьбы", "Cr1stal",
+        "IceStorm" , "Летучий Олень", "Fluffy",  "ShOoTeR",
+        "Lemon4ik ", "Mr.Negotive", "Утка_в_тапках",
+        "АНТИ ПЕТУХ", "Enigma", "V1RUS", "3Jlou_4uTep",
+        "-=HarDcore=- ", "Mr.Zadrot", "Шаман-наркоман",
+        "K_I_N_G", "Haker", "Mirrox", "Agressor",
+        "W1zarD", "_LegenDa_ ", "KiSS_Ka", "Ceme4ka"],
 
     PLAYER_RADIUS: 25,
     PLAYER_MAX_HP: 100,
@@ -20,7 +27,7 @@ let obj = {
 
     TREE_RADIUS: 50,
 
-    SCORE_BULLET_HIT: 20,
+    SCORE_BULLET_HIT: 5,
     SCORE_PER_SECOND: 0.5,
     EXP_FOR_LEVEL_UP: expForLevelUp(),
 

@@ -9,11 +9,8 @@ const Constants = require('../shared/constants')
 // TODO
 // Сделать показ что повысился уровень
 // Всплывающее окно перед закрытием
-// За просмотр рекламы восрешение с 20% опыт от смерти
 
-// Скеил страницы нормальный
 // Начальный экран изменить
-// Босса потправить и начальные очки равные 0
 
 // Недочеты
 // ~ Если несолько раз нажать на выбор атрибута
@@ -23,8 +20,10 @@ const Constants = require('../shared/constants')
 // мобов не было
 
 class Player extends ObjectClass {
-  constructor(id, username, x, y, level) {
+  constructor(id, username, x, y, level, ifAI) {
     super(id, x, y, Constants.PLAYER_SPEED, Constants.PLAYER_RADIUS)
+    // От этого избавиться, то что снизу
+    this.ifNotAI = ifAI
     this.username = username
     this.direction = 0
     this.fireCooldown = 0
@@ -34,7 +33,7 @@ class Player extends ObjectClass {
     this.hitAnimation = 0
     this.count = 0
     this.level = 0
-    this.score = Constants.EXP_FOR_LEVEL_UP[level]
+    this.score = Constants.EXP_FOR_LEVEL_UP[11]
     this.leaderBuff = 1
     this.skillPoints = 0
     this.sendMsgSP = false
@@ -82,10 +81,11 @@ class Player extends ObjectClass {
     this.weaponY2 = 0
     this.giveDamage = false
 
-    this.damage = 10
+    this.damage = 20
     this.hp = Constants.PLAYER_MAX_HP
     this.defense = 1
     this.maxHp = this.hp
+    this.bulletSpeed = 1
 
     this.functionStack = []
     this.lastDir = 0
@@ -171,10 +171,10 @@ class Player extends ObjectClass {
       this.skillPoints++
       this.sendMsgSP = true
 
-      this.skills.attack += 0.2
-      this.skills.defense += 0.2
-      this.skills.regeneration += 0.2
-      this.skills.maxHp += 0.2
+      this.skills.attack += 0.8
+      this.skills.defense += 0.8
+      this.skills.regeneration += 0.8
+      this.skills.maxHp += 0.8
 
       this.setDamage()
       this.setDefense()
@@ -184,7 +184,7 @@ class Player extends ObjectClass {
         this.classPoint++
         this.sendMsgCP = true
       }
-      if(this.level === 21) {
+      if(this.level === 11) {
         this.classPoint++
         this.sendMsgCP = true
       }
@@ -385,33 +385,64 @@ class Player extends ObjectClass {
     let temp = 1
     if(this.level < 3)
       temp = 10
-    this.score += this.damage / 5 + dopScore / 5  * this.leaderBuff + temp
+    this.score += this.damage / 10 + dopScore / 10  * this.leaderBuff + temp
   }
 
   onKill(level) {
-    this.score += Constants.EXP_FOR_LEVEL_UP[level] / 10  * this.leaderBuff
+    this.score += Constants.EXP_FOR_LEVEL_UP[level] / 20  * this.leaderBuff
   }
 
   setAttributes(item) {
-    let newSkills = this.class.setAttributes(item)
-    this.skills.attack += newSkills.atk
-    this.skills.defense += newSkills.def
-    this.skills.regeneration += newSkills.reg
-    this.skills.maxHp += newSkills.hp
+    switch (item) {
+      case 0:
+        this.skills.attack += 1
+        this.setDamage()
+        break
+      case 1:
+        this.skills.defense += 1
+        this.setDefense()
+        break
+      case 2:
+        this.skills.maxHp += 1
+        this.setHp()
+        break
+      case 3:
+        this.skills.regeneration += 1
+        break
+      case 4:
+        this.speed += 3
+        this.pureSpeed += 3
+        break
+      case 5:
+        this.attackSpeed -= 0.005
+        this.defaultAttackSpeed -= 0.005
+        break
+      case 6:
+        this.bulletSpeed += 0.1
+        if(this.bulletSpeed >= 2) this.bulletSpeed = 2
+        break
+    }
+    // let newSkills = this.class.setAttributes(item)
+    // this.skills.attack += newSkills.atk
+    // this.skills.defense += newSkills.def
+    // this.skills.regeneration += newSkills.reg
+    // this.skills.maxHp += newSkills.hp
+    //
+    // this.speed += newSkills.speed
+    // this.pureSpeed += newSkills.speed
+    // this.attackSpeed -= newSkills.atkSpeed
+    // this.defaultAttackSpeed -= newSkills.atkSpeed
+    //
+    // this.attributes.strength += newSkills.str
+    // this.attributes.agility += newSkills.agl
+    // this.attributes.intelligence += newSkills.int
 
-    this.speed += newSkills.speed
-    this.pureSpeed += newSkills.speed
-    this.attackSpeed -= newSkills.atkSpeed
-    this.defaultAttackSpeed -= newSkills.atkSpeed
 
-    this.attributes.strength += newSkills.str
-    this.attributes.agility += newSkills.agl
-    this.attributes.intelligence += newSkills.int
 
-    this.setDamage()
-    this.setDefense()
-    this.setHp()
-    this.setCdReduction()
+    // this.setDamage()
+    // this.setDefense()
+    // this.setHp()
+    // this.setCdReduction()
   }
 
   chosenClass(c) {
@@ -439,7 +470,7 @@ class Player extends ObjectClass {
         this.className = Constants.CLASSES.ARCHER
         this.class = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
         this.updateClass = (dt) => {
-          this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick)
+          this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
           return this.class.update(dt)
         }
         break
@@ -468,7 +499,7 @@ class Player extends ObjectClass {
           this.className = "sniper"
           this.class = new Sniper(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
           this.updateClass = (dt) => {
-            this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick)
+            this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
             return this.class.update(dt)
           }
           break
@@ -476,28 +507,6 @@ class Player extends ObjectClass {
     this.classStage++
   }
 
-  //  Можно сделать передачу аргумента среди всех наследованных классов к самому первому
-  //  Так можно сделать массив спелов которые есть и их и показывать
-  // let a = {
-  //   arr: [1, 2, 3, 4]
-  // }
-  //
-  // function A (ttr) {
-  //   return {
-  //     x: 10,
-  //     y: 20,
-  //     z: ttr
-  //   }
-  // }
-  //
-  // function B () {
-  //   return {
-  //     ...(A(["spell1", "spell2"])),
-  //     f: 40
-  //   }
-  // }
-  //
-  // console.log(B().z.forEach(item=> console.log(item)))
 
   serializeForUpdate() {
     return {

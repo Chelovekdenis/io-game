@@ -5,7 +5,7 @@ class Enemy extends ObjectClass {
     constructor(id, x, y, speed, lvl) {
         super(id, x, y, speed, Constants.ENEMY_RADIUS)
         this.direction = 0
-        this.maxHp = 35 + 30 * lvl
+        this.maxHp = 35 + 20 * lvl
         this.hp = this.maxHp
         this.level = lvl
         this.className = "e"
@@ -18,7 +18,7 @@ class Enemy extends ObjectClass {
         this.weaponX = 0
         this.weaponY = 0
 
-        this.damage = 0.3 + 0.3 * lvl
+        this.damage = 0.3 + 0.15 * lvl
         // this.damage = 0.1
         this.lastHit = []
         this.lh = ''

@@ -92,32 +92,32 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
     let yImg = canvas.height - 45
 
     context.fillStyle = "rgba(51, 46, 61, 0.7)"
-    fillRoundedRect(context, xImg - 20, yImg - 80, 180, 110, Math.PI*1.5)
+    fillRoundedRect(context, xImg + 40, yImg - 80, 120, 110, Math.PI*1.5)
     context.fillStyle = 'white'
     context.textBaseline = "middle"
     context.textAlign = 'center'
     context.font = "16px Verdana"
-    context.drawImage(
-        getAsset('str.svg'),
-        xImg, yImg - 60,
-        20,
-        20,
-    )
-    context.fillText(`${me.attributes.strength}`, xImg+35, yImg - 50)
-    context.drawImage(
-        getAsset('agl.svg'),
-        xImg, yImg - 35,
-        20,
-        20,
-    )
-    context.fillText(`${me.attributes.agility}`, xImg+35, yImg - 25)
-    context.drawImage(
-        getAsset('int.svg'),
-        xImg, yImg - 10,
-        20,
-        20,
-    )
-    context.fillText(`${me.attributes.intelligence}`, xImg+35, yImg)
+    // context.drawImage(
+    //     getAsset('str.svg'),
+    //     xImg, yImg - 60,
+    //     20,
+    //     20,
+    // )
+    // context.fillText(`${me.attributes.strength}`, xImg+35, yImg - 50)
+    // context.drawImage(
+    //     getAsset('agl.svg'),
+    //     xImg, yImg - 35,
+    //     20,
+    //     20,
+    // )
+    // context.fillText(`${me.attributes.agility}`, xImg+35, yImg - 25)
+    // context.drawImage(
+    //     getAsset('int.svg'),
+    //     xImg, yImg - 10,
+    //     20,
+    //     20,
+    // )
+    // context.fillText(`${me.attributes.intelligence}`, xImg+35, yImg)
 
     xImg += 60
     yImg = canvas.height - 20
@@ -161,8 +161,8 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
     context.textBaseline = "middle"
     context.textAlign = 'center'
     context.font = "16px Verdana"
-    context.fillText("Name", aa_x + 60, 30)
-    context.fillText("Score", aa_x + 140, 30)
+    context.fillText("Имя", aa_x + 60, 30)
+    context.fillText("Очки", aa_x + 140, 30)
     context.drawImage(
         getAsset('crown.svg'),
         aa_x + 5, 45,
@@ -219,7 +219,7 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
     context.textBaseline = "middle"
     context.textAlign = 'center'
     context.font = "16px Verdana"
-    context.fillText(`level: ${me.level}`, canvas.width/2, expBarH + 16)
+    context.fillText(`Уровень: ${me.level}`, canvas.width/2, expBarH + 16)
 
     // Distribution of skill points
     if (newSkillPoint > 0) {
@@ -227,29 +227,38 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
 
         context.fillStyle = "rgba(51, 46, 61, 0.7)"
         // context.fillRect( 20, thisHeight, 200 , 200)
-        fillRoundedRect(context, 20, thisHeight, 200 , 200, Math.PI*1.5)
+        fillRoundedRect(context, 20, thisHeight, 220 , 240, Math.PI*1.5)
 
         context.fillStyle = 'white'
         context.textBaseline = "bottom"
         context.textAlign = 'center'
         context.font = "16px Verdana"
-        context.fillText(`Choose skill`, 120, thisHeight + 24)
+        context.fillText(`Выберите умение`, 130, thisHeight + 24)
 
         context.textAlign = 'start'
 
         let skillCoordinates = []
-        let attributes = ['strength', 'agility', 'intelligence']
-        for (let i = 0; i < attributes.length; i++) {
-            skillCoordinates.push({skill: attributes[i], x: 160, y: thisHeight + 40 * (i+1), w: 20, h: 20})
-            context.fillStyle = "rgba(51, 46, 61, 0.7)"
-            context.fillRect( 160, thisHeight + 40 * (i+1), 20 , 20)
-            context.fillStyle = 'white'
-            context.fillText(`+`, 160 + 4, thisHeight + 40 * (i+1) + 18)
+        let attributes = ['Атака', 'Защита', 'Жизни', 'Регенерация', 'Скорость', 'Скорость атаки']
+
+        if(me.className === "archer" || me.className === "sniper"){
+            attributes = ['Атака', 'Защита', 'Жизни', 'Регенерация', 'Скорость', 'Скорость атаки', 'Скорость стрелы']
         }
 
-        context.fillText(`Strength`, skillCoordinates[0].x - 120, skillCoordinates[0].y + skillCoordinates[0].h)
-        context.fillText(`Agility`, skillCoordinates[1].x - 120, skillCoordinates[1].y + skillCoordinates[1].h)
-        context.fillText(`Intelligence`, skillCoordinates[2].x - 120, skillCoordinates[2].y + skillCoordinates[2].h)
+        for (let i = 0; i < attributes.length; i++) {
+            let tempY = thisHeight + 30 * (i+1)
+            let tempX = 200
+            let tempH = 20
+            skillCoordinates.push({skill: i, x: tempX, y: tempY, w: tempH, h: tempH})
+            context.fillText(attributes[i], tempX - 160, tempY + tempH)
+            context.fillStyle = "rgba(51, 46, 61, 0.7)"
+            context.fillRect(tempX, tempY, tempH , tempH)
+            context.fillStyle = 'white'
+            context.fillText(`+`, tempX + 4, tempY + 18)
+        }
+
+        // context.fillText(`Strength`, skillCoordinates[0].x - 120, skillCoordinates[0].y + skillCoordinates[0].h)
+        // context.fillText(`Agility`, skillCoordinates[1].x - 120, skillCoordinates[1].y + skillCoordinates[1].h)
+        // context.fillText(`Intelligence`, skillCoordinates[2].x - 120, skillCoordinates[2].y + skillCoordinates[2].h)
         onChooseSkill(skillCoordinates)
     }
 
@@ -265,7 +274,7 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
             context.textBaseline = "bottom"
             context.textAlign = 'center'
             context.font = "16px Verdana"
-            context.fillText(`Choose class`, 155, thisHeight + 24)
+            context.fillText(`Выберите класс`, 155, thisHeight + 24)
 
             context.textAlign = 'start'
 
@@ -288,9 +297,9 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
                 context.fillText(`+`, 240 + 4, thisHeight + 70 * (i+1) + 18)
             }
             if(attributes === 'warlord')
-                context.fillText(`Warlord`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
+                context.fillText(`Рыцарь `, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
             else
-                context.fillText(`Sniper`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
+                context.fillText(`Снайпер`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
 
             onChooseClass(skillCoordinates)
         } else {
@@ -304,7 +313,7 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
             context.textBaseline = "bottom"
             context.textAlign = 'center'
             context.font = "16px Verdana"
-            context.fillText(`Choose class`, 155, thisHeight + 24)
+            context.fillText(`Выберите класс`, 155, thisHeight + 24)
 
             context.textAlign = 'start'
 
@@ -327,8 +336,8 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
                 context.fillText(`+`, 240 + 4, thisHeight + 70 * (i+1) + 18)
             }
 
-            context.fillText(`Warrior`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
-            context.fillText(`Archer`, skillCoordinates[1].x - 200, skillCoordinates[1].y + skillCoordinates[1].h)
+            context.fillText(`Воин`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
+            context.fillText(`Лучник`, skillCoordinates[1].x - 200, skillCoordinates[1].y + skillCoordinates[1].h)
             onChooseClass(skillCoordinates)
         }
     }

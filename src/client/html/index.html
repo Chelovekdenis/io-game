@@ -46,50 +46,37 @@
 <canvas id="game-canvas"></canvas>
 <div id="play-menu" class="hidden">
     <h1>Medieval War</h1>
-    <p>
-        Прокачивайтесь, сражайтесь,
-        <br />
-        уничтожьте главного босса.
-        <br />
-        Используйте W A S D
-        <br />
-        и мышку для управления.
-    </p>
-<!--    <p>-->
-<!--        Progress, fight,-->
-<!--        <br />-->
-<!--        destroy the main boss.-->
-<!--        <br />-->
-<!--        Use W A S D-->
-<!--        <br />-->
-<!--        and a mouse to control.-->
-<!--    </p>-->
-    <p>
-        Выберете сервер
-        <br />
-    </p>
-<!--    <p>-->
-<!--        Select server-->
-<!--        <br />-->
-<!--    </p>-->
-    <label>
-        <select id="server_list">
-<!--            <option value = "0">Server 1</option>-->
-<!--            <option value = "1">Server 2</option>-->
-<!--            <option value = "2">Server 3</option>-->
-        </select>
-    </label>
-    <hr />
-    <input type="text" id="username-input" placeholder="Username" />
-    <button id="play-button">ИГРАТЬ</button>
+    <div class="select">
+        <div class="air_space">
+            Используйте умения при помощи цифр на клавиатуре
+        </div>
+        <label>
+            <select id="server_list">
+                <!--            <option value = "0">Server 1</option>-->
+                <!--            <option value = "1">Server 2</option>-->
+                <!--            <option value = "2">Server 3</option>-->
+            </select>
+        </label>
+    </div>
+    <div class="form">
+        <input type="text" id="username-input" placeholder="Ваше имя" />
+        <button id="play-button">ИГРАТЬ</button>
+    </div>
 </div>
+
+<script >
+    $(document).keypress(function (e) {
+        if (e.which == 13) {
+            document.getElementById("play-button").click()
+        }
+    })
+</script>
 <div id="disconnect-modal" class="hidden">
     <div>
         <h2>Вы погибли</h2>
 <!--        <h2>Disconnect from the server </h2>-->
-        <hr />
-        <button id="button" style="background: #FFDE03;">ф</button> <br>
-        <button id="reconnect-button">ВЕРНУТСЯ</button>
+        <button id="button">ВЕРНУТСЯ С 0 УРОВНЕМ</button> <br>
+        <button id="reconnect-button">ВЕРНУТЬСЯ</button>
 <!--        <button id="reconnect-button">RECONNECT </button>-->
     </div>
 </div>

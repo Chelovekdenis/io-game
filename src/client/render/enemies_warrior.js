@@ -27,14 +27,26 @@ export function renderEnemiesWarrior(me, enemy) {
     else
         lvl = 1
 
+    if(enemy.ifObsidian) {
+        console.log("obsidian")
+        context.drawImage(
+            getAsset(`obsidian.svg`),
+            -Constants.PLAYER_RADIUS * 5,
+            -Constants.PLAYER_RADIUS * 5,
+            Constants.PLAYER_RADIUS * 10,
+            Constants.PLAYER_RADIUS * 10,
+        )
+    } else {
+        context.drawImage(
+            getAsset(`enemy_warrior${lvl}.svg`),
+            -Constants.PLAYER_RADIUS * 5,
+            -Constants.PLAYER_RADIUS * 5,
+            Constants.PLAYER_RADIUS * 10,
+            Constants.PLAYER_RADIUS * 10,
+        )
+    }
 
-    context.drawImage(
-        getAsset(`enemy_warrior${lvl}.svg`),
-        -Constants.PLAYER_RADIUS * 5,
-        -Constants.PLAYER_RADIUS * 5,
-        Constants.PLAYER_RADIUS * 10,
-        Constants.PLAYER_RADIUS * 10,
-    )
+
     context.restore()
 
     // context.fillRect(
@@ -52,16 +64,22 @@ export function renderEnemiesWarrior(me, enemy) {
 
     // Draw level
     let lvlString = "lvl"
+    let tempColor = ""
     if(enemy.effects.stunned.yes === true) {
         enemy.level = "STUN"
+        tempColor = "gold"
         lvlString = enemy.effects.stunned.time.toFixed(1)
     } else if (enemy.effects.slowed.yes) {
         enemy.level = "SLOWED"
+        tempColor = "skyblue"
         lvlString = enemy.effects.slowed.time.toFixed(1)
 
     }
-    context.font = "12px Verdana"
+
     context.fillStyle = 'white'
+    if (tempColor)
+        context.fillStyle = tempColor
+    context.font = "12px Verdana"
     context.textBaseline = "middle"
     context.textAlign = 'center'
     context.fillText(`${enemy.level} ${lvlString}`, canvasX, canvasY - Constants.ENEMY_RADIUS - 24)

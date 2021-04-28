@@ -14,6 +14,7 @@ class Archer {
         this.ifSlowBullet = false
         this.lastMove = {}
         this.lastClick = false
+        this.bulletSpeed = 1
 
         this.availableAbilities = {
             first: true,
@@ -31,13 +32,13 @@ class Archer {
                 // Двинуть передсобой, чтобы вылетали из дула
                 let sendX = this.x + dt * 400 * Math.sin(this.direction) * 8
                 let sendY = this.y - dt * 400 * Math.cos(this.direction) * 8
-                return new Bullet(this.id, sendX, sendY, this.direction, this.damage, false)
+                return new Bullet(this.id, sendX, sendY, this.direction, this.damage, false, this.bulletSpeed)
             }
         }
         if(this.ifSlowBullet) {
             let sendX = this.x + dt * this.speed * Math.sin(this.direction) * 10
             let sendY = this.y - dt * this.speed * Math.cos(this.direction) * 10
-            return new Bullet(this.id, sendX, sendY, this.direction, this.damage, true)
+            return new Bullet(this.id, sendX, sendY, this.direction, this.damage, true, this.bulletSpeed)
         }
 
         return null
@@ -62,7 +63,7 @@ class Archer {
         this.ifSlowBulletCount = !data
     }
 
-    setInfo(x, y, click, direction, atkSpeed, damage, speed, ifSlowBullet, lastMove, lastClick) {
+    setInfo(x, y, click, direction, atkSpeed, damage, speed, ifSlowBullet, lastMove, lastClick, bulletSpeed) {
         this.x = x
         this.y = y
         this.click = click
@@ -73,6 +74,7 @@ class Archer {
         this.ifSlowBullet = ifSlowBullet
         this.lastMove = lastMove
         this.lastClick = lastClick
+        this.bulletSpeed = bulletSpeed
     }
 
     getIfStun() {

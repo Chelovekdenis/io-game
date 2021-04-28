@@ -1,23 +1,56 @@
 const Enemy = require('./enemy')
 const Constants = require('../../shared/constants')
 
-class EnemyWarrior extends Enemy {
-    constructor(id, x, y, speed, lvl, topPlayer) {
-        super(id, x, y, speed)
+class PlayerBot extends Enemy {
+    constructor(id, x, y, speed, lvl, username) {
+        super(id, x, y, Constants.PLAYER_SPEED, lvl)
         this.maxHp = 70 + 40 * lvl
         this.hp = this.maxHp
-        this.level = lvl
         this.radius = Constants.PLAYER_RADIUS
         this.damage = 0.6 + 0.3 * lvl
         // this.damage = 0.2
-        this.className = "ew"
+        this.className = Constants.CLASSES.WARRIOR
 
         this.weaponX = 0
         this.weaponY = 0
         this.weaponX2 = 0
         this.weaponY2 = 0
 
-        this.ifObsidian = topPlayer.ifObsidian
+        this.username = username
+        this.score = Constants.EXP_FOR_LEVEL_UP[lvl]
+        this.leaderBuff = 1
+
+        this.skills = {
+            attack: 0,
+            defense: 0,
+            regeneration: 0,
+            maxHp: 0
+        }
+
+        this.attributes = {
+            strength: 0,
+            agility: 0,
+            intelligence: 0
+        }
+
+        this.effects = {
+            stunned: {
+                yes: false,
+                time: 0
+            },
+            slowed: {
+                yes: false,
+                time: 0
+            },
+            rage: {
+                yes: false,
+                time: 0
+            },
+            storm: {
+                yes: false,
+                time: 0
+            }
+        }
     }
 
     update(dt, x, y) {
@@ -51,9 +84,13 @@ class EnemyWarrior extends Enemy {
             weaponY: this.weaponY,
             weaponX2: this.weaponX2,
             weaponY2: this.weaponY2,
-            ifObsidian: this.ifObsidian,
+            username: this.username,
+            score: this.score,
+            skills: this.skills,
+            attributes: this.attributes,
+            className: this.className,
         }
     }
 }
 
-module.exports = EnemyWarrior
+module.exports = PlayerBot
