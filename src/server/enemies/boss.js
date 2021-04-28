@@ -5,8 +5,8 @@ const Constants = require('../../shared/constants')
 class Boss extends Enemy {
     constructor(id, x, y, speed) {
         super(id, x, y, speed)
-        this.hp = 1
-        this.maxHp = 1
+        this.hp = 40000
+        this.maxHp = 40000
         this.level = 40
         this.radius = Constants.BOSS_RADIUS
 
