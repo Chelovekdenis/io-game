@@ -30,8 +30,8 @@ class Archer {
             if (this.fireCooldown <= 0) {
                 this.fireCooldown += this.attackSpeed
                 // Двинуть передсобой, чтобы вылетали из дула
-                let sendX = this.x + dt * 400 * Math.sin(this.direction) * 8
-                let sendY = this.y - dt * 400 * Math.cos(this.direction) * 8
+                let sendX = this.x + dt * 400 * Math.sin(this.direction) * 6
+                let sendY = this.y - dt * 400 * Math.cos(this.direction) * 6
                 return new Bullet(this.id, sendX, sendY, this.direction, this.damage, false, this.bulletSpeed)
             }
         }

@@ -17,7 +17,6 @@
                 }
             })
             .then(ysdk => {
-                console.log("then")
                 const buttonElem = document.querySelector('#button');
                 buttonElem.addEventListener('click', () => {
                     ysdk.adv.showRewardedVideo({

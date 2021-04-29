@@ -4,7 +4,7 @@ const Constants = require('../../shared/constants')
 class PlayerBot extends Enemy {
     constructor(id, x, y, speed, lvl, username) {
         super(id, x, y, Constants.PLAYER_SPEED, lvl)
-        this.maxHp = 70 + 40 * lvl
+        this.maxHp = 70 + 100 * lvl
         this.hp = this.maxHp
         this.radius = Constants.PLAYER_RADIUS
         this.damage = 0.6 + 0.3 * lvl
@@ -21,9 +21,9 @@ class PlayerBot extends Enemy {
         this.leaderBuff = 1
 
         this.skills = {
-            attack: 0,
-            defense: 0,
-            regeneration: 0,
+            attack: Math.round(Math.random() * 20),
+            defense: Math.round(Math.random() * 10),
+            regeneration: Math.round(Math.random() * 20),
             maxHp: 0
         }
 
@@ -55,6 +55,15 @@ class PlayerBot extends Enemy {
 
     update(dt, x, y) {
         super.update(dt, x, y)
+
+        this.score += dt * Constants.SCORE_PER_SECOND * (this.level + 1)
+
+        if(this.maxHp > this.hp) {
+            this.hp += dt * this.skills.regeneration
+            if(this.maxHp < this.hp) {
+                this.hp = this.maxHp
+            }
+        }
 
         let a = dt * 400 * Math.sin(this.direction + Constants.PI_25 + this.hitAnimation)
         let b = dt * 400 * Math.cos(this.direction + Constants.PI_25 + this.hitAnimation)

@@ -58,7 +58,6 @@ class Game {
 
     resurrectPlayer(socket) {
         this.sockets[socket.id] = socket
-        console.log(Object.keys(this.players))
         // Generate a position to start this player at.
         let t = Object.values(this.trees)
         let e = Object.values(this.enemies)
@@ -68,10 +67,8 @@ class Game {
         let pb = Object.values(this.bots_players)
         // Может лучше радиус Босса?
         let xy = spawn(e.concat(t, b, p, ew, pb), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
-        console.log("game.js socket.id " + socket.id)
         this.players[socket.id] = new Player(socket.id, this.resPlayers[socket.id].username,
             xy.x, xy.y, this.resPlayers[socket.id].rewardedLevel, true)
-        console.log("game.js", this.players[socket.id].level, this.players[socket.id].score)
         socket.emit("player_ready")
     }
 
@@ -174,11 +171,12 @@ class Game {
             this.spawnEnemyWarrior()
         }
         this.spawnBoss()
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 5; i++) {
             this.addPlayerBot()
         }
         let firstObsidian = {
-            ifObsidian: true
+            ifObsidian: true,
+            level: 20
         }
         this.spawnEnemyWarrior(firstObsidian)
     }
@@ -214,7 +212,6 @@ class Game {
         // Нужно передать больший радиус из массива объектов
         let xy = spawn(p.concat(t, b, e, ew, pb), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS, 0.45, 0.55, 0.25, 0.7)
         const id = shortid()
-        console.log(topPlayer)
         if(topPlayer) {
             topPlayer.ifObsidian = true
             this.enemies_warrior[id] = new EnemyWarrior(id, xy.x, xy.y, Constants.PLAYER_SPEED, topPlayer.level, topPlayer)
@@ -225,7 +222,6 @@ class Game {
 
     addPlayerBot() {
         // Проверка на максимальное кол-во игроков
-        console.log(Object.keys(this.players))
         if (Object.keys(this.players).length + 1 > Constants.GAME_MAX_PLAYER) {
             return null
         }
@@ -444,7 +440,7 @@ class Game {
                     tempTopPlayer = Object.values(Object.assign({}, this.players, this.bots_players))
                         .sort((p1, p2) => p2.score - p1.score)
                         .slice(0, 5)
-                        .map(p => ({level: p.level}))
+                        .map(p => ({level: p.level}))[0]
 
                 }
                 delete this.enemies_warrior[enemyId]
@@ -509,19 +505,17 @@ class Game {
 
                 let destroyedEnemies = circleToCircleWithReturn(boss, enemies, Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS)
                 if (destroyedEnemies) {
-                    delete this.enemies[destroyedEnemies.id]
-                    this.spawnEnemy()
+                    this.enemies[destroyedEnemies.id].hp = 0
                 }
 
                 let destroyedEW = circleToCircleWithReturn(boss, enemies_warrior, Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS)
                 if (destroyedEW) {
-                    delete this.enemies_warrior[destroyedEW.id]
-                    this.spawnEnemyWarrior()
+                    this.enemies_warrior[destroyedEW.id].hp = 0
                 }
 
 
                 if (boss.giveDamage === true) {
-                    let beaten = hitPlayer(boss, players, Constants.PLAYER_RADIUS)
+                    let beaten = hitPlayer(boss, objPlayers, Constants.PLAYER_RADIUS)
                     if (beaten) {
                         beaten.takeDamage(boss.damage, boss.id)
                         beaten.needKick.need = true
@@ -655,19 +649,19 @@ class Game {
 
     createUpdate(player, leaderboard) {
         const nearbyPlayers = Object.values(Object.assign({}, this.players, this.bots_players)).filter(
-            p => p !== player && (p.distanceTo(player) <= 2000 || p.id === leaderboard[0].id),
+            p => p !== player && (p.distanceTo(player) <= 1200 || p.id === leaderboard[0].id),
         )
         const nearbyEnemies = Object.values(this.enemies).filter(
-            e => e.distanceTo(player) <= 2000,
+            e => e.distanceTo(player) <= 1200,
         )
         const nearbyEnemiesWarrior = Object.values(this.enemies_warrior).filter(
-            ew => ew.distanceTo(player) <= 2000,
+            ew => ew.distanceTo(player) <= 1200,
         )
         // const nearbyBoss = Object.values(this.boss).filter(
         //     boss => boss.distanceTo(player) <= Constants.MAP_SIZE / 2,
         // )
         const nearbyBullets = this.bullets.filter(
-            b => b.distanceTo(player) <= 2000,
+            b => b.distanceTo(player) <= 1200,
         )
         return {
             t: Date.now(),

@@ -28,7 +28,6 @@ export function renderEnemiesWarrior(me, enemy) {
         lvl = 1
 
     if(enemy.ifObsidian) {
-        console.log("obsidian")
         context.drawImage(
             getAsset(`obsidian.svg`),
             -Constants.PLAYER_RADIUS * 5,

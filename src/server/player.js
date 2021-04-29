@@ -6,11 +6,9 @@ const Archer = require('./classes/archer')
 const Sniper = require('./classes/sniper')
 const Constants = require('../shared/constants')
 
-// TODO
-// Сделать показ что повысился уровень
-// Всплывающее окно перед закрытием
+// Networking и assets ссылки на сервер
+// player.js уровени игрока меньше
 
-// Начальный экран изменить
 
 // Недочеты
 // ~ Если несолько раз нажать на выбор атрибута
@@ -172,9 +170,11 @@ class Player extends ObjectClass {
       this.sendMsgSP = true
 
       this.skills.attack += 0.8
-      this.skills.defense += 0.8
-      this.skills.regeneration += 0.8
+      this.skills.defense += 0.1
+      this.skills.regeneration += 0.5
       this.skills.maxHp += 0.8
+      this.attackSpeed -= 0.001
+      this.defaultAttackSpeed -= 0.001
 
       this.setDamage()
       this.setDefense()
@@ -395,7 +395,7 @@ class Player extends ObjectClass {
   setAttributes(item) {
     switch (item) {
       case 0:
-        this.skills.attack += 1
+        this.skills.attack += 1.5
         this.setDamage()
         break
       case 1:
@@ -407,7 +407,7 @@ class Player extends ObjectClass {
         this.setHp()
         break
       case 3:
-        this.skills.regeneration += 1
+        this.skills.regeneration += 2
         break
       case 4:
         this.speed += 3
