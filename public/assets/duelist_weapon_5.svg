@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient id="color-0" bx:pinned="true">
+      <stop style="stop-color: rgb(94, 22, 34)"/>
+    </linearGradient>
+  </defs>
+  <line stroke-width="18" x1="293.502" y1="100.064" x2="706.502" y2="100.064" id="line-3" stroke-linejoin="null" stroke-linecap="null" style="fill: rgb(209, 145, 85); stroke: rgb(94, 22, 34);"/>
+  <g transform="matrix(1, 0, 0, 1, -199.997955, -499.935547)">
+    <title>Glef</title>
+    <path style="paint-order: fill; stroke-width: 10px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" d="M 3173.78 385.933 H 3311.35 V 406.167 A 25.348 20.234 0 0 1 3286.002 426.401 H 3148.48 V 406.167 A 25.3 20.234 0 0 1 3173.78 385.933 Z" transform="matrix(0.997552, -0.069929, -2.20279, -0.848037, -1306.115518, 1173.163089)" bx:shape="rect 3148.48 385.933 162.87 40.468 25.3 0 25.348 0 1@6a55cb85"/>
+    <rect x="-906.5" y="-626.933" width="26.5" height="54.717" style="stroke-width: 8px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" transform="matrix(-1, 0, 0, -1, 0, 0)"/>
+    <path stroke-linejoin="null" stroke-linecap="null" id="path-9" d="M 906.5 599.935 L 928.807 555.32 L 951.115 599.935 L 928.807 644.551 L 906.5 599.935 Z" stroke-width="8" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+    <path stroke-linejoin="null" stroke-linecap="null" id="path-10" d="M 919.501 599.997 L 928.731 581.536 L 937.962 599.997 L 928.731 618.459 L 919.501 599.997 Z" stroke-width="3" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+    <line style="stroke-width: 0px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" x1="1000" y1="620" x2="1000" y2="620"/>
+    <line style="stroke-width: 6px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" x1="1009.025" y1="623.556" x2="948.017" y2="608.697"/>
+    <line style="stroke-width: 7px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" x1="1133.805" y1="611.975" x2="1040" y2="582.338"/>
+    <path style="paint-order: fill; stroke-width: 10px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" d="M 3173.784 385.933 H 3311.354 V 406.167 A 25.348 20.234 0 0 1 3286.006 426.401 H 3148.484 V 406.167 A 25.3 20.234 0 0 1 3173.784 385.933 Z" transform="matrix(-0.997552, -0.069929, 2.20279, -0.848037, 2706.115234, 1173.162842)" bx:shape="rect 3148.484 385.933 162.87 40.468 25.3 0 25.348 0 1@9ffac021"/>
+    <rect x="493.5" y="-626.933" width="26.5" height="54.717" style="stroke-width: 8px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" transform="matrix(1, 0, 0, -1, 0, 0)"/>
+    <path stroke-linejoin="null" stroke-linecap="null" id="path-11" d="M 448.885 599.936 L 471.192 644.551 L 493.5 599.936 L 471.192 555.32 L 448.885 599.936 Z" stroke-width="8" transform="matrix(-1, 0, 0, -1, 942.38501, 1199.871033)" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+    <path stroke-linejoin="null" stroke-linecap="null" id="path-12" d="M 462.037 599.998 L 471.267 618.459 L 480.498 599.998 L 471.267 581.536 L 462.037 599.998 Z" stroke-width="3" transform="matrix(-1, 0, 0, -1, 942.534973, 1199.994995)" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+    <line style="stroke-width: 6px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" x1="451.983" y1="608.697" x2="390.975" y2="623.556" transform="matrix(-1, 0, 0, -1, 842.958008, 1232.253052)"/>
+    <line style="stroke-width: 7px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" x1="360" y1="582.338" x2="266.195" y2="611.975" transform="matrix(-1, 0, 0, -1, 626.195007, 1194.312988)"/>
+  </g>
+</svg>

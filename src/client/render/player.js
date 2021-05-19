@@ -15,45 +15,44 @@ export function renderPlayer(me, player) {
     // Animation hit
     context.rotate(direction + hitAnimation)
 
-    let atk = 0
-    if(className === "warrior") {
-        atk = (player.skills.attack - 5) < 0 ? 0 : (player.skills.attack - 5)
-    }
-    else if (className === "warlord") {
-        atk = (player.skills.attack / 5)
-    }
-    else if (className === "archer") {
-        atk = (player.skills.attack + 2)
-    }
-    else if (className === "sniper") {
-        atk = (player.skills.attack / 3)
-    }
-    if(className === "fighter") {
-        if(player.level >= 2) {
-            atk = 2
-        } else
-            atk = 1
-    } else {
-        if(atk > 15)
-            atk = 5
-        else if (atk > 11)
-            atk = 4
-        else if (atk > 7)
-            atk = 3
-        else if (atk > 3)
-            atk = 2
-        else if (atk >= 0)
-            atk = 1
+    let weaponLvl = player.skills.attack
+    if(className === Constants.CLASSES.MELEE.FIGHTER && player.skills.attack > 0) {
+        weaponLvl = 1
     }
 
+
+    // context.drawImage(
+    //     getAsset(`${className}${weaponName.toFixed(0)}.svg`),
+    //     -Constants.PLAYER_RADIUS * 5,
+    //     -Constants.PLAYER_RADIUS * 5,
+    //     Constants.PLAYER_RADIUS * 10,
+    //     Constants.PLAYER_RADIUS * 10,
+    // )
 
     context.drawImage(
-        getAsset(`${className}${atk.toFixed(0)}.svg`),
+        getAsset(`${className}_weapon_${weaponLvl}.svg`),
+        -125,
+        -50,
+        250,
+        50,
+    )
+
+    context.drawImage(
+        getAsset(`hands_0.svg`),
         -Constants.PLAYER_RADIUS * 5,
         -Constants.PLAYER_RADIUS * 5,
         Constants.PLAYER_RADIUS * 10,
         Constants.PLAYER_RADIUS * 10,
     )
+
+    context.drawImage(
+        getAsset(`human.svg`),
+        -Constants.PLAYER_RADIUS * 5,
+        -Constants.PLAYER_RADIUS * 5,
+        Constants.PLAYER_RADIUS * 10,
+        Constants.PLAYER_RADIUS * 10,
+    )
+
     context.restore()
 
     context.fillStyle = "red"

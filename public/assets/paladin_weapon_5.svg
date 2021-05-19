@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient id="color-0" bx:pinned="true">
+      <stop style="stop-color: rgb(94, 22, 34)"/>
+    </linearGradient>
+  </defs>
+  <g transform="matrix(1, 0, 0, 1, -1475.762085, -198.094482)">
+    <title>Hammer</title>
+    <line stroke-width="18" x1="1820" y1="300" x2="2233" y2="300" id="line-2" stroke-linejoin="null" stroke-linecap="null" style="fill: rgb(3, 169, 244); stroke: rgb(94, 22, 34);"/>
+    <rect x="2223.026" y="254.29" width="66.217" height="93.433" style="stroke-width: 8px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+    <rect x="2210.567" y="230.932" width="93.433" height="37.626" style="stroke-width: 8px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+    <rect x="2210.567" y="333.456" width="93.433" height="37.626" style="stroke-width: 8px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" bx:origin="0.286 2.311"/>
+    <path style="stroke-width: 8px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" d="M 2215.247 220 H 2299.32 A 4.68 4.68 0 0 1 2304 224.68 V 230.932 H 2210.567 V 224.68 A 4.68 4.68 0 0 1 2215.247 220 Z" bx:shape="rect 2210.567 220 93.433 10.932 4.68 4.68 0 0 1@9bcbc996"/>
+    <path style="stroke-width: 8px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);" d="M 2215.247 -381.986 H 2299.087 A 4.68 4.68 0 0 1 2303.767 -377.306 V -371.082 H 2210.567 V -377.306 A 4.68 4.68 0 0 1 2215.247 -381.986 Z" transform="matrix(1, 0, 0, -1, 0, 0)" bx:shape="rect 2210.567 -381.986 93.2 10.904 4.68 4.68 0 0 1@67c18b2f"/>
+    <rect x="2289.244" y="293.37" width="14.523" height="14.523" style="stroke-width: 8px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+    <path stroke-linejoin="null" stroke-linecap="null" id="path-7" d="M 2235 299.996 L 2255.769 279.226 L 2276.538 299.996 L 2255.769 320.765 L 2235 299.996 Z" stroke-width="4" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+    <path stroke-linejoin="null" stroke-linecap="null" id="path-8" d="M 2246.6 300.031 L 2255.83 290.8 L 2265.061 300.031 L 2255.83 309.262 L 2246.6 300.031 Z" stroke-width="3" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+    <rect x="1820" y="292.62" width="14.523" height="14.523" style="stroke-width: 8px; fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+  </g>
+</svg>

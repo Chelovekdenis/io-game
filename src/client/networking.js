@@ -8,8 +8,8 @@ const Constants = require('../shared/constants')
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws'
 // const socket = io(`${socketProtocol}://84.201.139.216:3001`, { reconnection: false })
-const socket = io(`wss://medievalwar.ru`, { reconnection: false })
-// const socket = io(`${socketProtocol}://localhost:3001`, { reconnection: false })
+// const socket = io(`wss://medievalwar.ru`, { reconnection: false })
+const socket = io(`${socketProtocol}://localhost:3001`, { reconnection: false })
 // const socket = io(`${socketProtocol}:medievalwar.ru`, { reconnection: false })
 const connectedPromise = new Promise(resolve => {
   socket.on('connect', () => {
@@ -22,7 +22,7 @@ export const connect = onGameOver => (
   connectedPromise.then(() => {
     // Register callbacks
     socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate)
-    socket.on(Constants.MSG_TYPES.GAME_OVER, (data) => onGameOver(data))
+    socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver)
     socket.on(Constants.MSG_TYPES.SKILL_POINTS, (data) => setNewSkillPoint(data))
     socket.on("class_point", (data) => setNewClassPoint(data))
     socket.on("number_of_players", serversInfo => {

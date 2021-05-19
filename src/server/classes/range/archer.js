@@ -1,4 +1,4 @@
-const Bullet = require('../bullet')
+const Bullet = require('../../bullet')
 
 class Archer {
     constructor(id, x, y, click, direction, speed, damage, atkSpeed) {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(1, 0, 0, 1, 395.662354, -327.909149)">
+    <title>Layer 1</title>
+    <g transform="matrix(1, 0, 0, 1, -404.662366, 15.961311)">
+      <title>Layer 1</title>
+      <line fill="#b00020" stroke-width="18" x1="389.824141" y1="411.852302" x2="612.566954" y2="411.852302" id="line-10" stroke-linejoin="null" stroke-linecap="null" stroke="#5e1622"/>
+      <path stroke-linejoin="null" stroke-linecap="null" id="path-55" d="M 638.913 393.154 L 843.41 379.045 L 913.667 410.286 L 843.41 440.519 L 638.286 426.411 L 638.913 393.154 Z" stroke-width="8" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+      <path stroke-linejoin="null" stroke-linecap="null" id="path-56" d="M 641.925 401.984 L 825.421 395.085 L 888.462 410.363 L 825.421 425.148 L 641.363 418.248 L 641.925 401.984 Z" stroke-width="3" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+      <path stroke-linejoin="null" stroke-linecap="null" id="path-57" d="M 600.245 409.601 L 622.553 364.986 L 644.861 409.601 L 622.553 454.217 L 600.245 409.601 Z" stroke-width="8" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+      <path stroke-linejoin="null" stroke-linecap="null" id="path-58" d="m360.095386,411.112752l20.769238,-20.769239l20.769238,20.769239l-20.769238,20.769239l-20.769238,-20.769239z" stroke-width="4" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+      <path stroke-linejoin="null" stroke-linecap="null" id="path-59" d="m371.703391,411.182274l9.230765,-9.23077l9.23077,9.23077l-9.23077,9.23077l-9.230765,-9.23077z" stroke-width="3" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+      <path stroke-linejoin="null" stroke-linecap="null" id="path-60" d="M 612.567 408.805 L 621.798 390.344 L 631.028 408.805 L 621.798 427.267 L 612.567 408.805 Z" stroke-width="3" style="fill: rgb(3, 169, 244); stroke: rgb(1, 87, 155);"/>
+    </g>
+  </g>
+</svg>

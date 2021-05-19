@@ -1,0 +1,23 @@
+<svg width="1000" height="199.99999999999997" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG Editor - http://github.com/mzalive/SVG Editor/ -->
+
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="1002" height="202" id="canvas_background" fill="none"/>
+  <g id="canvasGrid" display="none">
+   <rect id="svg_2" width="100%" height="100%" x="0" y="0" stroke-width="0" fill="url(#gridpattern)"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path fill="#607d8b" stroke-width="8" d="m646.432166,82.11704l192.65083,-13.29161l66.18678,29.43142l-66.18678,28.48202l-193.24178,-13.29161l0.59095,-31.33022z" id="svg_22" stroke="#263238" stroke-linecap="null" stroke-linejoin="null"/>
+  <path fill="#607d8b" stroke-width="3" d="m648.8852,91.56598l170.37292,-6.40636l58.53302,14.18552l-58.53302,13.72792l-170.89553,-6.40636l0.52261,-15.10072z" id="svg_32" stroke="#263238" stroke-linecap="null" stroke-linejoin="null"/>
+  <path transform="rotate(-180 247.9999542236328,97.95671844482422) " fill="#607d8b" stroke-width="8" d="m118.87661,82.291608l192.65083,-13.29161l66.18678,29.43142l-66.18678,28.48202l-193.24178,-13.29161l0.59095,-31.33022z" id="svg_4" stroke="#263238" stroke-linecap="null" stroke-linejoin="null"/>
+  <path transform="rotate(-180 256.0768737792969,99.45671844482422) " fill="#607d8b" stroke-width="3" d="m141.8852,91.906358l170.37292,-6.40636l58.53302,14.18552l-58.53302,13.72792l-170.89553,-6.40636l0.52261,-15.10072z" id="svg_5" stroke="#263238" stroke-linecap="null" stroke-linejoin="null"/>
+  <line stroke-linecap="null" stroke-linejoin="null" id="svg_8" y2="100" x2="610" y1="100" x1="390" fill-opacity="null" stroke-opacity="null" stroke-width="18" stroke="#5e1622" fill="none"/>
+  <path fill="#607d8b" stroke-width="8" d="m609.24541,98.60117l22.30767,-44.61538l22.30767,44.61538l-22.30767,44.61538l-22.30767,-44.61538z" id="svg_23" stroke="#263238" stroke-linecap="null" stroke-linejoin="null"/>
+  <path fill="#607d8b" stroke-width="2" d="m622.24616,98.461512l9.23075,-18.46151l9.23075,18.46151l-9.23075,18.46152l-9.23075,-18.46152z" id="svg_25" stroke="#263238" stroke-linecap="null" stroke-linejoin="null"/>
+  <path fill="#607d8b" stroke-width="8" d="m350.24541,98.61538l22.30767,-44.61538l22.30767,44.61538l-22.30767,44.61538l-22.30767,-44.61538z" id="svg_6" stroke="#263238" stroke-linecap="null" stroke-linejoin="null"/>
+  <path fill="#607d8b" stroke-width="2" d="m363.24616,98.461508l9.23075,-18.46151l9.23075,18.46151l-9.23075,18.46152l-9.23075,-18.46152z" id="svg_7" stroke="#263238" stroke-linecap="null" stroke-linejoin="null"/>
+ </g>
+</svg>

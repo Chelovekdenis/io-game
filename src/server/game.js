@@ -79,7 +79,7 @@ class Game {
         } else {
             this.resPlayers[socket.id] = socket
             this.resPlayers[socket.id].username = this.players[socket.id].username
-            this.resPlayers[socket.id].rewardedLevel = Math.ceil(this.players[socket.id].level * 0.4)
+            this.resPlayers[socket.id].rewardedLevel = Math.ceil(this.players[socket.id].level * 0.5)
             delete this.players[socket.id]
             socket.emit("resurrect", this.resPlayers[socket.id].rewardedLevel)
         }
@@ -113,22 +113,7 @@ class Game {
         if (player) {
             if (player.skillPoints > 0) {
                 player.setAttributes(item)
-                // player.skills[item]++
-                player.skillPoints--
                 player.sendMsgSP = true
-                // console.log(player.setAttributes())
-
-                // switch (item) {
-                //     case "attack":
-                //         player.setDamage()
-                //         break
-                //     case "defense":
-                //         player.setDefense()
-                //         break
-                //     case "maxHp":
-                //         player.setHp()
-                //         break
-                // }
             }
         }
     }
@@ -139,30 +124,14 @@ class Game {
             if(player.classPoint > 0) {
                 player.classPoint--
                 player.sendMsgCP = true
-                switch (c) {
-                    case "warrior":
-                        player.chosenClass(Constants.CLASSES.WARRIOR)
-                        break
-                    case "archer":
-                        player.chosenClass(Constants.CLASSES.ARCHER)
-                        break
-                    case "warlord":
-                        player.chosenClass("warlord")
-                        break
-                    case "sniper":
-                        player.chosenClass("sniper")
-                        break
-                }
+                player.chosenClass(c)
             }
         }
     }
 
     initGame() {
-        for (let i = 0; i < 150; i++) {
-            const x = Constants.MAP_SIZE * (0.05 + Math.random() * 0.95)
-            const y = Constants.MAP_SIZE * (0.05 + Math.random() * 0.95)
-            const id = shortid()
-            this.trees[id] = new Tree(id, x, y)
+        for (let i = 0; i < 160; i++) {
+            this.spawnTree()
         }
         for (let i = 0; i < 40; i++) {
             this.spawnEnemy()
@@ -197,7 +166,7 @@ class Game {
             sum += item.level
         })
         if(p.length) {
-            sum /= p.length
+            sum /= p.length * 4
         }
         this.enemies[id] = new Enemy(id, xy.x, xy.y, Constants.PLAYER_SPEED * 0.8, this.randomInteger(1 , Math.min(2 + sum, 10)))
     }
@@ -218,6 +187,21 @@ class Game {
             return null
         }
         this.enemies_warrior[id] = new EnemyWarrior(id, xy.x, xy.y, Constants.PLAYER_SPEED, this.randomInteger(11, 20), {ifObsidian: false})
+    }
+
+    spawnTree() {
+        let p = Object.values(this.players)
+        let b = Object.values(this.boss)
+        let e = Object.values(this.enemies)
+        let ew = Object.values(this.enemies_warrior)
+        let pb = Object.values(this.bots_players)
+        // Нужно передать больший радиус из массива объектов
+        let xy = spawn(p.concat(b, e, ew, pb), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS, 0.49, 0.50, 0.02, 0.98)
+        const id = shortid()
+        let treeType = Constants.TREE_TYPES[Math.round(Math.random() * (Constants.TREE_TYPES.length-1))]
+        if(this.shouldSendUpdate)
+            treeType = "tree"
+        this.trees[id] = new Tree(id, xy.x, xy.y, treeType)
     }
 
     addPlayerBot() {
@@ -312,8 +296,9 @@ class Game {
                 player.y = earlyY
             }
 
-            if((player.className === Constants.CLASSES.WARRIOR || player.className === Constants.CLASSES.FIGHTER
-                || player.className === "warlord")
+            if((player.className === Constants.CLASSES.MELEE.WARRIOR || player.className === Constants.CLASSES.MELEE.FIGHTER
+                || player.className === Constants.CLASSES.MELEE.KNIGHT || player.className === Constants.CLASSES.MELEE.PALADIN
+                || player.className === Constants.CLASSES.MELEE.DUELIST)
                 && player.giveDamage === true) {
                 let beaten = hitPlayer(player, [].concat(players, players_bots), Constants.PLAYER_RADIUS)
                 let beatenEnemy = hitPlayer(player, enemies, Constants.ENEMY_RADIUS)
@@ -327,7 +312,7 @@ class Game {
                     beaten.takeDamage(player.damage, player.id)
                     beaten.needKick.need = true
                     beaten.needKick.dir = Math.atan2(beaten.x - player.x, player.y - beaten.y)
-                    beaten.needKick.power = player.className === Constants.CLASSES.WARLORD ? 300 : 200
+                    beaten.needKick.power = player.className === Constants.CLASSES.MELEE.WARLORD ? 300 : 200
                     player.listDamaged.push({id: beaten.id, count: player.attackSpeed})
                     player.onDealtDamage(0)
                 }
@@ -339,7 +324,7 @@ class Game {
                     beatenEnemy.takeDamage(player.damage, player.id)
                     beatenEnemy.needKick.need = true
                     beatenEnemy.needKick.dir = Math.atan2(beatenEnemy.x - player.x, player.y - beatenEnemy.y)
-                    beatenEnemy.needKick.power = player.className === Constants.CLASSES.WARLORD ? 400 : 300
+                    beatenEnemy.needKick.power = player.className === Constants.CLASSES.MELEE.WARLORD ? 400 : 300
                     player.listDamaged.push({id: beatenEnemy.id, count: player.attackSpeed})
                     player.onDealtDamage(0)
 
@@ -352,7 +337,7 @@ class Game {
                     beatenEnemyWarrior.takeDamage(player.damage, player.id)
                     beatenEnemyWarrior.needKick.need = true
                     beatenEnemyWarrior.needKick.dir = Math.atan2(beatenEnemyWarrior.x - player.x, player.y - beatenEnemyWarrior.y)
-                    beatenEnemyWarrior.needKick.power = player.className === Constants.CLASSES.WARLORD ? 300 : 200
+                    beatenEnemyWarrior.needKick.power = player.className === Constants.CLASSES.MELEE.WARLORD ? 300 : 200
                     player.listDamaged.push({id: beatenEnemyWarrior.id, count: player.attackSpeed})
                     player.onDealtDamage(0)
 
@@ -500,8 +485,10 @@ class Game {
                     }
                 }
                 let destroyedTree = circleToCircleWithReturn(boss, trees, Constants.BOSS_RADIUS, Constants.TREE_RADIUS)
-                if (destroyedTree)
+                if (destroyedTree) {
                     delete this.trees[destroyedTree.id]
+                    this.spawnTree()
+                }
 
                 let destroyedEnemies = circleToCircleWithReturn(boss, enemies, Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS)
                 if (destroyedEnemies) {
@@ -543,7 +530,7 @@ class Game {
             const player = this.players[playerID]
             const socket = this.sockets[playerID]
             if (player.hp <= 0) {
-                socket.emit(Constants.MSG_TYPES.GAME_OVER, "player.hp <= 0")
+                socket.emit(Constants.MSG_TYPES.GAME_OVER)
                 if(this.players[player.lastHit])
                     this.players[player.lastHit].onKill(player.level)
                 this.removePlayer(socket, true)
@@ -648,6 +635,9 @@ class Game {
     }
 
     createUpdate(player, leaderboard) {
+        const nearbyTrees = Object.values(this.trees).filter(
+            e => e.distanceTo(player) <= 1200,
+        )
         const nearbyPlayers = Object.values(Object.assign({}, this.players, this.bots_players)).filter(
             p => p !== player && (p.distanceTo(player) <= 1200 || p.id === leaderboard[0].id),
         )
@@ -668,7 +658,7 @@ class Game {
             me: player.serializeForUpdate(),
             others: nearbyPlayers.map(p => p.serializeForUpdate()),
             bullets: nearbyBullets.map(b => b.serializeForUpdate()),
-            trees: this.trees,
+            trees: nearbyTrees.map(t => t.serializeForUpdate()),
             enemies: nearbyEnemies.map(e => e.serializeForUpdate()),
             enemies_warrior: nearbyEnemiesWarrior.map(ew => ew.serializeForUpdate()),
             boss: Object.values(this.boss).map(boss => boss.serializeForUpdate()),

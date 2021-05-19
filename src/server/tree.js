@@ -2,12 +2,13 @@ const ObjectClass = require('./object')
 const Constants = require('../shared/constants')
 
 class Tree extends ObjectClass {
-    constructor(id, x, y) {
+    constructor(id, x, y, className) {
         super(id, x, y, 0, Constants.TREE_RADIUS)
         this.damage = 0
         this.hp = 100
         this.lastHit = 0
         this.defense = 0
+        this.className = className
     }
 
     hitKick(dir) {
@@ -25,7 +26,8 @@ class Tree extends ObjectClass {
 
     serializeForUpdate() {
         return {
-            ...(super.serializeForUpdate())
+            ...(super.serializeForUpdate()),
+            className: this.className
         }
     }
 }

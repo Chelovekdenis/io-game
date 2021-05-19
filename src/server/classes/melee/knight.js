@@ -1,7 +1,7 @@
 const Warrior = require('./warrior')
-const Constants = require('../../shared/constants')
+const Constants = require('../../../shared/constants')
 
-class Warlord extends Warrior {
+class Knight extends Warrior {
     constructor(x, y, click, direction, speed, damage, atkSpeed) {
         super(x, y, click, direction, speed, damage, atkSpeed)
         this.availableAbilities = {
@@ -49,4 +49,4 @@ class Warlord extends Warrior {
     }
 }
 
-module.exports = Warlord
+module.exports = Knight

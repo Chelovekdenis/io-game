@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(1, 0, 0, 1, -10.295378, -312.438812)">
+    <title>Layer 1</title>
+    <line stroke-linecap="null" stroke-linejoin="null" id="svg_16" y2="411.852302" x2="612.566954" y1="411.852302" x1="389.824141" fill="#d19155" style="stroke-width: 16px; stroke: rgb(102, 102, 102);"/>
+    <rect stroke-linejoin="null" stroke-linecap="null" id="svg_17" height="75" width="20" y="373.835066" x="615.364223" stroke-width="8" style="fill: rgb(178, 178, 178); stroke: rgb(102, 102, 102);"/>
+    <ellipse stroke-linejoin="null" stroke-linecap="null" ry="12.5" rx="12.5" id="svg_15" cy="411.13435" cx="381.173192" stroke-width="8" style="fill: rgb(178, 178, 178); stroke: rgb(102, 102, 102);"/>
+    <polygon style="fill: rgb(178, 178, 178);" points="638.794 429.55 817.531 429.55 834.563 412.144 815.66 393.802 639.355 393.802"/>
+    <line stroke-linecap="null" stroke-linejoin="null" id="svg_24" y2="392.824633" x2="818.370405" y1="392.824633" x1="637.864184" stroke-width="8" fill="#d19155" style="stroke: rgb(102, 102, 102);"/>
+    <line stroke-linecap="null" stroke-linejoin="null" id="svg_28" y2="430.58062" x2="637.404108" y1="430.58062" x1="817.904789" stroke-width="8" fill="#d19155" style="stroke: rgb(102, 102, 102);"/>
+    <line stroke-linecap="null" stroke-linejoin="null" id="svg_27" y2="432.163351" x2="815.26816" y1="408.898308" x1="838.533203" stroke-width="8" fill="#b2b2b2" style="stroke: rgb(102, 102, 102);"/>
+    <line stroke-linecap="null" stroke-linejoin="null" id="svg_26" y2="413.482726" x2="837.557056" y1="392.193367" x1="815.718807" stroke-width="8" fill="#d19155" style="stroke: rgb(102, 102, 102);"/>
+  </g>
+</svg>

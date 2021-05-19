@@ -100,7 +100,7 @@ function interpolateObject(object1, object2, ratio) {
   Object.keys(object1).forEach(key => {
     if (key === 'direction') {
       interpolated[key] = interpolateDirection(object1[key], object2[key], ratio)
-    } else if  (key === 'username' || key ===  "item" || key ===  "id" || key ===  "click" || key === "ifObsidian"
+    } else if  (key === 'username' || key ===  "item" || key ===  "id" || key ===  "click" || key === "ifObsidian" || key === "skillPoints"
         || key ===  "level" || key ===  "score" || key ===  "skills" || key ===  "className" || key === "classStage"
         || key === "damage" || key === "atkSpeed" || key === "speed" || key === "defense" || key === "attributes" || key === "abilityCd"
         || key === "abilityName1" || key === "abilityName2" || key === "availableAbilities" || key === "effects" || key === "isSlow") {

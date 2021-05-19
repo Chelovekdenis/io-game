@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+  <ellipse style="fill: rgb(53, 123, 63); stroke-dashoffset: 8px; stroke-width: 8px; stroke: rgb(35, 100, 46);" cx="500" cy="500" rx="74.939" ry="140.326"/>
+  <ellipse style="stroke-width: 8px; fill: rgb(53, 123, 63); stroke: rgb(35, 100, 46);" cx="608.538" cy="571.615" rx="74.939" ry="140.326" transform="matrix(0.707086, 0.707127, -0.707127, 0.707086, 473.915627, -334.494484)"/>
+  <ellipse style="fill: rgb(53, 123, 63); stroke-width: 8px; stroke: rgb(35, 100, 46);" cx="874.939" cy="578.283" rx="74.939" ry="140.326" transform="matrix(0, 1, -1, 0, 1078.283065, -374.938665)"/>
+  <ellipse style="fill: rgb(53, 123, 63); stroke-width: 8px; stroke: rgb(35, 100, 46);" cx="874.939" cy="578.283" rx="74.939" ry="140.326" transform="matrix(0.707107, -0.707107, 0.707107, 0.707107, -527.582858, 709.767146)"/>
+  <circle style="fill: rgb(53, 123, 63);" cx="499.888" cy="499.045" r="118.701"/>
+  <circle style="fill: rgb(236, 20, 20); stroke: rgb(145, 24, 24); stroke-width: 4px;" cx="480.153" cy="568.254" r="19.847"/>
+  <circle style="fill: rgb(236, 20, 20); stroke: rgb(145, 24, 24); stroke-width: 4px;" cx="444.908" cy="480.153" r="19.847"/>
+  <circle style="fill: rgb(236, 20, 20); stroke: rgb(145, 24, 24); stroke-width: 4px;" cx="519.847" cy="440.459" r="19.847"/>
+  <circle style="fill: rgb(236, 20, 20); stroke: rgb(145, 24, 24); stroke-width: 4px;" cx="559.541" cy="498.045" r="19.847"/>
+</svg>

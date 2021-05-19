@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="200 100.672 500 400" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient id="color-0" bx:pinned="true">
+      <stop style="stop-color: rgb(94, 22, 34)"/>
+    </linearGradient>
+  </defs>
+  <g transform="matrix(1, 0, 0, 1, -237.694936, -239.328223)">
+    <path style="fill: rgb(178, 178, 178); stroke-width: 8px; stroke: rgb(102, 102, 102);" transform="matrix(0.707107, -0.707107, 0.707107, 0.707107, -1152.94165, 1073.60498)" d="M 1500.799 875.097 H 1680.799 A 10 10 0 0 1 1690.799 885.097 V 895.097 H 1490.799 V 885.097 A 10 10 0 0 1 1500.799 875.097 Z" bx:shape="rect 1490.799 875.097 200 20 10 10 0 0 1@bad85d5b"/>
+    <g transform="matrix(0.633955, -0.380917, 0.380917, 0.633955, 564.764343, 371.903107)" style="">
+      <title>Layer 1</title>
+      <line fill="#b00020" stroke-width="18" x1="16.946" y1="416.654" x2="137.284" y2="416.654" id="line-4" stroke-linejoin="null" stroke-linecap="null" stroke="#5e1622" transform="matrix(0.777175, -0.629284, 0.629284, 0.777175, -245.010627, 141.368043)"/>
+      <path stroke-linejoin="null" stroke-linecap="null" stroke="#666666" id="path-13" d="M 121.23 260.091 L 313.88 246.799 L 380.067 276.231 L 313.88 304.713 L 120.639 291.421 L 121.23 260.091 Z" stroke-width="8" fill="#b2b2b2" transform="matrix(0.777175, -0.629284, 0.629284, 0.777175, -117.744055, 218.988414)"/>
+      <path stroke-linejoin="null" stroke-linecap="null" stroke="#666666" id="path-14" d="M 127.105 275.967 L 297.478 269.561 L 356.01 283.747 L 297.478 297.475 L 126.582 291.069 L 127.105 275.967 Z" stroke-width="3" fill="#b2b2b2" transform="matrix(0.777175, -0.629284, 0.629284, 0.777175, -124.646679, 215.018563)"/>
+      <path stroke-linejoin="null" stroke-linecap="null" stroke="#666666" id="path-15" d="M 116.449 365.885 L 138.757 321.27 L 161.064 365.885 L 138.757 410.501 L 116.449 365.885 Z" stroke-width="8" fill="#b2b2b2" transform="matrix(0.777175, -0.629284, 0.629284, 0.777175, -199.32757, 168.845587)"/>
+      <path stroke-linejoin="null" stroke-linecap="null" id="path-16" d="M 17.784 445.156 L 38.553 424.387 L 59.322 445.156 L 38.553 465.925 L 17.784 445.156 Z" stroke-width="4" stroke="#666666" fill="#b2b2b2" transform="matrix(0.882948, -0.469471, 0.469471, 0.882948, -204.475156, 70.205987)"/>
+      <path stroke-linejoin="null" stroke-linecap="null" stroke="#666666" id="path-17" d="M 29.417 445.184 L 38.648 435.953 L 47.878 445.184 L 38.648 454.415 L 29.417 445.184 Z" stroke-width="3" fill="#b2b2b2" transform="matrix(0.882948, -0.469471, 0.469471, 0.882948, -204.477247, 70.253631)"/>
+      <path stroke-linejoin="null" stroke-linecap="null" stroke="#666666" id="path-18" d="M 129.504 365.979 L 138.734 347.517 L 147.965 365.979 L 138.734 384.441 L 129.504 365.979 Z" stroke-width="3" fill="#b2b2b2" transform="matrix(0.777175, -0.629284, 0.629284, 0.777175, -199.391314, 168.852578)"/>
+    </g>
+    <rect x="540" y="720" width="14.523" height="14.523" style="stroke-width: 8px; stroke: rgb(102, 102, 102); fill: rgb(178, 178, 178);" transform="matrix(0.707107, -0.707107, 0.707107, 0.707107, -353.962341, 499.9823)"/>
+    <rect x="540" y="720" width="14.523" height="14.523" style="stroke-width: 8px; stroke: rgb(102, 102, 102); fill: rgb(178, 178, 178);" transform="matrix(0.707107, -0.707107, 0.707107, 0.707107, -259.134613, 402.990051)"/>
+  </g>
+</svg>

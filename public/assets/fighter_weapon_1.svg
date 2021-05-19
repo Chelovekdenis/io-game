@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(1, 0, 0, 1, -5.239722, -296.783661)">
+    <title>Layer 1</title>
+    <path stroke-width="8" stroke-opacity="null" fill-opacity="null" id="path-1" style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <path stroke-width="8" d="m419.199713,409.278968l2.272728,-23.484843l7.575761,0l2.272727,23.484843l-12.121217,0l0.000001,0z" id="path-2" transform="rotate(93 425.26031494140614,397.53652954101574) " style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <rect stroke-width="8" x="437.134935" y="394.713218" width="166.16266" height="10.606059" id="rect-1" style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <path stroke-width="8" d="m619.346786,428.176407l6.726318,-58.3909l22.42106,0l6.726315,58.3909l-35.873694,0l0.000001,0z" id="path-3" transform="rotate(-90 637.2836303710938,398.98095703124994) " style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <path stroke-width="8" d="m659.549295,387.71982l9.51252,-16.474959l16.474959,-9.51252l19.025043,0l16.474959,9.51252l9.512518,16.474959l0,19.025043l-9.512518,16.474959l-16.474959,9.512518l-19.025043,0l-16.474959,-9.512518l-9.51252,-16.474959l0,-19.025043z" id="path-4" style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <line stroke-width="8" x1="437.879798" y1="407.068777" x2="587.760349" y2="409.486205" id="line-1" stroke-linejoin="null" stroke-linecap="null" style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <line stroke-width="8" x1="436.926909" y1="392.622357" x2="584.032175" y2="393.433321" id="line-2" stroke-linejoin="null" stroke-linecap="null" style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <line stroke-width="8" x1="581.067794" y1="393.322397" x2="670.103664" y2="370.828631" id="line-3" stroke-linejoin="null" stroke-linecap="null" style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <line stroke-width="8" x1="577.379212" y1="408.717483" x2="667.206806" y2="422.391091" id="line-4" stroke-linejoin="null" stroke-linecap="null" style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <line stroke-width="8" x1="399.694325" y1="411.11052" x2="445.014822" y2="405.046366" id="line-5" stroke-linejoin="null" stroke-linecap="null" transform="rotate(6 422.3545837402344,408.0784301757817) " style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <line stroke-width="8" x1="402.103461" y1="381.148144" x2="442.103461" y2="396.148144" id="line-6" stroke-linejoin="null" stroke-linecap="null" transform="rotate(-9 422.10345458984386,388.64813232421864) " style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+    <ellipse stroke-width="8" cx="395.294029" cy="396.251283" id="ellipse-1" rx="14" ry="14" style="fill: rgb(153, 153, 153); stroke: rgb(102, 102, 102);"/>
+  </g>
+</svg>

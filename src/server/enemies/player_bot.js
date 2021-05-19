@@ -9,7 +9,7 @@ class PlayerBot extends Enemy {
         this.radius = Constants.PLAYER_RADIUS
         this.damage = 0.6 + 0.3 * lvl
         // this.damage = 0.2
-        this.className = Constants.CLASSES.WARRIOR
+        this.className = Constants.CLASSES.MELEE.WARRIOR
 
         this.weaponX = 0
         this.weaponY = 0
@@ -21,10 +21,13 @@ class PlayerBot extends Enemy {
         this.leaderBuff = 1
 
         this.skills = {
-            attack: Math.round(Math.random() * 20),
-            defense: Math.round(Math.random() * 10),
-            regeneration: Math.round(Math.random() * 20),
-            maxHp: 0
+            attack: Math.round(Math.random() * 8),
+            defense: Math.round(Math.random() * 8),
+            maxHp: 0,
+            regeneration: Math.round(Math.random() * 8),
+            speed: 0,
+            atkSpeed: 0,
+            bltSpeed: 0,
         }
 
         this.attributes = {

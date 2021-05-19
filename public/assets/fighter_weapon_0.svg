@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 1000 200" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(1, 0, 0, 1, -5.819336, -297.020721)">
+    <title>Layer 1</title>
+    <path id="svg_8" fill-opacity="null" stroke-opacity="null" stroke-width="8" stroke="#b00020" fill="#b2b2b2"/>
+    <path transform="rotate(93 425.26031494140614,397.53652954101574) " id="svg_20" d="m419.199713,409.278968l2.272728,-23.484843l7.575761,0l2.272727,23.484843l-12.121217,0z" stroke-width="8" stroke="#d19155" fill="#d19155"/>
+    <rect stroke="#d19155" id="svg_21" height="10.606059" width="166.16266" y="394.713218" x="437.134935" stroke-width="8" fill="#d19155"/>
+    <path transform="rotate(-90 637.2836303710938,398.9809265136718) " stroke="#d19155" id="svg_22" d="m619.346786,428.176407l6.726318,-58.3909l22.42106,0l6.726315,58.3909l-35.873694,0z" stroke-width="8" fill="#d19155"/>
+    <path stroke="#7c542e" id="svg_3" d="m659.549295,387.71982l9.51252,-16.474959l16.474959,-9.51252l19.025043,0l16.474959,9.51252l9.512518,16.474959l0,19.025043l-9.512518,16.474959l-16.474959,9.512518l-19.025043,0l-16.474959,-9.512518l-9.51252,-16.474959l0,-19.025043z" stroke-width="8" fill="#d19155"/>
+    <line stroke="#7c542e" stroke-linecap="null" stroke-linejoin="null" id="svg_13" y2="409.486205" x2="587.760349" y1="407.068777" x1="437.879798" stroke-width="8" fill="#d19155"/>
+    <line stroke="#7c542e" stroke-linecap="null" stroke-linejoin="null" id="svg_12" y2="393.433321" x2="584.032175" y1="392.622357" x1="436.926909" stroke-width="8" fill="#d19155"/>
+    <line stroke="#7c542e" stroke-linecap="null" stroke-linejoin="null" id="svg_14" y2="370.828631" x2="670.103664" y1="393.322397" x1="581.067794" stroke-width="8" fill="#d19155"/>
+    <line stroke="#7c542e" stroke-linecap="null" stroke-linejoin="null" id="svg_18" y2="422.391091" x2="667.206806" y1="408.717483" x1="577.379212" stroke-width="8" fill="#d19155"/>
+    <line transform="rotate(6 422.3545837402344,408.0784301757817) " stroke="#7c542e" stroke-linecap="null" stroke-linejoin="null" id="svg_11" y2="405.046366" x2="445.014822" y1="411.11052" x1="399.694325" stroke-width="8" fill="#d19155"/>
+    <line transform="rotate(-9 422.10345458984386,388.64813232421864) " stroke-linecap="null" stroke-linejoin="null" id="svg_10" y2="396.148144" x2="442.103461" y1="381.148144" x1="402.103461" stroke-width="8" stroke="#7c542e" fill="#d19155"/>
+    <ellipse stroke="#7c542e" ry="14" rx="14" id="svg_4" cy="396.251283" cx="395.294029" stroke-width="8" fill="#d19155"/>
+  </g>
+</svg>

@@ -1,9 +1,15 @@
 const ObjectClass = require('./object')
-const Fighter = require('./classes/fighter')
-const Warrior = require('./classes/warrior')
-const Warlord = require('./classes/warlord')
-const Archer = require('./classes/archer')
-const Sniper = require('./classes/sniper')
+const Fighter = require('./classes/melee/fighter')
+const Warrior = require('./classes/melee/warrior')
+const Warlord = require('./classes/melee/warlord')
+const Duelist = require('./classes/melee/duelist')
+const Knight = require('./classes/melee/knight')
+const Paladin = require('./classes/melee/paladin')
+const Archer = require('./classes/range/archer')
+const Sniper = require('./classes/range/sniper')
+const Crossbowman = require('./classes/range/crossbowman')
+const Ranger = require('./classes/range/ranger')
+const Shooter = require('./classes/range/shooter')
 const Constants = require('../shared/constants')
 
 // Networking и assets ссылки на сервер
@@ -31,7 +37,7 @@ class Player extends ObjectClass {
     this.hitAnimation = 0
     this.count = 0
     this.level = 0
-    this.score = Constants.EXP_FOR_LEVEL_UP[level]
+    this.score = Constants.EXP_FOR_LEVEL_UP[40]
     this.leaderBuff = 1
     this.skillPoints = 0
     this.sendMsgSP = false
@@ -93,14 +99,21 @@ class Player extends ObjectClass {
     this.skills = {
       attack: 0,
       defense: 0,
+      maxHp: 0,
       regeneration: 0,
-      maxHp: 0
+      speed: 0,
+      atkSpeed: 0,
+      bltSpeed: 0,
     }
 
-    this.attributes = {
-      strength: 0,
-      agility: 0,
-      intelligence: 0
+    this.skills2 = {
+      attack: 0,
+      defense: 0,
+      maxHp: 0,
+      regeneration: 0,
+      speed: 0,
+      atkSpeed: 0,
+      bltSpeed: 0,
     }
 
     this.effects = {
@@ -124,7 +137,7 @@ class Player extends ObjectClass {
 
     this.lastHit = ''
 
-    this.className = Constants.CLASSES.FIGHTER
+    this.className = Constants.CLASSES.MELEE.FIGHTER
     this.class = new Fighter(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
     // this.class2 = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage)
 
@@ -157,7 +170,7 @@ class Player extends ObjectClass {
 
     // Regeneration
     if(this.maxHp > this.hp) {
-      this.hp += dt * this.skills.regeneration
+      this.hp += dt * this.skills.regeneration * Constants.PLAYER_REGENERATION
       if(this.maxHp < this.hp) {
         this.hp = this.maxHp
       }
@@ -165,32 +178,10 @@ class Player extends ObjectClass {
 
     // Lvl up
     if(this.score >= Constants.EXP_FOR_LEVEL_UP[this.level+1]) {
-      this.level++
-      this.skillPoints++
-      this.sendMsgSP = true
-
-      this.skills.attack += 0.8
-      this.skills.defense += 0.1
-      this.skills.regeneration += 0.5
-      this.skills.maxHp += 0.8
-      this.attackSpeed -= 0.001
-      this.defaultAttackSpeed -= 0.001
-
-      this.setDamage()
-      this.setDefense()
-      this.setHp()
-
-      if(this.level === 3) {
-        this.classPoint++
-        this.sendMsgCP = true
-      }
-      if(this.level === 11) {
-        this.classPoint++
-        this.sendMsgCP = true
-      }
+     this.levelUp()
     }
 
-    let upDown = this.move.left || this.move.right ? dt * this.speed * 0.7 : dt * this.speed
+    let upDown = this.move.left || this.move.right ? dt * this.speed * 0.75 : dt * this.speed
 
     if (this.move.up)
       this.y -= upDown
@@ -198,7 +189,7 @@ class Player extends ObjectClass {
     if (this.move.down)
       this.y += upDown
 
-    let leftRight = this.move.up || this.move.down ? dt * this.speed * 0.7 : dt * this.speed
+    let leftRight = this.move.up || this.move.down ? dt * this.speed * 0.75 : dt * this.speed
 
     if (this.move.left)
       this.x -= leftRight
@@ -215,6 +206,36 @@ class Player extends ObjectClass {
 
     if(this.canAttack)
       return this.updateClass(dt)
+  }
+
+  levelUp() {
+    this.level++
+    this.skillPoints++
+    this.sendMsgSP = true
+
+    this.skills2.attack += Constants.PLAYER_LEVEL_SKILL_RICE
+    this.skills2.defense += Constants.PLAYER_LEVEL_SKILL_RICE
+    this.skills2.maxHp += Constants.PLAYER_LEVEL_SKILL_RICE
+    this.skills2.regeneration += Constants.PLAYER_LEVEL_SKILL_RICE
+    this.skills2.speed += Constants.PLAYER_LEVEL_SKILL_RICE
+    this.skills2.atkSpeed += Constants.PLAYER_LEVEL_SKILL_RICE
+    this.skills2.bltSpeed += Constants.PLAYER_LEVEL_SKILL_RICE
+
+    this.setDamage()
+    this.setDefense()
+    this.setHp()
+    this.setSpeed()
+    this.setAtkSpeed()
+    this.setBltSpeed()
+
+    if(this.level === 3) {
+      this.classPoint++
+      this.sendMsgCP = true
+    }
+    if(this.level === 11) {
+      this.classPoint++
+      this.sendMsgCP = true
+    }
   }
 
   setKick(sec) {
@@ -354,17 +375,32 @@ class Player extends ObjectClass {
   }
 
   setDamage() {
-    this.damage = 10 + 2 * this.skills.attack
+    this.damage = 10 + 6 * (this.skills.attack + this.skills2.attack)
   }
 
   setDefense() {
-    this.defense = 1 - ((0.06 * this.skills.defense)/(1 + 0.06 * Math.abs(this.skills.defense)))
+    this.defense = 1 - ((0.06 * (this.skills.defense + this.skills2.defense))/
+        (1 + 0.06 * Math.abs(this.skills.defense+ this.skills2.defense)))
   }
 
   setHp() {
     let hpProportion = this.hp / this.maxHp
-    this.maxHp = Constants.PLAYER_MAX_HP + Constants.PLAYER_MAX_HP * this.skills.maxHp
+    this.maxHp = Constants.PLAYER_MAX_HP + Constants.PLAYER_MAX_HP * (this.skills.maxHp + this.skills2.maxHp)
     this.hp = this.maxHp * hpProportion
+  }
+
+  setSpeed() {
+    this.speed += Constants.PLAYER_RAISE_SPEED
+    this.pureSpeed += Constants.PLAYER_RAISE_SPEED
+  }
+
+  setAtkSpeed() {
+    this.attackSpeed -= Constants.PLAYER_RAISE_ATK_SPEED
+    this.defaultAttackSpeed -= Constants.PLAYER_RAISE_ATK_SPEED
+  }
+
+  setBltSpeed() {
+    this.bulletSpeed = 1 + Constants.PLAYER_RAISE_BLT_SPEED * (this.skills.bltSpeed + this.skills2.bltSpeed)
   }
 
   setCdReduction() {
@@ -395,113 +431,231 @@ class Player extends ObjectClass {
   setAttributes(item) {
     switch (item) {
       case 0:
-        this.skills.attack += 1.5
-        this.setDamage()
+        if (this.skills.attack < 8) {
+          this.skills.attack++
+          this.setDamage()
+          this.skillPoints--
+        }
         break
       case 1:
-        this.skills.defense += 1
-        this.setDefense()
+        if (this.skills.defense < 8) {
+          this.skills.defense++
+          this.setDefense()
+          this.skillPoints--
+        }
         break
       case 2:
-        this.skills.maxHp += 1
-        this.setHp()
+        if (this.skills.maxHp < 8) {
+          this.skills.maxHp++
+          this.setHp()
+          this.skillPoints--
+        }
         break
       case 3:
-        this.skills.regeneration += 2
+        if (this.skills.regeneration < 8) {
+          this.skills.regeneration++
+          this.skillPoints--
+        }
         break
       case 4:
-        this.speed += 3
-        this.pureSpeed += 3
+        if (this.skills.speed < 8) {
+          this.skills.speed++
+          this.setSpeed()
+          this.skillPoints--
+        }
         break
       case 5:
-        this.attackSpeed -= 0.005
-        this.defaultAttackSpeed -= 0.005
+        if (this.skills.atkSpeed < 8) {
+          this.skills.atkSpeed++
+          this.setAtkSpeed()
+          this.skillPoints--
+        }
         break
       case 6:
-        this.bulletSpeed += 0.1
-        if(this.bulletSpeed >= 2) this.bulletSpeed = 2
+        if (this.skills.bltSpeed < 8) {
+          this.skills.bltSpeed++
+          this.setBltSpeed()
+          this.skillPoints--
+        }
         break
     }
-    // let newSkills = this.class.setAttributes(item)
-    // this.skills.attack += newSkills.atk
-    // this.skills.defense += newSkills.def
-    // this.skills.regeneration += newSkills.reg
-    // this.skills.maxHp += newSkills.hp
-    //
-    // this.speed += newSkills.speed
-    // this.pureSpeed += newSkills.speed
-    // this.attackSpeed -= newSkills.atkSpeed
-    // this.defaultAttackSpeed -= newSkills.atkSpeed
-    //
-    // this.attributes.strength += newSkills.str
-    // this.attributes.agility += newSkills.agl
-    // this.attributes.intelligence += newSkills.int
+  }
 
+  ifClassWarrior() {
+    this.className = Constants.CLASSES.MELEE.WARRIOR
+    this.class = new Warrior(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
 
+    this.skills2.attack += 5
+    this.skills2.defense += 3
+    this.skills2.regeneration += 3
+    this.skills2.maxHp += 5
+    this.setDamage()
+    this.setDefense()
+    this.setHp()
 
-    // this.setDamage()
-    // this.setDefense()
-    // this.setHp()
-    // this.setCdReduction()
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.lastMove, this.lastClick)
+      this.class.update(dt)
+      this.giveDamage = this.class.getInfo()
+    }
+  }
+
+  ifClassWarlord() {
+    this.className = Constants.CLASSES.MELEE.WARLORD
+    this.class = new Warlord(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+
+    this.skills2.attack += 5
+    this.skills2.defense += 3
+    this.skills2.regeneration += 3
+    this.skills2.maxHp += 5
+    this.setDamage()
+    this.setDefense()
+    this.setHp()
+
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage)
+      this.class.update(dt)
+      this.giveDamage = this.class.getInfo()
+    }
+  }
+
+  ifClassDuelist() {
+    this.className = Constants.CLASSES.MELEE.DUELIST
+    this.class = new Duelist(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+
+    this.skills2.attack += 5
+    this.skills2.defense += 3
+    this.skills2.regeneration += 3
+    this.skills2.maxHp += 5
+    this.setDamage()
+    this.setDefense()
+    this.setHp()
+
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage)
+      this.class.update(dt)
+      this.giveDamage = this.class.getInfo()
+    }
+  }
+
+  ifClassKnight() {
+    this.className = Constants.CLASSES.MELEE.KNIGHT
+    this.class = new Knight(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+
+    this.skills2.attack += 5
+    this.skills2.defense += 3
+    this.skills2.regeneration += 3
+    this.skills2.maxHp += 5
+    this.setDamage()
+    this.setDefense()
+    this.setHp()
+
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage)
+      this.class.update(dt)
+      this.giveDamage = this.class.getInfo()
+    }
+  }
+
+  ifClassPaladin() {
+    this.className = Constants.CLASSES.MELEE.PALADIN
+    this.class = new Paladin(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+
+    this.skills2.attack += 5
+    this.skills2.defense += 3
+    this.skills2.regeneration += 3
+    this.skills2.maxHp += 5
+    this.setDamage()
+    this.setDefense()
+    this.setHp()
+
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage)
+      this.class.update(dt)
+      this.giveDamage = this.class.getInfo()
+    }
+  }
+
+  ifClassArcher() {
+    this.className = Constants.CLASSES.RANGE.ARCHER
+    this.class = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
+      return this.class.update(dt)
+    }
+  }
+
+  ifClassSniper() {
+    this.className = Constants.CLASSES.RANGE.SNIPER
+    this.class = new Sniper(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
+      return this.class.update(dt)
+    }
+  }
+
+  ifClassCrossbowman() {
+    this.className = Constants.CLASSES.RANGE.CROSSBOWMAN
+    this.class = new Crossbowman(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
+      return this.class.update(dt)
+    }
+  }
+
+  ifClassRanger() {
+    this.className = Constants.CLASSES.RANGE.RANGER
+    this.class = new Ranger(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
+      return this.class.update(dt)
+    }
+  }
+
+  ifClassShooter() {
+    this.className = Constants.CLASSES.RANGE.SHOOTER
+    this.class = new Shooter(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.updateClass = (dt) => {
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
+      return this.class.update(dt)
+    }
   }
 
   chosenClass(c) {
     if(this.classStage === 0)
     switch (c) {
-      case Constants.CLASSES.WARRIOR:
-        this.className = Constants.CLASSES.WARRIOR
-        this.class = new Warrior(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
-
-        this.skills.attack += 5
-        this.skills.defense += 3
-        this.skills.regeneration += 3
-        this.skills.maxHp += 5
-        this.setDamage()
-        this.setDefense()
-        this.setHp()
-
-        this.updateClass = (dt) => {
-          this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.lastMove, this.lastClick)
-          this.class.update(dt)
-          this.giveDamage = this.class.getInfo()
-        }
+      case Constants.CLASSES.MELEE.WARRIOR:
+        this.ifClassWarrior()
         break
-      case Constants.CLASSES.ARCHER:
-        this.className = Constants.CLASSES.ARCHER
-        this.class = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
-        this.updateClass = (dt) => {
-          this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
-          return this.class.update(dt)
-        }
+      case Constants.CLASSES.RANGE.ARCHER:
+        this.ifClassArcher()
         break
     }
     else
       switch (c) {
-        case "warlord":
-          this.className = "warlord"
-          this.class = new Warlord(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
-
-          this.skills.attack += 5
-          this.skills.defense += 3
-          this.skills.regeneration += 3
-          this.skills.maxHp += 5
-          this.setDamage()
-          this.setDefense()
-          this.setHp()
-
-          this.updateClass = (dt) => {
-            this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage)
-            this.class.update(dt)
-            this.giveDamage = this.class.getInfo()
-          }
+        case Constants.CLASSES.MELEE.WARLORD:
+          this.ifClassWarlord()
           break
-        case "sniper":
-          this.className = "sniper"
-          this.class = new Sniper(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
-          this.updateClass = (dt) => {
-            this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
-            return this.class.update(dt)
-          }
+        case Constants.CLASSES.MELEE.DUELIST:
+          this.ifClassDuelist()
+          break
+        case Constants.CLASSES.MELEE.KNIGHT:
+          this.ifClassKnight()
+          break
+        case Constants.CLASSES.MELEE.PALADIN:
+          this.ifClassPaladin()
+          break
+        case Constants.CLASSES.RANGE.SNIPER:
+          this.ifClassSniper()
+          break
+        case Constants.CLASSES.RANGE.CROSSBOWMAN:
+          this.ifClassCrossbowman()
+          break
+        case Constants.CLASSES.RANGE.RANGER:
+          this.ifClassRanger()
+          break
+        case Constants.CLASSES.RANGE.SHOOTER:
+          this.ifClassShooter()
           break
       }
     this.classStage++
@@ -525,9 +679,9 @@ class Player extends ObjectClass {
       skills: this.skills,
       speed: this.speed,
       defense: this.defense,
-      attributes: this.attributes,
       abilityCd: this.abilityCd,
-      effects: this.effects
+      effects: this.effects,
+      skillPoints: this.skillPoints
     }
   }
 }
