@@ -25,6 +25,28 @@ let obj = {
     BULLET_RADIUS: 3,
     BULLET_SPEED: 800,
     BULLET_DAMAGE: 10,
+    BULLET_MODIFICATOR: {
+        PURE: {
+            slow: false,
+            mega: false,
+            stun: false,
+        },
+        SLOW: {
+            slow: true,
+            mega: false,
+            stun: false,
+        },
+        MEGA: {
+            slow: false,
+            mega: true,
+            stun: false,
+        },
+        STUN: {
+            slow: false,
+            mega: false,
+            stun: true,
+        },
+    },
 
     ENEMY_RADIUS: 20,
 

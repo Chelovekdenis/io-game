@@ -52,7 +52,11 @@ class PlayerBot extends Enemy {
             storm: {
                 yes: false,
                 time: 0
-            }
+            },
+            invis: {
+                yes: false,
+                time: 0
+            },
         }
     }
 

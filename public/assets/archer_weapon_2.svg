@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="100 100 800 400" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(1, 0, 0, 1, -0.305787, 16.433807)">
+    <title>Layer 1</title>
+    <path stroke-width="8" d="m503.67692,336.17057l-38.34017,-160.85273l68.93686,160.85273l-68.93686,160.85265l38.34017,-160.85265z" id="svg_34" transform="rotate(-90 499.80517578125006,336.1705627441407) " style="stroke: rgb(96, 125, 139); fill: rgb(144, 164, 174);"/>
+    <path stroke-width="14" stroke-opacity="null" fill-opacity="null" opacity="0.5" d="m339.92248,370.54264" id="svg_38" style="stroke: rgb(96, 125, 139);" fill="#ffd36d"/>
+    <path stroke-width="8" d="m342.24806,371.31783c0,0 122.34606,12.4031 158.13954,12.4031c35.79347,0 158.13953,-12.4031 157.75194,-13.17829" id="path-1" style="fill: none; stroke: rgb(96, 125, 139);"/>
+  </g>
+</svg>

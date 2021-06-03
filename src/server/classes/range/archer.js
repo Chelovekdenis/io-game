@@ -1,4 +1,5 @@
 const Bullet = require('../../bullet')
+const Constants = require('../../../shared/constants')
 
 class Archer {
     constructor(id, x, y, click, direction, speed, damage, atkSpeed) {
@@ -22,6 +23,12 @@ class Archer {
             third: false,
             fourth: false,
         }
+        this.abilitiesPassivActive = {
+            first: true,
+            second: false,
+            third: false,
+            fourth: false,
+        }
     }
     update(dt) {
         if (this.fireCooldown > 0)
@@ -32,13 +39,13 @@ class Archer {
                 // Двинуть передсобой, чтобы вылетали из дула
                 let sendX = this.x + dt * 400 * Math.sin(this.direction) * 6
                 let sendY = this.y - dt * 400 * Math.cos(this.direction) * 6
-                return new Bullet(this.id, sendX, sendY, this.direction, this.damage, false, this.bulletSpeed)
+                return new Bullet(this.id, sendX, sendY, this.direction, this.damage, Constants.BULLET_MODIFICATOR.PURE, this.bulletSpeed, false)
             }
         }
         if(this.ifSlowBullet) {
             let sendX = this.x + dt * this.speed * Math.sin(this.direction) * 10
             let sendY = this.y - dt * this.speed * Math.cos(this.direction) * 10
-            return new Bullet(this.id, sendX, sendY, this.direction, this.damage, true, this.bulletSpeed)
+            return new Bullet(this.id, sendX, sendY, this.direction, this.damage, Constants.BULLET_MODIFICATOR.SLOW, this.bulletSpeed, false)
         }
 
         return null
@@ -63,7 +70,7 @@ class Archer {
         this.ifSlowBulletCount = !data
     }
 
-    setInfo(x, y, click, direction, atkSpeed, damage, speed, ifSlowBullet, lastMove, lastClick, bulletSpeed) {
+    setInfo(x, y, click, direction, atkSpeed, damage, speed, ifSlowBullet, lastMove, lastClick, bulletSpeed, ifMegaShot) {
         this.x = x
         this.y = y
         this.click = click
@@ -75,6 +82,7 @@ class Archer {
         this.lastMove = lastMove
         this.lastClick = lastClick
         this.bulletSpeed = bulletSpeed
+        this.ifMegaShot = ifMegaShot
     }
 
     getIfStun() {

@@ -19,6 +19,7 @@ class Enemy extends ObjectClass {
         this.weaponY = 0
 
         this.damage = 0.3 + 0.15 * lvl
+        this.defense = 0.99
         // this.damage = 0.1
         this.lastHit = []
         this.lh = ''
@@ -33,7 +34,19 @@ class Enemy extends ObjectClass {
             slowed: {
                 yes: false,
                 time: 0
-            }
+            },
+            rage: {
+                yes: false,
+                time: 0
+            },
+            storm: {
+                yes: false,
+                time: 0
+            },
+            invis: {
+                yes: false,
+                time: 0
+            },
         }
 
         this.needKick = {
@@ -237,7 +250,7 @@ class Enemy extends ObjectClass {
         let moreAggressive = {}
         // Отсеиваем игроков которые в радиусе
         players = players.filter(
-            p => this.distanceTo(p) <= biggerDis
+            p => (this.distanceTo(p) <= biggerDis) && !p.effects.invis.yes
         )
         // Если таки игроков нет, то возвращаем 0
         if(players.length === 0)

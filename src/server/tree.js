@@ -19,6 +19,10 @@ class Tree extends ObjectClass {
 
     }
 
+    setStun(sec) {
+
+    }
+
     takeDamage(damage, id) {
         this.hp -= damage * this.defense
         this.lastHit = id

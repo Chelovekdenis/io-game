@@ -4,7 +4,9 @@ const canvas = document.getElementById('game-canvas')
 const context = canvas.getContext('2d')
 
 export function renderPlayer(me, player) {
-    const { x, y, direction, className, hitAnimation, skills } = player
+    if(player.effects.invis.yes)
+        return null
+    const { x, y, direction, className, hitAnimation} = player
     const canvasX = canvas.width / 2 + x - me.x
     const canvasY = canvas.height / 2 + y - me.y
     // Draw player
@@ -15,9 +17,33 @@ export function renderPlayer(me, player) {
     // Animation hit
     context.rotate(direction + hitAnimation)
 
+    let tempX = -125
+    let tempY = -50
+    let tempW = 250
+    let tempH = 50
+
+    let hands = ""
+
     let weaponLvl = player.skills.attack
     if(className === Constants.CLASSES.MELEE.FIGHTER && player.skills.attack > 0) {
         weaponLvl = 1
+    } else if (className === Constants.CLASSES.MELEE.KNIGHT) {
+        tempX = -74
+        tempY = -100
+        tempW = 140
+        tempH = 120
+    }
+
+
+    const isRangeClass = Object.values(Constants.CLASSES.RANGE).filter(
+        e => e === className,
+    )
+    if(isRangeClass[0]) {
+        tempX = -100
+        tempY = -100
+        tempW = 200
+        tempH = 100
+        hands = "arch_"
     }
 
 
@@ -28,17 +54,17 @@ export function renderPlayer(me, player) {
     //     Constants.PLAYER_RADIUS * 10,
     //     Constants.PLAYER_RADIUS * 10,
     // )
-
+    // console.log("className -> ", className)
     context.drawImage(
         getAsset(`${className}_weapon_${weaponLvl}.svg`),
-        -125,
-        -50,
-        250,
-        50,
+        tempX,
+        tempY,
+        tempW,
+        tempH,
     )
 
     context.drawImage(
-        getAsset(`hands_0.svg`),
+        getAsset(`${hands}hands_0.svg`),
         -Constants.PLAYER_RADIUS * 5,
         -Constants.PLAYER_RADIUS * 5,
         Constants.PLAYER_RADIUS * 10,
@@ -46,7 +72,7 @@ export function renderPlayer(me, player) {
     )
 
     context.drawImage(
-        getAsset(`human.svg`),
+        getAsset(`body_0.svg`),
         -Constants.PLAYER_RADIUS * 5,
         -Constants.PLAYER_RADIUS * 5,
         Constants.PLAYER_RADIUS * 10,
@@ -133,5 +159,4 @@ export function renderPlayer(me, player) {
         Constants.PLAYER_RADIUS * 2 * (1 - player.hp / player.maxHp),
         2,
     )
-
 }

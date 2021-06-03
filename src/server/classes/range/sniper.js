@@ -9,6 +9,12 @@ class Sniper extends Archer {
             third: false,
             fourth: false,
         }
+        this.abilitiesPassivActive = {
+            first: true,
+            second: true,
+            third: false,
+            fourth: false,
+        }
     }
 
     update(dt) {

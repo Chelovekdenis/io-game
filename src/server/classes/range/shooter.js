@@ -1,4 +1,6 @@
 const Archer = require('./archer')
+const Bullet = require('../../bullet')
+const Constants = require('../../../shared/constants')
 
 class Shooter extends Archer {
     constructor(id, x, y, click, direction, speed, damage, atkSpeed) {
@@ -9,32 +11,54 @@ class Shooter extends Archer {
             third: false,
             fourth: false,
         }
+        this.abilitiesPassivActive = {
+            first: true,
+            second: false,
+            third: false,
+            fourth: false,
+        }
     }
 
     update(dt) {
-        // Икс два урон, модификатор класса
-        this.damage = this.damage*2
-        return super.update(dt)
+        if (this.fireCooldown > 0)
+            this.fireCooldown -= dt
+        if(this.click) {
+            if (this.fireCooldown <= 0) {
+                this.fireCooldown += this.attackSpeed
+                // Двинуть передсобой, чтобы вылетали из дула
+                let bullets = []
+                for (let i = 0; i < 3; i++) {
+                    let sendX = this.x + dt * 400 * Math.sin(this.direction + Constants.PI_40 * (i-1)) * 6
+                    let sendY = this.y - dt * 400 * Math.cos(this.direction + Constants.PI_40 * (i-1)) * 6
+                    bullets.push(new Bullet(this.id, sendX, sendY, this.direction, this.damage, Constants.BULLET_MODIFICATOR.PURE, this.bulletSpeed, false))
+                }
+                return bullets
+            }
+        }
+        if(this.ifSlowBullet) {
+            let bullets = []
+            for (let i = 0; i < 3; i++) {
+                let sendX = this.x + dt * 400 * Math.sin(this.direction + Constants.PI_40 * (i-1)) * 6
+                let sendY = this.y - dt * 400 * Math.cos(this.direction + Constants.PI_40 * (i-1)) * 6
+                bullets.push(new Bullet(this.id, sendX, sendY, this.direction, this.damage, Constants.BULLET_MODIFICATOR.SLOW, this.bulletSpeed, false))
+            }
+            return bullets
+        }
+
+        return null
     }
 
     spellTwo(dt, sec) {
-        this.attackSpeed = this.defaultAttackSpeed / 2
-        this.speed = this.pureSpeed * 0.7
-        this.effects.storm.yes = true
-        this.effects.storm.time = sec
+
     }
 
     afterSpellTwo(data) {
-        this.attackSpeed = data.atkSpeed
-        this.speed = data.speed
-        this.effects.storm.yes = false
-        this.effects.storm.time = 0
     }
 
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
-            abilityName2: "Storm"
+            abilityName2: "TripleShot"
         }
     }
 }

@@ -2,9 +2,15 @@ const Warrior = require('./warrior')
 const Constants = require('../../../shared/constants')
 
 class Duelist extends Warrior {
-    constructor(x, y, click, direction, speed, damage, atkSpeed) {
-        super(x, y, click, direction, speed, damage, atkSpeed)
+    constructor(id, x, y, click, direction, speed, damage, atkSpeed) {
+        super(id, x, y, click, direction, speed, damage, atkSpeed)
         this.availableAbilities = {
+            first: true,
+            second: true,
+            third: false,
+            fourth: false,
+        }
+        this.abilitiesPassivActive = {
             first: true,
             second: true,
             third: false,

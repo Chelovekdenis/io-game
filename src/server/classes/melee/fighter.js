@@ -1,7 +1,8 @@
 const Constants = require('../../../shared/constants')
 
 class Fighter {
-    constructor(x, y, click, direction, speed, damage, atkSpeed) {
+    constructor(id, x, y, click, direction, speed, damage, atkSpeed) {
+        this.id = id
         this.x = x
         this.y = y
         this.click = click
@@ -21,6 +22,12 @@ class Fighter {
         this.hitAnimation = 0
 
         this.availableAbilities = {
+            first: false,
+            second: false,
+            third: false,
+            fourth: false,
+        }
+        this.abilitiesPassivActive = {
             first: false,
             second: false,
             third: false,

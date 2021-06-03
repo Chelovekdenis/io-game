@@ -103,7 +103,7 @@ function interpolateObject(object1, object2, ratio) {
     } else if  (key === 'username' || key ===  "item" || key ===  "id" || key ===  "click" || key === "ifObsidian" || key === "skillPoints"
         || key ===  "level" || key ===  "score" || key ===  "skills" || key ===  "className" || key === "classStage"
         || key === "damage" || key === "atkSpeed" || key === "speed" || key === "defense" || key === "attributes" || key === "abilityCd"
-        || key === "abilityName1" || key === "abilityName2" || key === "availableAbilities" || key === "effects" || key === "isSlow") {
+        || key === "abilityName1" || key === "abilityName2" || key === "availableAbilities" || key === "effects" || key === "modificator") {
       interpolated[key] = object2[key]
     } else {
       interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio

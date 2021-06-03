@@ -1,10 +1,18 @@
 const Warrior = require('./warrior')
+const Bullet = require('../../bullet')
 const Constants = require('../../../shared/constants')
 
 class Paladin extends Warrior {
-    constructor(x, y, click, direction, speed, damage, atkSpeed) {
-        super(x, y, click, direction, speed, damage, atkSpeed)
+    constructor(id, x, y, click, direction, speed, damage, atkSpeed) {
+        super(id, x, y, click, direction, speed, damage, atkSpeed)
+        this.ifToss = false
         this.availableAbilities = {
+            first: true,
+            second: true,
+            third: false,
+            fourth: false,
+        }
+        this.abilitiesPassivActive = {
             first: true,
             second: true,
             third: false,
@@ -13,7 +21,12 @@ class Paladin extends Warrior {
     }
 
     update(dt) {
-        return super.update(dt)
+        super.update(dt)
+        if(this.ifToss) {
+            let sendX = this.x + dt * 400 * Math.sin(this.direction) * 10
+            let sendY = this.y - dt * 400 * Math.cos(this.direction) * 10
+            return new Bullet(this.id, sendX, sendY, this.direction, this.damage * 3, Constants.BULLET_MODIFICATOR.STUN, 0.2, true)
+        }
     }
 
     weaponsTargets(dt) {
@@ -28,23 +41,31 @@ class Paladin extends Warrior {
     }
 
     spellTwo(dt, sec) {
-        this.attackSpeed = this.defaultAttackSpeed / 2
-        this.speed = this.pureSpeed * 1.3
-        this.effects.rage.yes = true
-        this.effects.rage.time = sec
+        this.ifToss = false
+        if(this.ifTossCount) {
+            this.ifToss = true
+            this.ifTossCount = false
+        }
     }
 
     afterSpellTwo(data) {
-        this.attackSpeed = data.atkSpeed
-        this.speed = data.speed
-        this.effects.rage.yes = false
-        this.effects.rage.time = 0
+        this.ifTossCount = true
+    }
+
+    setInfo(x, y, click, direction, atkSpeed, damage, ifToss) {
+        this.x = x
+        this.y = y
+        this.click = click
+        this.direction = direction
+        this.attackSpeed = atkSpeed
+        this.damage = damage
+        this.ifToss = ifToss
     }
 
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
-            abilityName2: "Rage"
+            abilityName2: "Toss"
         }
     }
 }

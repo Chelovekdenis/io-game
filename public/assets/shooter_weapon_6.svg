@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="100 100 800 400" xmlns="http://www.w3.org/2000/svg">
+  <g transform="matrix(1, 0, 0, 1, 1, 1)">
+    <title>Layer 1</title>
+    <path stroke-width="14" stroke-opacity="null" fill-opacity="null" opacity="0.5" d="m339.922481,370.542636" id="svg_38" style="fill: rgb(63, 81, 181); stroke: rgb(26, 35, 126);"/>
+    <path stroke-width="8" d="m342.248062,371.317829c0,0 122.346058,12.403101 158.139535,12.403101c35.793477,0 158.139535,-12.403101 157.751942,-13.178292" id="svg_39" style="fill-opacity: 0; fill: rgb(63, 81, 181); stroke: rgb(26, 35, 126);"/>
+    <path id="svg_4" d="m454.5,115z" fill-opacity="null" stroke-opacity="null" stroke-width="8" style="fill: rgb(63, 81, 181); stroke: rgb(26, 35, 126);"/>
+    <path transform="rotate(-90 401.4718322753907,345.1705322265625) " stroke-width="8" d="m404.220305,345.170555l-27.216908,-114.186073l48.936875,114.186073l-48.936875,114.186011l27.216908,-114.186011z" id="svg_8" style="fill: rgb(63, 81, 181); stroke: rgb(26, 35, 126);"/>
+    <path transform="rotate(-90 596.6358642578126,345.17053222656256) " stroke-width="8" d="m599.384337,345.170555l-27.216908,-114.186073l48.936875,114.186073l-48.936875,114.186011l27.216908,-114.186011z" id="svg_9" style="fill: rgb(63, 81, 181); stroke: rgb(26, 35, 126);"/>
+    <path transform="rotate(-90 499.80517578125006,336.17053222656256) " stroke-width="8" d="m503.676921,336.170572l-38.340176,-160.852737l68.936868,160.852737l-68.936868,160.85265l38.340176,-160.85265z" id="svg_34" style="fill: rgb(63, 81, 181); stroke: rgb(26, 35, 126);"/>
+  </g>
+</svg>

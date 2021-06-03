@@ -14,6 +14,9 @@ const Constants = require('../shared/constants')
 
 // Networking и assets ссылки на сервер
 // player.js уровени игрока меньше
+// кд скилов подправить
+// megashot урон изменить
+
 
 
 // Недочеты
@@ -54,6 +57,12 @@ class Player extends ObjectClass {
     this.ifSlowBullet = false
     this.ifSlowBulletCount = true
 
+    this.ifMegaShot = false
+    this.ifMegaShotCount = true
+
+    this.ifToss = false
+    this.ifTossCount = true
+
     this.needKick = {
       need:false,
       dir: 0,
@@ -69,7 +78,7 @@ class Player extends ObjectClass {
     }
     this.abilityMaxCd = {
       first: 10,
-      second: 15
+      second: 3
     }
     this.defualtAbilityMaxCd = {
       first: 10,
@@ -132,13 +141,17 @@ class Player extends ObjectClass {
       storm: {
         yes: false,
         time: 0
-      }
+      },
+      invis: {
+      yes: false,
+        time: 0
+      },
     }
 
     this.lastHit = ''
 
     this.className = Constants.CLASSES.MELEE.FIGHTER
-    this.class = new Fighter(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.class = new Fighter(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
     // this.class2 = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage)
 
     this.updateClass = (dt) => {
@@ -272,7 +285,8 @@ class Player extends ObjectClass {
     if (this.abilityCd.first <= 0
         && this.canSpell
         && item === 1
-        && this.class.availableAbilities.first) {
+        && this.class.availableAbilities.first
+        && this.class.abilitiesPassivActive.first) {
       this.item = item
       this.lastDir = this.direction
       this.lastMove = this.move
@@ -297,7 +311,8 @@ class Player extends ObjectClass {
     if (this.abilityCd.second <= 0
         && this.canSpell
         && item === 2
-        && this.class.availableAbilities.second) {
+        && this.class.availableAbilities.second
+        && this.class.abilitiesPassivActive.second) {
       this.item = item
       this.lastDir = this.direction
       this.lastMove = this.move
@@ -483,7 +498,7 @@ class Player extends ObjectClass {
 
   ifClassWarrior() {
     this.className = Constants.CLASSES.MELEE.WARRIOR
-    this.class = new Warrior(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.class = new Warrior(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
 
     this.skills2.attack += 5
     this.skills2.defense += 3
@@ -502,7 +517,7 @@ class Player extends ObjectClass {
 
   ifClassWarlord() {
     this.className = Constants.CLASSES.MELEE.WARLORD
-    this.class = new Warlord(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.class = new Warlord(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
 
     this.skills2.attack += 5
     this.skills2.defense += 3
@@ -521,7 +536,7 @@ class Player extends ObjectClass {
 
   ifClassDuelist() {
     this.className = Constants.CLASSES.MELEE.DUELIST
-    this.class = new Duelist(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.class = new Duelist(this.id,this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
 
     this.skills2.attack += 5
     this.skills2.defense += 3
@@ -540,7 +555,7 @@ class Player extends ObjectClass {
 
   ifClassKnight() {
     this.className = Constants.CLASSES.MELEE.KNIGHT
-    this.class = new Knight(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.class = new Knight(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
 
     this.skills2.attack += 5
     this.skills2.defense += 3
@@ -559,7 +574,7 @@ class Player extends ObjectClass {
 
   ifClassPaladin() {
     this.className = Constants.CLASSES.MELEE.PALADIN
-    this.class = new Paladin(this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+    this.class = new Paladin(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
 
     this.skills2.attack += 5
     this.skills2.defense += 3
@@ -570,9 +585,9 @@ class Player extends ObjectClass {
     this.setHp()
 
     this.updateClass = (dt) => {
-      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage)
-      this.class.update(dt)
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.ifToss)
       this.giveDamage = this.class.getInfo()
+      return this.class.update(dt)
     }
   }
 
@@ -598,7 +613,7 @@ class Player extends ObjectClass {
     this.className = Constants.CLASSES.RANGE.CROSSBOWMAN
     this.class = new Crossbowman(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
     this.updateClass = (dt) => {
-      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
+      this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed, this.ifMegaShot)
       return this.class.update(dt)
     }
   }

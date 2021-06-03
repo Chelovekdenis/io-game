@@ -9,6 +9,12 @@ class Ranger extends Archer {
             third: false,
             fourth: false,
         }
+        this.abilitiesPassivActive = {
+            first: true,
+            second: true,
+            third: false,
+            fourth: false,
+        }
     }
 
     update(dt) {
@@ -18,23 +24,21 @@ class Ranger extends Archer {
     }
 
     spellTwo(dt, sec) {
-        this.attackSpeed = this.defaultAttackSpeed / 2
-        this.speed = this.pureSpeed * 0.7
-        this.effects.storm.yes = true
-        this.effects.storm.time = sec
+        this.speed = this.pureSpeed * 1.1
+        this.effects.invis.yes = true
+        this.effects.invis.time = sec
     }
 
     afterSpellTwo(data) {
-        this.attackSpeed = data.atkSpeed
         this.speed = data.speed
-        this.effects.storm.yes = false
-        this.effects.storm.time = 0
+        this.effects.invis.yes = false
+        this.effects.invis.time = 0
     }
 
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
-            abilityName2: "Storm"
+            abilityName2: "Invisible"
         }
     }
 }

@@ -3,13 +3,17 @@ const ObjectClass = require('./object')
 const Constants = require('../shared/constants')
 
 class Bullet extends ObjectClass {
-  constructor(parentID, x, y, dir, attack, isSlow, speed) {
-    super(shortid(), x, y, Constants.BULLET_SPEED * speed, Constants.BULLET_RADIUS)
+  constructor(parentID, x, y, dir, attack, modificator, speed, ifCrossbow) {
+    let tempRadius = 1
+    if(modificator.mega)
+      tempRadius = 2
+    super(shortid(), x, y, Constants.BULLET_SPEED * speed, Constants.BULLET_RADIUS * tempRadius)
     this.direction = dir
     this.parentID = parentID
     this.attack = attack
     this.livetime = 1
-    this.isSlow = isSlow
+    this.modificator = modificator
+    this.ifCrossbow = ifCrossbow
   }
 
   // Returns true if the bullet should be destroyed
@@ -24,7 +28,7 @@ class Bullet extends ObjectClass {
     return {
       ...(super.serializeForUpdate()),
       direction: this.direction,
-      isSlow: this.isSlow
+      modificator: this.modificator
     }
   }
 }

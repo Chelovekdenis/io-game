@@ -2,9 +2,15 @@ const Fighter = require('./fighter')
 const Constants = require('../../../shared/constants')
 
 class Warrior extends Fighter {
-    constructor(x, y, click, direction, speed, damage, atkSpeed) {
-        super(x, y, click, direction, speed, damage, atkSpeed)
+    constructor(id, x, y, click, direction, speed, damage, atkSpeed) {
+        super(id, x, y, click, direction, speed, damage, atkSpeed)
         this.availableAbilities = {
+            first: true,
+            second: false,
+            third: false,
+            fourth: false,
+        }
+        this.abilitiesPassivActive = {
             first: true,
             second: false,
             third: false,
@@ -12,7 +18,7 @@ class Warrior extends Fighter {
         }
     }
     update(dt) {
-        return super.update(dt)
+        super.update(dt)
     }
 
     spellOne(dt) {

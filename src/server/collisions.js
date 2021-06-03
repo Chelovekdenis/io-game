@@ -12,11 +12,16 @@ exports.applyCollisions = (objects, bullets, r) => {
                 object.distanceTo(bullet) <= r + Constants.BULLET_RADIUS
             ) {
                 destroyedBullets.push(bullet)
-                object.takeDamage(bullet.attack, bullet.parentID)
+                let damageForObject = bullet.attack
+                if(bullet.ifCrossbow)
+                    damageForObject /= object.defense
+                if(bullet.modificator.stun)
+                    object.setStun(3)
+                object.takeDamage(damageForObject, bullet.parentID)
                 object.needKick.need = true
                 object.needKick.dir = bullet.direction
                 object.needKick.power = 75
-                if(bullet.isSlow)
+                if(bullet.modificator.slow)
                     object.setSlow(5)
                 break
             }

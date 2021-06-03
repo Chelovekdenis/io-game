@@ -31,7 +31,7 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
                 context.fillText(`${me.abilityCd.second.toFixed(1)}`, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter) + 25, canvas.height - 95)
             else
                 context.fillText(`${me.abilityName2}`, canvas.width/2 - qikBarWHalf + i * (50 + qikBarItemInter) + 25, canvas.height - 95)
-        }
+      }
     }
     // Mini map
     context.fillStyle = "rgba(51, 46, 61,0.7)"
@@ -246,7 +246,11 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
         let skillCoordinates = []
         let attributes = ['Атака', 'Защита', 'Жизни', 'Регенерация', 'Скорость', 'Скорость атаки']
 
-        if(me.className === "archer" || me.className === "sniper"){
+        let tempClasses = Object.keys(Constants.CLASSES.RANGE).map((item) => {
+            return item.toLowerCase();
+        }).filter(i => i === me.className,)
+
+        if(tempClasses[0]){
             attributes = ['Атака', 'Защита', 'Жизни', 'Регенерация', 'Скорость', 'Скорость атаки', 'Скорость стрелы']
         }
         let tempSkills = Object.values(me.skills)
@@ -290,6 +294,12 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
             let skillCoordinates = []
             let attributes = ""
             let a = 2
+            let x_img = -100
+            let y_img = -40
+            let w_img = 200
+            let h_img = 40
+
+            let hands = ""
             if(me.className === "warrior") {
                 attributes = Object.keys(Constants.CLASSES.MELEE).map((item) => {
                     return item.toLowerCase();
@@ -300,14 +310,18 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
                     return item.toLowerCase();
                 })
                 a = 1
+                x_img = -80
+                y_img = -80
+                w_img = 160
+                h_img = 80
+                hands = "arch_"
             }
-            console.log(attributes)
-            console.log(attributes)
+            // console.log(attributes)
             for (let i = a; i < attributes.length; i++) {
                 let tempX = 40
                 let tempH = 80
                 let tempW = 220
-                let tempY = thisHeight + (tempH + 6) * (i-2) + 40
+                let tempY = thisHeight + (tempH + 6) * (i-a) + 40
                 context.fillStyle = "rgba(51, 46, 61, 0.7)"
                 fillRoundedRect(context, tempX, tempY, tempW, tempH, Math.PI*1.5)
 
@@ -315,7 +329,7 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
                 context.save()
                 if(attributes[i] === "knight")
                     context.drawImage(
-                        getAsset(`${attributes[i]}_weapon_0.svg`),
+                        getAsset(`${attributes[i]}_weapon_1.svg`),
                         -50 + 150,
                         -80 + tempY + 40,
                         100,
@@ -323,14 +337,14 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
                     )
                 else
                     context.drawImage(
-                        getAsset(`${attributes[i]}_weapon_0.svg`),
-                        -100 + 150,
-                        -40 + tempY + 40,
-                        200,
-                        40,
+                        getAsset(`${attributes[i]}_weapon_1.svg`),
+                        x_img + 150,
+                        y_img + tempY + 40,
+                        w_img,
+                        h_img,
                     )
                 context.drawImage(
-                    getAsset(`hands_0.svg`),
+                    getAsset(`${hands}hands_0.svg`),
                     -Constants.PLAYER_RADIUS * 4 + 150,
                     -Constants.PLAYER_RADIUS * 4 + tempY + 40,
                     Constants.PLAYER_RADIUS * 8,

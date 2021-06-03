@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="100 100 800 400" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <polygon style="stroke-width: 8px; fill: rgb(96, 125, 139); stroke: rgb(38, 50, 56);" points="312.179 400 375.397 357.828 500.715 318.136 627.232 355.348 700 396.693 624.751 371.885 503.196 340.463 377.471 371.009"/>
+    <polygon style="stroke-width: 7px; fill: rgb(96, 125, 139); stroke: rgb(38, 50, 56);" points="263.644 368.722 380.29 320.405 428.284 340.285 497.764 300 497.764 325.985 427.367 366.679 380.328 344.392"/>
+    <polygon style="stroke-width: 7px; fill: rgb(96, 125, 139); stroke: rgb(38, 50, 56);" points="504.694 300.001 621.34 348.317 669.334 328.437 738.814 368.722 738.814 342.738 668.417 302.044 621.378 324.331" transform="matrix(-1, 0, 0, -1, 1243.508026, 668.722992)"/>
+    <line style="stroke-width: 6px; fill: rgb(96, 125, 139); stroke: rgb(38, 50, 56);" x1="312.179" y1="400" x2="500" y2="423.733"/>
+    <line style="stroke-width: 6px; fill: rgb(96, 125, 139); stroke: rgb(38, 50, 56);" x1="500" y1="423.733" x2="700" y2="400"/>
+    <polygon style="stroke-width: 0px; fill: rgb(96, 125, 139); stroke: rgb(38, 50, 56);" points="493.766 306.375 501.219 302.225 508.964 306.504 509.025 324.297 501.161 321.26 492.469 324.86"/>
+  </g>
+</svg>

@@ -298,7 +298,7 @@ class Game {
 
             if((player.className === Constants.CLASSES.MELEE.WARRIOR || player.className === Constants.CLASSES.MELEE.FIGHTER
                 || player.className === Constants.CLASSES.MELEE.KNIGHT || player.className === Constants.CLASSES.MELEE.PALADIN
-                || player.className === Constants.CLASSES.MELEE.DUELIST)
+                || player.className === Constants.CLASSES.MELEE.DUELIST || player.className === Constants.CLASSES.MELEE.WARLORD)
                 && player.giveDamage === true) {
                 let beaten = hitPlayer(player, [].concat(players, players_bots), Constants.PLAYER_RADIUS)
                 let beatenEnemy = hitPlayer(player, enemies, Constants.ENEMY_RADIUS)
@@ -368,8 +368,15 @@ class Game {
                 //     trees[j].y + Constants.PLAYER_RADIUS * 3 * Math.sin(dir))
                 // console.log(player.x, player.y)
             }
-            if (newBullet)
-                this.bullets.push(newBullet)
+            if (newBullet) {
+                // console.log(newBullet)
+                if (Object.values(newBullet).length === 3) {
+                    for (let i = 0; i < Object.values(newBullet).length; i++) {
+                        this.bullets.push(newBullet[i])
+                    }
+                } else
+                    this.bullets.push(newBullet)
+            }
         })
 
         // Столкновение с пулей
