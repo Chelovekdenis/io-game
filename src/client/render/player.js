@@ -4,6 +4,8 @@ const canvas = document.getElementById('game-canvas')
 const context = canvas.getContext('2d')
 
 export function renderPlayer(me, player) {
+    if(player.effects.invis.yes && me.id !== player.id)
+        return null
     const { x, y, direction, className, hitAnimation} = player
     const canvasX = canvas.width / 2 + x - me.x
     const canvasY = canvas.height / 2 + y - me.y
@@ -15,8 +17,7 @@ export function renderPlayer(me, player) {
     // Animation hit
     context.rotate(direction + hitAnimation)
 
-
-    if(player.effects.invis.yes) {
+    if(me.effects.invis.yes && player.effects.invis.yes) {
         context.drawImage(
             getAsset(`invis.svg`),
             -Constants.PLAYER_RADIUS * 5,

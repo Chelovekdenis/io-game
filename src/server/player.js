@@ -40,7 +40,7 @@ class Player extends ObjectClass {
     this.hitAnimation = 0
     this.count = 0
     this.level = 0
-    this.score = Constants.EXP_FOR_LEVEL_UP[0]
+    this.score = Constants.EXP_FOR_LEVEL_UP[16]
     this.leaderBuff = 1
     this.skillPoints = 0
     this.sendMsgSP = false

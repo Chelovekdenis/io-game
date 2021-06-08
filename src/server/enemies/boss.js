@@ -5,11 +5,12 @@ const Constants = require('../../shared/constants')
 class Boss extends Enemy {
     constructor(id, x, y, speed) {
         super(id, x, y, speed)
-        this.hp = 50000
+        this.hp = 40000
         this.maxHp = this.hp
         this.level = 50
         this.radius = Constants.BOSS_RADIUS
 
+        this.defense = 0.50
         this.damage = 40
 
         this.weaponX2 = 0
@@ -46,7 +47,10 @@ class Boss extends Enemy {
     hitKick(dir) {
 
     }
-
+    setStun(sec) {
+    }
+    setSlow(sec) {
+    }
 
     weaponsHit(object) {
         const dx = this.weaponX - object.x

@@ -135,10 +135,10 @@ class Game {
         for (let i = 0; i < 160; i++) {
             this.spawnTree()
         }
-        for (let i = 0; i < 40; i++) {
+        for (let i = 0; i < 60; i++) {
             this.spawnEnemy()
         }
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 20; i++) {
             this.spawnEnemyWarrior()
         }
         this.spawnBoss()

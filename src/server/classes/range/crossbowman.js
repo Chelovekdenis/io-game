@@ -6,7 +6,7 @@ class Crossbowman extends Archer {
     constructor(id, x, y, click, direction, speed, damage, atkSpeed) {
         super(id, x, y, click, direction, speed, damage, atkSpeed)
         this.ifMegaShot = false
-        this.megaShotDamage = this.damage * 5
+        this.megaShotDamage = this.damage * 10
         this.availableAbilities = {
             first: true,
             second: true,

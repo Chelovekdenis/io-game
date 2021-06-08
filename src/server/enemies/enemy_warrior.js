@@ -4,13 +4,15 @@ const Constants = require('../../shared/constants')
 class EnemyWarrior extends Enemy {
     constructor(id, x, y, speed, lvl, topPlayer) {
         super(id, x, y, speed)
-        this.maxHp = 70 + 40 * lvl
+        this.maxHp = 70 + 30 * lvl
         this.hp = this.maxHp
         this.level = lvl
         this.radius = Constants.PLAYER_RADIUS
         this.damage = 0.6 + 0.3 * lvl
         // this.damage = 0.2
         this.className = "ew"
+
+        this.defense = 0.80
 
         this.weaponX = 0
         this.weaponY = 0

@@ -4,12 +4,13 @@ const Constants = require('../../shared/constants')
 class PlayerBot extends Enemy {
     constructor(id, x, y, speed, lvl, username) {
         super(id, x, y, Constants.PLAYER_SPEED, lvl)
-        this.maxHp = 70 + 70 * lvl
+        this.maxHp = 70 + 50 * lvl
         this.hp = this.maxHp
         this.radius = Constants.PLAYER_RADIUS
-        this.damage = 0.6 + 0.1 * lvl
+        this.damage = 0.4 + 0.05 * lvl
         // this.damage = 0.2
         this.className = Constants.CLASSES.MELEE.WARRIOR
+        this.defense = 0.90
 
         this.weaponX = 0
         this.weaponY = 0
