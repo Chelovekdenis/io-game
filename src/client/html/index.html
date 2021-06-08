@@ -40,6 +40,27 @@
                 })
             });
     </script>
+    <!-- Yandex.RTB R-A-757163-1 -->
+    <div id="yandex_rtb_R-A-757163-1"></div>
+    <script type="text/javascript">
+        console.log("Script открылся")
+        const buttonElem2 = document.querySelector('#button');
+        buttonElem2.addEventListener('click', () => {
+            (function(w, n) {
+                console.log("Внутри функции")
+                w[n] = w[n] || [];
+                w[n].push(function() {
+                    Ya.Context.AdvManager.render({
+                        blockId: "R-A-757163-1",
+                        renderTo: "yandex_rtb_R-A-757163-1",
+                        async: false
+                    });
+                });
+                document.write('<sc'+'ript type="text/javascript" src="//an.yandex.ru/system/context.js"></sc'+'ript>');
+            })(this, "yandexContextSyncCallbacks");
+        })
+    </script>
+
 </head>
 <body>
 <canvas id="game-canvas"></canvas>
