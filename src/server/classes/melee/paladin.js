@@ -21,12 +21,12 @@ class Paladin extends Warrior {
     }
 
     update(dt) {
-        super.update(dt)
         if(this.ifToss) {
             let sendX = this.x + dt * 400 * Math.sin(this.direction) * 10
             let sendY = this.y - dt * 400 * Math.cos(this.direction) * 10
-            return new Bullet(this.id, sendX, sendY, this.direction, this.damage * 3, Constants.BULLET_MODIFICATOR.STUN, 0.2, true)
+            return new Bullet(this.id, sendX, sendY, this.direction, this.damage, Constants.BULLET_MODIFICATOR.STUN, 1, true)
         }
+        super.update(dt)
     }
 
     weaponsTargets(dt) {

@@ -31,26 +31,35 @@ class Duelist extends Warrior {
         b = dt * 400 * Math.cos(this.direction + Constants.PI_30 + this.hitAnimation)
         this.weaponX2 = this.x + a * 8
         this.weaponY2 = this.y - b * 8
+        a = dt * 400 * Math.sin(this.direction - Constants.PI_25 + this.hitAnimation)
+        b = dt * 400 * Math.cos(this.direction - Constants.PI_25 + this.hitAnimation)
+        this.weaponX3 = this.x + a * 14
+        this.weaponY3 = this.y - b * 14
+        a = dt * 400 * Math.sin(this.direction - Constants.PI_30 + this.hitAnimation)
+        b = dt * 400 * Math.cos(this.direction - Constants.PI_30 + this.hitAnimation)
+        this.weaponX4 = this.x + a * 8
+        this.weaponY4 = this.y - b * 8
     }
 
     spellTwo(dt, sec) {
-        this.attackSpeed = this.defaultAttackSpeed / 2
-        this.speed = this.pureSpeed * 1.3
-        this.effects.rage.yes = true
-        this.effects.rage.time = sec
+        this.damage = this.pureDamage * 2
+        this.effects.double.yes = true
+        this.effects.double.time = sec
     }
 
     afterSpellTwo(data) {
-        this.attackSpeed = data.atkSpeed
-        this.speed = data.speed
-        this.effects.rage.yes = false
-        this.effects.rage.time = 0
+        // Так как урон к которому вернется записывается в начале
+        // использования скилла, то прокаченный урон не добавится пока
+        // не прокачать повторно (можно запретить прокачку под действием скилов)
+        this.damage = data.damage
+        this.effects.double.yes = false
+        this.effects.double.time = 0
     }
 
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
-            abilityName2: "Rage"
+            abilityName2: "Double"
         }
     }
 }

@@ -34,23 +34,22 @@ class Knight extends Warrior {
     }
 
     spellTwo(dt, sec) {
-        this.attackSpeed = this.defaultAttackSpeed / 2
-        this.speed = this.pureSpeed * 1.3
-        this.effects.rage.yes = true
-        this.effects.rage.time = sec
+        // Сделать 10000 брони или больше
+        this.defense = 0
+        this.effects.immortal.yes = true
+        this.effects.immortal.time = sec
     }
 
     afterSpellTwo(data) {
-        this.attackSpeed = data.atkSpeed
-        this.speed = data.speed
-        this.effects.rage.yes = false
-        this.effects.rage.time = 0
+        this.defense = data.defense
+        this.effects.immortal.yes = false
+        this.effects.immortal.time = 0
     }
 
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
-            abilityName2: "Rage"
+            abilityName2: "Immortal"
         }
     }
 }

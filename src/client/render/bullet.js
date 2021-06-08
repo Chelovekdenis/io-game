@@ -29,14 +29,18 @@ export function renderBullet(me, bullet) {
             Constants.BULLET_RADIUS * scale,
             Constants.BULLET_RADIUS * scale,
         )
-    else if (bullet.modificator.stun)
+    else if (bullet.modificator.stun) {
+        context.save()
+        context.rotate(-Math.PI/2)
         context.drawImage(
-            getAsset('paladin_weapon_5.svg'),
-            - Constants.BULLET_RADIUS * halfScale,
-            - Constants.BULLET_RADIUS * halfScale,
-            Constants.BULLET_RADIUS * scale,
-            Constants.BULLET_RADIUS * scale,
+            getAsset('paladin_weapon_4.svg'),
+            - 4 * halfScale,
+            - 2 * halfScale,
+            8 * scale,
+            2 * scale,
         )
+        context.restore()
+    }
     else
         context.drawImage(
             getAsset('arrow.svg'),

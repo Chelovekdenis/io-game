@@ -18,6 +18,11 @@ class EnemyWarrior extends Enemy {
         this.weaponY2 = 0
 
         this.ifObsidian = topPlayer.ifObsidian
+        if(this.ifObsidian) {
+            this.maxHp += 1500
+            this.hp = this.maxHp
+            this.damage *= 3
+        }
     }
 
     update(dt, x, y) {

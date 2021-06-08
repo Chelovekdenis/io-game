@@ -19,6 +19,10 @@ class Fighter {
         this.weaponY = 0
         this.weaponX2 = 0
         this.weaponY2 = 0
+        this.weaponX3 = 0
+        this.weaponY3 = 0
+        this.weaponX4 = 0
+        this.weaponY4 = 0
         this.hitAnimation = 0
 
         this.availableAbilities = {
@@ -97,6 +101,17 @@ class Fighter {
         const dy = this.weaponY - object.y
         const dx2 = this.weaponX2 - object.x
         const dy2 = this.weaponY2 - object.y
+        if(this.weaponX3 !== 0) {
+            const dx3 = this.weaponX3 - object.x
+            const dy3 = this.weaponY3 - object.y
+            const dx4 = this.weaponX4 - object.x
+            const dy4 = this.weaponY4 - object.y
+            return Math.min(Math.sqrt(dx * dx + dy * dy),
+                Math.sqrt(dx2 * dx2 + dy2 * dy2),
+                Math.sqrt(dx3 * dx3 + dy3 * dy3),
+                Math.sqrt(dx4 * dx4 + dy4 * dy4))
+
+        }
         return Math.min(Math.sqrt(dx * dx + dy * dy), Math.sqrt(dx2 * dx2 + dy2 * dy2))
     }
 
@@ -139,9 +154,15 @@ class Fighter {
             weaponY: this.weaponY,
             weaponX2: this.weaponX2,
             weaponY2: this.weaponY2,
+            weaponX3: this.weaponX3,
+            weaponY3: this.weaponY3,
+            weaponX4: this.weaponX4,
+            weaponY4: this.weaponY4,
             damage: this.damage,
             atkSpeed: this.attackSpeed,
-            availableAbilities: this.availableAbilities
+            availableAbilities: this.availableAbilities,
+
+
         }
     }
 }

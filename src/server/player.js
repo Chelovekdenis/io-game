@@ -40,7 +40,7 @@ class Player extends ObjectClass {
     this.hitAnimation = 0
     this.count = 0
     this.level = 0
-    this.score = Constants.EXP_FOR_LEVEL_UP[40]
+    this.score = Constants.EXP_FOR_LEVEL_UP[0]
     this.leaderBuff = 1
     this.skillPoints = 0
     this.sendMsgSP = false
@@ -78,7 +78,7 @@ class Player extends ObjectClass {
     }
     this.abilityMaxCd = {
       first: 10,
-      second: 3
+      second: 15
     }
     this.defualtAbilityMaxCd = {
       first: 10,
@@ -86,17 +86,23 @@ class Player extends ObjectClass {
     }
 
     this.listDamaged = []
-    this.attackSpeed = 0.6
+    this.attackSpeed = Constants.PLAYER_ATK_SPEED
     this.defaultAttackSpeed = this.attackSpeed
     this.weaponX = 0
     this.weaponY = 0
     this.weaponX2 = 0
     this.weaponY2 = 0
+    // this.weaponX3 = 0
+    // this.weaponY3 = 0
+    // this.weaponX4 = 0
+    // this.weaponY4 = 0
     this.giveDamage = false
 
     this.damage = 20
+    this.pureDamage = this.damage
     this.hp = Constants.PLAYER_MAX_HP
     this.defense = 1
+    this.pureDefense = this.defense
     this.maxHp = this.hp
     this.bulletSpeed = 1
 
@@ -143,7 +149,15 @@ class Player extends ObjectClass {
         time: 0
       },
       invis: {
-      yes: false,
+        yes: false,
+        time: 0
+      },
+      double: {
+        yes: false,
+        time: 0
+      },
+      immortal: {
+        yes: false,
         time: 0
       },
     }
@@ -323,7 +337,9 @@ class Player extends ObjectClass {
         rec: this.class.afterSpellTwo.bind(this),
         recData: {
           atkSpeed: this.defaultAttackSpeed,
-          speed: this.pureSpeed
+          speed: this.pureSpeed,
+          damage: this.pureDamage,
+          defense: this.pureDefense,
         },
       })
       this.functionStack.push({
@@ -390,12 +406,14 @@ class Player extends ObjectClass {
   }
 
   setDamage() {
-    this.damage = 10 + 6 * (this.skills.attack + this.skills2.attack)
+    this.damage = Constants.PLAYER_BASE_DAMAGE + Constants.PLAYER_DAMAGE * (this.skills.attack + this.skills2.attack)
+    this.pureDamage = this.damage
   }
 
   setDefense() {
     this.defense = 1 - ((0.06 * (this.skills.defense + this.skills2.defense))/
-        (1 + 0.06 * Math.abs(this.skills.defense+ this.skills2.defense)))
+        (1 + 0.06 * Math.abs(this.skills.defense + this.skills2.defense)))
+    this.pureDefense = this.defense
   }
 
   setHp() {
@@ -405,13 +423,17 @@ class Player extends ObjectClass {
   }
 
   setSpeed() {
-    this.speed += Constants.PLAYER_RAISE_SPEED
-    this.pureSpeed += Constants.PLAYER_RAISE_SPEED
+    this.speed = Constants.PLAYER_SPEED + (this.skills2.speed + this.skills.speed) * Constants.PLAYER_RAISE_SPEED
+    this.pureSpeed = Constants.PLAYER_SPEED + (this.skills2.speed + this.skills.speed) * Constants.PLAYER_RAISE_SPEED
   }
 
   setAtkSpeed() {
-    this.attackSpeed -= Constants.PLAYER_RAISE_ATK_SPEED
-    this.defaultAttackSpeed -= Constants.PLAYER_RAISE_ATK_SPEED
+    this.attackSpeed = Constants.PLAYER_ATK_SPEED - (this.skills2.atkSpeed + this.skills.atkSpeed) * Constants.PLAYER_RAISE_ATK_SPEED
+    this.defaultAttackSpeed =  Constants.PLAYER_ATK_SPEED - (this.skills2.atkSpeed + this.skills.atkSpeed) * Constants.PLAYER_RAISE_ATK_SPEED
+    if(this.attackSpeed <= Constants.PLAYER_ATK_SPEED_MAX) {
+      this.attackSpeed = Constants.PLAYER_ATK_SPEED_MAX
+      this.defaultAttackSpeed = Constants.PLAYER_ATK_SPEED_MAX
+    }
   }
 
   setBltSpeed() {
@@ -440,10 +462,19 @@ class Player extends ObjectClass {
   }
 
   onKill(level) {
-    this.score += Constants.EXP_FOR_LEVEL_UP[level] / 20  * this.leaderBuff
+    this.score += Constants.EXP_FOR_LEVEL_UP[level] / 6  * this.leaderBuff
   }
 
   setAttributes(item) {
+    // Очков 0, если все прокачено
+    let x
+    x = Object.values(this.skills).map(i=>x+=i, x=0).reverse()[0]
+    const isRangeClass = Object.values(Constants.CLASSES.RANGE).filter(
+        e => e === this.className,
+    )
+    if((isRangeClass[0] && x >= 56) || (!isRangeClass[0] && x >= 48))
+      this.skillPoints = 0
+
     switch (item) {
       case 0:
         if (this.skills.attack < 8) {
@@ -520,12 +551,13 @@ class Player extends ObjectClass {
     this.class = new Warlord(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
 
     this.skills2.attack += 5
-    this.skills2.defense += 3
-    this.skills2.regeneration += 3
-    this.skills2.maxHp += 5
+    this.skills2.regeneration += 5
+    this.skills2.maxHp += 2
+    this.skills2.speed += 4
     this.setDamage()
     this.setDefense()
     this.setHp()
+    this.setSpeed()
 
     this.updateClass = (dt) => {
       this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage)
@@ -538,13 +570,15 @@ class Player extends ObjectClass {
     this.className = Constants.CLASSES.MELEE.DUELIST
     this.class = new Duelist(this.id,this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
 
-    this.skills2.attack += 5
-    this.skills2.defense += 3
-    this.skills2.regeneration += 3
-    this.skills2.maxHp += 5
+    this.skills2.attack += 8
+    this.skills2.defense += 2
+    this.skills2.regeneration += 2
+    this.skills2.maxHp += 2
+    this.skills2.atkSpeed += 4
     this.setDamage()
     this.setDefense()
     this.setHp()
+    this.setAtkSpeed()
 
     this.updateClass = (dt) => {
       this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage)
@@ -557,9 +591,9 @@ class Player extends ObjectClass {
     this.className = Constants.CLASSES.MELEE.KNIGHT
     this.class = new Knight(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
 
-    this.skills2.attack += 5
-    this.skills2.defense += 3
-    this.skills2.regeneration += 3
+    this.skills2.attack += 2
+    this.skills2.defense += 8
+    this.skills2.regeneration += 8
     this.skills2.maxHp += 5
     this.setDamage()
     this.setDefense()
@@ -576,9 +610,9 @@ class Player extends ObjectClass {
     this.className = Constants.CLASSES.MELEE.PALADIN
     this.class = new Paladin(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
 
-    this.skills2.attack += 5
-    this.skills2.defense += 3
-    this.skills2.regeneration += 3
+    this.skills2.attack += 3
+    this.skills2.defense += 6
+    this.skills2.regeneration += 8
     this.skills2.maxHp += 5
     this.setDamage()
     this.setDefense()
@@ -594,6 +628,10 @@ class Player extends ObjectClass {
   ifClassArcher() {
     this.className = Constants.CLASSES.RANGE.ARCHER
     this.class = new Archer(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+
+    this.skills2.maxHp += 4
+    this.setHp()
+
     this.updateClass = (dt) => {
       this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
       return this.class.update(dt)
@@ -603,6 +641,15 @@ class Player extends ObjectClass {
   ifClassSniper() {
     this.className = Constants.CLASSES.RANGE.SNIPER
     this.class = new Sniper(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+
+    this.skills2.attack += 12
+    this.skills2.defense += 2
+    this.skills2.regeneration += 2
+    this.skills2.atkSpeed -= 5
+    this.setDamage()
+    this.setDefense()
+    this.setAtkSpeed()
+
     this.updateClass = (dt) => {
       this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
       return this.class.update(dt)
@@ -612,6 +659,17 @@ class Player extends ObjectClass {
   ifClassCrossbowman() {
     this.className = Constants.CLASSES.RANGE.CROSSBOWMAN
     this.class = new Crossbowman(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+
+    this.skills2.attack += 6
+    this.skills2.defense += 2
+    this.skills2.regeneration += 2
+    this.skills2.atkSpeed -= 5
+    this.skills2.bltSpeed += 4
+    this.setDamage()
+    this.setDefense()
+    this.setAtkSpeed()
+    this.setBltSpeed()
+
     this.updateClass = (dt) => {
       this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed, this.ifMegaShot)
       return this.class.update(dt)
@@ -621,6 +679,15 @@ class Player extends ObjectClass {
   ifClassRanger() {
     this.className = Constants.CLASSES.RANGE.RANGER
     this.class = new Ranger(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+
+    this.skills2.speed += 6
+    this.skills2.defense += 2
+    this.skills2.regeneration += 2
+    this.skills2.atkSpeed += 5
+    this.setSpeed()
+    this.setDefense()
+    this.setAtkSpeed()
+
     this.updateClass = (dt) => {
       this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
       return this.class.update(dt)
@@ -630,6 +697,16 @@ class Player extends ObjectClass {
   ifClassShooter() {
     this.className = Constants.CLASSES.RANGE.SHOOTER
     this.class = new Shooter(this.id, this.x, this.y, this.click, this.direction, this.speed, this.damage, this.attackSpeed)
+
+    this.skills2.attack += 2
+    this.skills2.defense += 2
+    this.skills2.regeneration += 2
+    this.skills2.atkSpeed += 2
+    this.skills2.speed += 2
+    this.setDamage()
+    this.setDefense()
+    this.setAtkSpeed()
+
     this.updateClass = (dt) => {
       this.class.setInfo(this.x, this.y, this.click, this.direction, this.attackSpeed, this.damage, this.speed, this.ifSlowBullet, this.lastMove, this.lastClick, this.bulletSpeed)
       return this.class.update(dt)
@@ -692,11 +769,11 @@ class Player extends ObjectClass {
       className: this.className,
       classStage: this.classStage,
       skills: this.skills,
+      skillPoints: this.skillPoints,
       speed: this.speed,
       defense: this.defense,
       abilityCd: this.abilityCd,
       effects: this.effects,
-      skillPoints: this.skillPoints
     }
   }
 }

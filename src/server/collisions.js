@@ -13,7 +13,7 @@ exports.applyCollisions = (objects, bullets, r) => {
             ) {
                 destroyedBullets.push(bullet)
                 let damageForObject = bullet.attack
-                if(bullet.ifCrossbow)
+                if(bullet.ifCrossbow && object.defense !== 0)
                     damageForObject /= object.defense
                 if(bullet.modificator.stun)
                     object.setStun(3)
@@ -101,53 +101,24 @@ exports.hitPlayer = (object1, objects2, r) => {
     return false
 }
 
-let balanser = 0
-exports.spawn = (arr, r1, r2, a, b, min, max) => {
-    let temp1 = min
-    let temp2 = max
-    let temp3 = 0.05
-    let temp4 = 0.9
-    if(balanser === 0) {
-        temp1 = min
-        temp2 = a - temp1
-        temp3 = min
-        temp4 = max
-        balanser = 1
-        // Y all
-    }
-    else if (balanser === 1) {
-        temp1 = b
-        temp2 = max - b
-        temp3 = min
-        temp4 = max
-        balanser = 2
-        //y all
-    }
-    else if (balanser === 2) {
-        temp1 = min
-        temp2 = max
-        temp3 = min
-        temp4 = a - temp3
-        balanser = 3
-        //X all
-    }
-    else {
-        temp1 = min
-        temp2 = max
-        temp3 = b
-        temp4 = max - b
-        balanser = 0
-        //X all
-    }
+
+exports.spawn = (arr, r1, r2, x, y, x2, y2) => {
+    // xy это левый верхний угол первого сектора, x2y2 второго
+
+    let tempX = x/Constants.MAP_SIZE
+    let tempY = y/Constants.MAP_SIZE
     while (true) {
-        let x = Constants.MAP_SIZE * (temp1 + Math.random() * temp2)
-        let y = Constants.MAP_SIZE * (temp3 + Math.random() * temp4)
+        let x3 = Constants.MAP_SIZE * (tempX + Math.random() * (1 - tempX * 2))
+        let y3 = Constants.MAP_SIZE * (tempY + Math.random() * (1 - tempY * 2))
         if (
-            !circleToCircle(arr, [{x: x, y: y}], r1, r2)
-        ) {
-            return {x: x, y: y}
-        }
+            !circleToCircle(arr, [{x: x3, y: y3}], r1, r2) &&
+            !(x3 >= x2 && x3 <= Constants.MAP_SIZE - x2 &&
+                y3 >= y2 && y3 <= Constants.MAP_SIZE - y2)
+        ) return {x: x3, y: y3}
     }
 }
+
+
+
 
 exports.circleToCircle = circleToCircle

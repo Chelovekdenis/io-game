@@ -204,7 +204,7 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
     context.font = "16px Verdana"
     context.fillText(`${Math.round(me.hp)}/${Math.round(me.maxHp)}`, canvas.width/2, expBarH + 16)
     context.font = "14px Verdana"
-    context.fillText(`+${me.skills.regeneration.toFixed(1)}`, canvas.width/2 + expBarW/2 - 24, expBarH + 16)
+    context.fillText(`+${(me.skills.regeneration * Constants.PLAYER_REGENERATION).toFixed(1)}`, canvas.width/2 + expBarW/2 - 24, expBarH + 16)
     // Experience bar
     expBarH = canvas.height - 40
     // context.fillStyle = "rgba(132,132,132,0.7)"

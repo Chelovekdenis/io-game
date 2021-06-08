@@ -52,6 +52,8 @@ const ASSET_NAMES = [
   's3.svg',
   'kldsg.svg',
 
+  'invis.svg',
+
   'body_0.svg',
   'body_1.svg',
   'body_2.svg',
@@ -202,8 +204,8 @@ function downloadAsset(assetName) {
       assets[assetName] = asset
       resolve()
     }
-    // asset.src = `https://medievalwar.ru/assets/${assetName}`
-    asset.src = `http://localhost:3001/assets/${assetName}`
+    asset.src = `https://medievalwar.ru/assets/${assetName}`
+    // asset.src = `http://localhost:3001/assets/${assetName}`
   })
   // https://medievalwar.ru/assets/${assetName}
 }

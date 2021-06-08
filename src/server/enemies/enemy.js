@@ -18,7 +18,7 @@ class Enemy extends ObjectClass {
         this.weaponX = 0
         this.weaponY = 0
 
-        this.damage = 0.3 + 0.15 * lvl
+        this.damage = 0.1 + 0.1 * lvl
         this.defense = 0.99
         // this.damage = 0.1
         this.lastHit = []
@@ -127,6 +127,10 @@ class Enemy extends ObjectClass {
     }
 
     promenade(dt) {
+        this.toAttack = false
+        this.count = 0
+        this.hitAnimation = 0
+        this.giveDamage = false
         if(this.timeTravel <= 0) {
             this.timeTravel = 180 + Math.random() * Constants.MAP_FPS * 20
             this.directionPoint = - 3.1415 + Math.random() * 6.2830

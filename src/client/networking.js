@@ -8,8 +8,8 @@ const Constants = require('../shared/constants')
 
 const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws'
 // const socket = io(`${socketProtocol}://84.201.139.216:3001`, { reconnection: false })
-// const socket = io(`wss://medievalwar.ru`, { reconnection: false })
-const socket = io(`${socketProtocol}://localhost:3001`, { reconnection: false })
+const socket = io(`wss://medievalwar.ru`, { reconnection: false })
+// const socket = io(`${socketProtocol}://localhost:3001`, { reconnection: false })
 // const socket = io(`${socketProtocol}:medievalwar.ru`, { reconnection: false })
 const connectedPromise = new Promise(resolve => {
   socket.on('connect', () => {

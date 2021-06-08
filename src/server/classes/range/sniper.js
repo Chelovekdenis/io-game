@@ -19,7 +19,7 @@ class Sniper extends Archer {
 
     update(dt) {
         // Икс два урон, модификатор класса
-        this.damage = this.damage*2
+        // this.damage = this.damage*2
         return super.update(dt)
     }
 

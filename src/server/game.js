@@ -52,7 +52,8 @@ class Game {
         let ew = Object.values(this.enemies_warrior)
         let pb = Object.values(this.bots_players)
         // Может лучше радиус Босса?
-        let xy = spawn(e.concat(t, b, p, ew, pb), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
+        let xy = spawn(e.concat(t, b, p, ew, pb), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS,
+            Constants.MAP_SIZE * 0.05, Constants.MAP_SIZE * 0.05, Constants.MAP_SIZE * 0.4, Constants.MAP_SIZE * 0.4)
         this.players[socket.id] = new Player(socket.id, username, xy.x, xy.y, 0, true)
     }
 
@@ -66,7 +67,8 @@ class Game {
         let ew = Object.values(this.enemies_warrior)
         let pb = Object.values(this.bots_players)
         // Может лучше радиус Босса?
-        let xy = spawn(e.concat(t, b, p, ew, pb), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
+        let xy = spawn(e.concat(t, b, p, ew, pb), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS,
+            Constants.MAP_SIZE * 0.05, Constants.MAP_SIZE * 0.05, Constants.MAP_SIZE * 0.3, Constants.MAP_SIZE * 0.3)
         this.players[socket.id] = new Player(socket.id, this.resPlayers[socket.id].username,
             xy.x, xy.y, this.resPlayers[socket.id].rewardedLevel, true)
         socket.emit("player_ready")
@@ -79,7 +81,7 @@ class Game {
         } else {
             this.resPlayers[socket.id] = socket
             this.resPlayers[socket.id].username = this.players[socket.id].username
-            this.resPlayers[socket.id].rewardedLevel = Math.ceil(this.players[socket.id].level * 0.5)
+            this.resPlayers[socket.id].rewardedLevel = Math.ceil(this.players[socket.id].level * Constants.PLAYER_RESURRECT_SCORE)
             delete this.players[socket.id]
             socket.emit("resurrect", this.resPlayers[socket.id].rewardedLevel)
         }
@@ -158,7 +160,8 @@ class Game {
         let ew = Object.values(this.enemies_warrior)
         let pb = Object.values(this.bots_players)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, b, e, ew, pb), Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS, 0.2, 0.8, 0.05, 0.9)
+        let xy = spawn(p.concat(t, b, e, ew, pb), Constants.BOSS_RADIUS, Constants.ENEMY_RADIUS,
+            Constants.MAP_SIZE * 0.05, Constants.MAP_SIZE * 0.05, Constants.MAP_SIZE * 0.4, Constants.MAP_SIZE * 0.4)
         const id = shortid()
 
         let sum = 0
@@ -179,7 +182,8 @@ class Game {
         let ew = Object.values(this.enemies_warrior)
         let pb = Object.values(this.bots_players)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, b, e, ew, pb), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS, 0.45, 0.55, 0.25, 0.7)
+        let xy = spawn(p.concat(t, b, e, ew, pb), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS,
+            Constants.MAP_SIZE * 0.3, Constants.MAP_SIZE * 0.3, Constants.MAP_SIZE, Constants.MAP_SIZE)
         const id = shortid()
         if(topPlayer) {
             topPlayer.ifObsidian = true
@@ -196,7 +200,8 @@ class Game {
         let ew = Object.values(this.enemies_warrior)
         let pb = Object.values(this.bots_players)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(b, e, ew, pb), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS, 0.49, 0.50, 0.02, 0.98)
+        let xy = spawn(p.concat(b, e, ew, pb), Constants.BOSS_RADIUS, Constants.PLAYER_RADIUS,
+            Constants.MAP_SIZE * 0.05, Constants.MAP_SIZE * 0.05, Constants.MAP_SIZE, Constants.MAP_SIZE)
         const id = shortid()
         let treeType = Constants.TREE_TYPES[Math.round(Math.random() * (Constants.TREE_TYPES.length-1))]
         if(this.shouldSendUpdate)
@@ -218,10 +223,11 @@ class Game {
         let ew = Object.values(this.enemies_warrior)
         let pb = Object.values(this.bots_players)
         // Может лучше радиус Босса?
-        let xy = spawn(e.concat(t, b, p, ew, pb), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS, 0.1, 0.9, 0.05, 0.9)
+        let xy = spawn(e.concat(t, b, p, ew, pb), Constants.TREE_RADIUS, Constants.PLAYER_RADIUS,
+            Constants.MAP_SIZE * 0.05, Constants.MAP_SIZE * 0.05, Constants.MAP_SIZE * 0.3, Constants.MAP_SIZE * 0.3)
         const id = shortid()
         const username = Constants.GAME_PLAYERS_NICKS[Math.round(0.05 + Math.random() * (Constants.GAME_PLAYERS_NICKS.length-1))]
-        this.bots_players[id] = new PlayerBot(id, xy.x, xy.y, 0, Math.round(3 + Math.random() * 7), username)
+        this.bots_players[id] = new PlayerBot(id, xy.x, xy.y, 0, Math.round(3 + Math.random() * 2), username)
     }
 
     spawnBoss() {
@@ -231,7 +237,8 @@ class Game {
         let ew = Object.values(this.enemies_warrior)
         let pb = Object.values(this.bots_players)
         // Нужно передать больший радиус из массива объектов
-        let xy = spawn(p.concat(t, e, ew, pb), Constants.TREE_RADIUS, Constants.BOSS_RADIUS, 0.5, 0.5, 0.5, 0.5)
+        let xy = spawn(p.concat(t, e, ew, pb), Constants.TREE_RADIUS, Constants.BOSS_RADIUS,
+            Constants.MAP_SIZE * 0.46, Constants.MAP_SIZE * 0.46, Constants.MAP_SIZE, Constants.MAP_SIZE)
         const id = shortid()
         this.boss[id] = new Boss(id, xy.x, xy.y, Constants.PLAYER_SPEED * 1.2)
     }

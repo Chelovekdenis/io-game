@@ -30,7 +30,7 @@ class Shooter extends Archer {
                 for (let i = 0; i < 3; i++) {
                     let sendX = this.x + dt * 400 * Math.sin(this.direction + Constants.PI_40 * (i-1)) * 6
                     let sendY = this.y - dt * 400 * Math.cos(this.direction + Constants.PI_40 * (i-1)) * 6
-                    bullets.push(new Bullet(this.id, sendX, sendY, this.direction, this.damage, Constants.BULLET_MODIFICATOR.PURE, this.bulletSpeed, false))
+                    bullets.push(new Bullet(this.id, sendX, sendY, this.direction, this.damage * 0.6, Constants.BULLET_MODIFICATOR.PURE, this.bulletSpeed, false))
                 }
                 return bullets
             }
@@ -58,7 +58,7 @@ class Shooter extends Archer {
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
-            abilityName2: "TripleShot"
+            abilityName2: "Triple"
         }
     }
 }

@@ -4,8 +4,6 @@ const canvas = document.getElementById('game-canvas')
 const context = canvas.getContext('2d')
 
 export function renderPlayer(me, player) {
-    if(player.effects.invis.yes)
-        return null
     const { x, y, direction, className, hitAnimation} = player
     const canvasX = canvas.width / 2 + x - me.x
     const canvasY = canvas.height / 2 + y - me.y
@@ -16,6 +14,19 @@ export function renderPlayer(me, player) {
 
     // Animation hit
     context.rotate(direction + hitAnimation)
+
+
+    if(player.effects.invis.yes) {
+        context.drawImage(
+            getAsset(`invis.svg`),
+            -Constants.PLAYER_RADIUS * 5,
+            -Constants.PLAYER_RADIUS * 5,
+            Constants.PLAYER_RADIUS * 10,
+            Constants.PLAYER_RADIUS * 10,
+        )
+        context.restore()
+        return null
+    }
 
     let tempX = -125
     let tempY = -50
@@ -84,7 +95,7 @@ export function renderPlayer(me, player) {
     context.fillStyle = "red"
     // console.log(canvas.width / 2 + x - me.weaponX - Constants.PLAYER_RADIUS, canvas.height / 2 + y - me.weaponY - Constants.PLAYER_RADIUS)
     // console.log(player.weaponX, player.weaponY)
-
+    //
     // context.fillRect(
     //     canvas.width / 2 + player.weaponX - me.x - 5,
     //     canvas.height / 2 + player.weaponY - me.y - 5,
@@ -94,6 +105,18 @@ export function renderPlayer(me, player) {
     // context.fillRect(
     //     canvas.width / 2 + player.weaponX2 - me.x - 5,
     //     canvas.height / 2 + player.weaponY2 - me.y - 5,
+    //     10,
+    //     10,
+    // )
+    // context.fillRect(
+    //     canvas.width / 2 + player.weaponX3 - me.x - 5,
+    //     canvas.height / 2 + player.weaponY3 - me.y - 5,
+    //     10,
+    //     10,
+    // )
+    // context.fillRect(
+    //     canvas.width / 2 + player.weaponX4 - me.x - 5,
+    //     canvas.height / 2 + player.weaponY4 - me.y - 5,
     //     10,
     //     10,
     // )
@@ -130,13 +153,23 @@ export function renderPlayer(me, player) {
 
     } else if (player.effects.rage.yes) {
         player.level = "RAGE"
-        tempColor = "mediumvioletred"
+        tempColor = "#FF4081"
         lvlString = player.effects.rage.time.toFixed(1)
 
     } else if (player.effects.storm.yes) {
-        tempColor = "blueviolet"
+        tempColor = "#7C4DFF"
         player.level = "STORM"
         lvlString = player.effects.storm.time.toFixed(1)
+
+    } else if (player.effects.double.yes) {
+        tempColor = "#69F0AE"
+        player.level = "DOUBLE"
+        lvlString = player.effects.double.time.toFixed(1)
+
+    } else if (player.effects.immortal.yes) {
+        tempColor = "#FFFF00"
+        player.level = "IMMORTAL"
+        lvlString = player.effects.immortal.time.toFixed(1)
 
     }
     if (tempColor)
