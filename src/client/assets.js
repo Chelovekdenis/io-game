@@ -204,8 +204,8 @@ function downloadAsset(assetName) {
       assets[assetName] = asset
       resolve()
     }
-    // asset.src = `https://medievalwar.ru/assets/${assetName}`
-    asset.src = `http://localhost:3001/assets/${assetName}`
+    asset.src = `https://medievalwar.ru/assets/${assetName}`
+    // asset.src = `http://localhost:3001/assets/${assetName}`
   })
   // https://medievalwar.ru/assets/${assetName}
 }
