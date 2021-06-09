@@ -13,7 +13,7 @@ const Shooter = require('./classes/range/shooter')
 const Constants = require('../shared/constants')
 
 // Networking и assets ссылки на сервер
-// player.js уровени игрока меньше
+// player.js уровени равен [level]
 // кд скилов подправить
 // megashot урон изменить
 
@@ -40,7 +40,7 @@ class Player extends ObjectClass {
     this.hitAnimation = 0
     this.count = 0
     this.level = 0
-    this.score = Constants.EXP_FOR_LEVEL_UP[0]
+    this.score = Constants.EXP_FOR_LEVEL_UP[level]
     this.leaderBuff = 1
     this.skillPoints = 0
     this.sendMsgSP = false
