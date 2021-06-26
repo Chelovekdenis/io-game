@@ -28,7 +28,8 @@ export const connect = onGameOver => (
     socket.on("number_of_players", serversInfo => {
         const serverList = document.getElementById('server_list')
         for (let i = 0; i < serversInfo.length; i++) {
-            let newOption = new Option(`Сервер #${i+1} - ${serversInfo[i]}/${Constants.GAME_MAX_PLAYER}`, `${i}`)
+            // let newOption = new Option(`Сервер #${i+1} - ${serversInfo[i]}/${Constants.GAME_MAX_PLAYER}`, `${i}`)
+            let newOption = new Option(`Server #${i+1} - ${serversInfo[i]}/${Constants.GAME_MAX_PLAYER}`, `${i}`)
             serverList.append(newOption)
         }
     })
@@ -44,7 +45,8 @@ export const connect = onGameOver => (
         document.getElementById('disconnect-modal').classList.remove('hidden')
         // document.getElementById('disconnect-modal').appendChild(`<button id="button2">ПЕРЕПОДКЛЮЧИТЬСЯ С наградой ${serversInfo}</button>`)
         // disconnect-modal.before('<p>Привет</p>', document.createElement('hr'));
-        document.getElementById("button").innerHTML=`ВЕРНУТЬСЯ С ${serversInfo} УРОВНЕМ`;
+        // document.getElementById("button").innerHTML=`ВЕРНУТЬСЯ С ${serversInfo} УРОВНЕМ`;
+        document.getElementById("button").innerHTML=`BACK WITH LEVEL ${serversInfo}`;
         document.getElementById('reconnect-button').onclick = () => {
             window.location.reload()
         }

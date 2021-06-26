@@ -40,19 +40,6 @@
 <!--                })-->
 <!--            });-->
 <!--    </script>-->
-    <script type="text/javascript">
-        const buttonElem = document.querySelector('#button');
-        buttonElem.addEventListener('click', () => {
-            document.getElementById('game-canvas').classList.add('hidden')
-            document.getElementById('yandex_rtb_R-A-757163-1').classList.remove('hidden')
-            setTimeout(() => {
-                localStorage.setItem('reklama', '1');
-                document.getElementById('game-canvas').classList.remove('hidden')
-                document.getElementById('yandex_rtb_R-A-757163-1').classList.add('hidden')
-
-            }, 3000)
-        })
-    </script>
 
     <script type="text/javascript">
         (function(w, d, n, s, t) {
@@ -82,8 +69,11 @@
 <div id="play-menu" class="hidden">
     <h1>Medieval War</h1>
     <div class="select">
+<!--        <div class="air_space">-->
+<!--            Используйте умения при помощи цифр на клавиатуре-->
+<!--        </div>-->
         <div class="air_space">
-            Используйте умения при помощи цифр на клавиатуре
+            To use skills press numbers on the keyboard
         </div>
         <label>
             <select id="server_list">
@@ -94,8 +84,10 @@
         </label>
     </div>
     <div class="form">
-        <input type="text" id="username-input" placeholder="Ваше имя" />
-        <button id="play-button">ИГРАТЬ</button>
+<!--        <input type="text" id="username-input" placeholder="Ваше имя" />-->
+<!--        <button id="play-button">ИГРАТЬ</button>-->
+        <input type="text" id="username-input" placeholder="Your name" />
+        <button id="play-button">PLAY</button>
     </div>
 </div>
 
@@ -108,12 +100,28 @@
 </script>
 <div id="disconnect-modal" class="hidden">
     <div>
-        <h2>Вы погибли</h2>
-<!--        <h2>Disconnect from the server </h2>-->
-        <button id="button">ВЕРНУТСЯ С 0 УРОВНЕМ</button> <br>
-        <button id="reconnect-button">ВЕРНУТЬСЯ</button>
-<!--        <button id="reconnect-button">RECONNECT </button>-->
+<!--        <h2>Вы погибли</h2>-->
+<!--        <button id="button">ВЕРНУТСЯ С 0 УРОВНЕМ</button> <br>-->
+<!--        <button id="reconnect-button">ВЕРНУТЬСЯ</button>-->
+        <h2>You are dead</h2>
+        <button id="button">BACK WITH LEVEL 0</button> <br>
+        <button id="reconnect-button">COME BACK </button>
     </div>
 </div>
+
+<script type="text/javascript">
+    const buttonElem = document.querySelector('#button');
+    buttonElem.addEventListener('click', () => {
+        document.getElementById('disconnect-modal').classList.add('hidden')
+        document.getElementById('game-canvas').classList.add('hidden')
+        document.getElementById('yandex_rtb_R-A-757163-1').classList.remove('hidden')
+        setTimeout(() => {
+            localStorage.setItem('reklama', '1');
+            document.getElementById('game-canvas').classList.remove('hidden')
+            document.getElementById('yandex_rtb_R-A-757163-1').classList.add('hidden')
+
+        }, 3000)
+    })
+</script>
 </body>
 </html>

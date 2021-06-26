@@ -161,8 +161,10 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
     context.textBaseline = "middle"
     context.textAlign = 'center'
     context.font = "16px Verdana"
-    context.fillText("Имя", aa_x + 60, 30)
-    context.fillText("Очки", aa_x + 140, 30)
+    // context.fillText("Имя", aa_x + 60, 30)
+    // context.fillText("Очки", aa_x + 140, 30)
+    context.fillText("Name", aa_x + 60, 30)
+    context.fillText("Points", aa_x + 140, 30)
     context.drawImage(
         getAsset('crown.svg'),
         aa_x + 5, 45,
@@ -225,7 +227,8 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
     context.textBaseline = "middle"
     context.textAlign = 'center'
     context.font = "16px Verdana"
-    context.fillText(`Уровень: ${me.level}`, canvas.width/2, expBarH + 16)
+    context.fillText(`Level: ${me.level}`, canvas.width/2, expBarH + 16)
+    // context.fillText(`Уровень: ${me.level}`, canvas.width/2, expBarH + 16)
 
     // Distribution of skill points
     if (newSkillPoint > 0) {
@@ -239,19 +242,22 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
         context.textBaseline = "bottom"
         context.textAlign = 'center'
         context.font = "16px Verdana"
-        context.fillText(`Доступно ${me.skillPoints}`, 130, thisHeight + 24)
+        // context.fillText(`Доступно ${me.skillPoints}`, 130, thisHeight + 24)
+        context.fillText(`Available ${me.skillPoints}`, 130, thisHeight + 24)
 
         context.textAlign = 'start'
 
         let skillCoordinates = []
-        let attributes = ['Атака', 'Защита', 'Жизни', 'Регенерация', 'Скорость', 'Скорость атаки']
+        let attributes = ['Attack', 'Defense', 'Health', 'Regeneration', 'Speed', 'Attack Speed']
+        // let attributes = ['Атака', 'Защита', 'Жизни', 'Регенерация', 'Скорость', 'Скорость атаки']
 
         let tempClasses = Object.keys(Constants.CLASSES.RANGE).map((item) => {
             return item.toLowerCase();
         }).filter(i => i === me.className,)
 
         if(tempClasses[0]){
-            attributes = ['Атака', 'Защита', 'Жизни', 'Регенерация', 'Скорость', 'Скорость атаки', 'Скорость стрелы']
+            attributes = ['Attack', 'Defense', 'Health', 'Regeneration', 'Speed', 'Attack Speed', 'Bullet Speed']
+            // attributes = ['Атака', 'Защита', 'Жизни', 'Регенерация', 'Скорость', 'Скорость атаки', 'Скорость стрелы']
         }
         let tempSkills = Object.values(me.skills)
         for (let i = 0; i < attributes.length; i++) {
@@ -287,7 +293,8 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
             context.textBaseline = "bottom"
             context.textAlign = 'center'
             context.font = "16px Verdana"
-            context.fillText(`Выберите класс`, 155, thisHeight + 24)
+            context.fillText(`Choose a class`, 155, thisHeight + 24)
+            // context.fillText(`Выберите класс`, 155, thisHeight + 24)
 
             context.textAlign = 'start'
 
@@ -377,7 +384,8 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
             context.textBaseline = "bottom"
             context.textAlign = 'center'
             context.font = "16px Verdana"
-            context.fillText(`Выберите класс`, 155, thisHeight + 24)
+            // context.fillText(`Выберите класс`, 155, thisHeight + 24)
+            context.fillText(`Choose a class`, 155, thisHeight + 24)
 
             context.textAlign = 'start'
 
@@ -400,8 +408,10 @@ export function renderHUD(me, boss, leader, leaderboard, currentWScale, currentH
                 context.fillText(`+`, 240 + 4, thisHeight + 70 * (i+1) + 18)
             }
 
-            context.fillText(`Воин`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
-            context.fillText(`Лучник`, skillCoordinates[1].x - 200, skillCoordinates[1].y + skillCoordinates[1].h)
+            // context.fillText(`Воин`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
+            // context.fillText(`Лучник`, skillCoordinates[1].x - 200, skillCoordinates[1].y + skillCoordinates[1].h)
+            context.fillText(`Warrior`, skillCoordinates[0].x - 200, skillCoordinates[0].y + skillCoordinates[0].h)
+            context.fillText(`Archer`, skillCoordinates[1].x - 200, skillCoordinates[1].y + skillCoordinates[1].h)
             onChooseClass(skillCoordinates)
         }
     }
